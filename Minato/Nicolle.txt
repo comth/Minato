@@ -1,0 +1,39 @@
+-conexão com a bina
+-integração api cep
+-calculo taxa entrega
+-lista de telefones no cadastro de usuário
+-web
+-integração ifood
+-impressão de relatório pra cozinha 
+- emissão de nota fiscal 
+- pagamento 
+- relatórios  fin pratos 
+- bem apple
+
+
+pedido
+- tempo de preparo
+- entrega(com emb) mesa busca
+- key : auto inc + data
+- observação
+
+
+cadastro 
+-lista de endereços
+-lista de celular
+
+
+tabela editável botão editar e deletar
+
+
+consulta por mesa 
+-livre, aberta e em recebimento
+
+- orçamento (simular pedido) (pode virar pedido)
+
+
+-tela inicial e cadastro
+
+-filtro por codigo e nome
+
+
