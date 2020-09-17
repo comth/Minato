@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Minato.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,15 +16,18 @@ namespace Minato.Models
         [StringLength(100, ErrorMessage = "O Nome deve ter no máximo 100 caracteres.")]
         public string Nome { get; set; }
 
+        [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 endereço é necessário")]
         public List<Endereco> Enderecos { get; set; }
 
+        [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 telefone é necessário")]
         public List<Telefone> Telefones { get; set; }
     }
 
     public class Telefone
     {
         [Required(ErrorMessage = "O Telefone é obrigatório.")]
-        [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
-        public string TelefoneString { get; set; } //trocar
+        [StringLength(11, ErrorMessage = "O telefone deve ter entre 10 e 11 caracteres", MinimumLength = 10)]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "O telefone só pode conter números")]
+        public string Value { get; set; } 
     }
 }
