@@ -10,13 +10,13 @@ namespace Minato.Models
     public class Usuario
     {
         [Key]
-        public int Id { get; set; }
+        public int IdUsuario { get; set; }
 
         [Required(ErrorMessage = "O Nome é obrigatório.")]
         [StringLength(100, ErrorMessage = "O Nome deve ter no máximo 100 caracteres.")]
         public string Nome { get; set; }
 
-        [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 endereço é necessário")]
+        [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 endereço é necessário")] //one to many
         public List<Endereco> Enderecos { get; set; }
 
         [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 telefone é necessário")]

@@ -1,10 +1,10 @@
--conexão com a bina
--integração api cep
--calculo taxa entrega
--lista de telefones no cadastro de usuário
--web
--integração ifood
--impressão de relatório pra cozinha 
+- conexão com a bina
+- integração api cep
+- calculo taxa entrega
+- lista de telefones no cadastro de usuário
+- web
+- integração ifood
+- impressão de relatório pra cozinha 
 - emissão de nota fiscal 
 - pagamento 
 - relatórios  fin pratos 
@@ -30,7 +30,6 @@ consulta por mesa
 -livre, aberta e em recebimento
 
 - orçamento (simular pedido) (pode virar pedido)
-
 
 -tela inicial e cadastro
 
