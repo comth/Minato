@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Minato.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,5 +23,8 @@ namespace Minato.Models
         public int IdEndereco { get; set; }
         [Required(ErrorMessage = "O Endereço é obrigatório.")]
         public Endereco EnderecoSelecionado { get; set; }
+
+        [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 produto é necessário")]
+        public List<Produto> Produtos { get; set; }
     }
 }

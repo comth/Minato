@@ -16,5 +16,11 @@ namespace Minato.Contexts
         public Context(DbContextOptions<Context> options)
         : base(options)
         { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Pedido>()
+                .HasKey(p => new { p.IdPedido, p.DataPedido });
+        }
     }
 }
