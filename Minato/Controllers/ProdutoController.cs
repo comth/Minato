@@ -1,6 +1,6 @@
 ﻿namespace Minato.Controllers
 {
-    public class PedidoController
+    public class ProdutoController
     {
     }
 }
