@@ -1,8 +1,34 @@
 import { Component } from '@angular/core';
+import { ProdutoService } from '../services/produto.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
+
+  constructor(private produtoService: ProdutoService) {
+  }
+
+  ngOnInit() {
+    this.post();
+  }
+
+  post() {
+    let produto = {
+      IdProduto: 6,
+      Nome: "batata",
+      Preco: 12
+    }
+    this.produtoService.post(produto).subscribe(data => {
+      console.log(data);
+      this.getAll();
+    });
+  }
+
+  getAll() {
+    this.produtoService.getAll(10,1).subscribe(data => {
+      console.log(data);
+    });
+  }
 }

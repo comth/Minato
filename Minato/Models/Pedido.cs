@@ -1,6 +1,7 @@
 ﻿using Minato.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Minato.Models
@@ -11,7 +12,7 @@ namespace Minato.Models
         public int IdPedido { get; set; }
 
         [Key]
-        public DateTime DataPedido { get; set; }
+        public DateTime DataPedido { get; set; } = DateTime.Now;
 
         public int IdUsuario { get; set; }
         [Required(ErrorMessage = "O Usuário é obrigatório.")]

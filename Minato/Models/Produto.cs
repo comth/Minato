@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Minato.Models
 {
     public class Produto
     {
         [Key]
+        //[Required]
         public int IdProduto { get; set; }
 
         [Required(ErrorMessage = "O Nome é obrigatório.")]
@@ -12,6 +14,6 @@ namespace Minato.Models
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "O Preço é obrigatório.")]
-        public decimal? Preco { get; set; }
+        public decimal Preco { get; set; }
     }
 }

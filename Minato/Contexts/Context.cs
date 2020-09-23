@@ -8,6 +8,7 @@ namespace Minato.Contexts
         public DbSet<Pedido> Pedido { get; set; }
         public DbSet<Endereco> Endereco { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Produto> Produto { get; set; }
 
         public Context(DbContextOptions<Context> options)
         : base(options)

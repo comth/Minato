@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioService {
+export class ProdutoService {
 
   private baseURL: string;
 
@@ -13,10 +13,10 @@ export class UsuarioService {
   }
 
   public getAll(itensPagina: number, index: number) {
-    return this.http.get(this.baseURL + "usuario/${itensPagina}/${index}");
+    return this.http.get(this.baseURL + `produto/${itensPagina}/${index}`);
   }
 
-  public post(usuario: any) {
-    return this.http.post(this.baseURL + "usuario", usuario);
+  public post(produto: any) {
+    return this.http.post(this.baseURL + "produto", produto);
   }
 }

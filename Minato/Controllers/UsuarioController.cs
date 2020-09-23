@@ -6,11 +6,12 @@ using System.Collections.Generic;
 
 namespace Minato.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class UsuarioController : Controller
     {
         private readonly Context Context;
         private readonly UsuarioBLL UsuarioBLL;
-        private readonly string CabecalhoMensagem = "O Usuário"; //para não ter que mudar a mensagem ??
 
         public UsuarioController(Context context, UsuarioBLL usuarioBLL)
         {
