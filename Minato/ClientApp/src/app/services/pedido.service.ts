@@ -14,10 +14,26 @@ export class PedidoService {
   }
 
   public getAll(itensPagina: number, index: number) {
-    return this.http.get(this.baseURL + "pedido/${itensPagina}/${index}");
+    return this.http.get(this.baseURL + `pedido/${itensPagina}/${index}`);
+  }
+
+  public get(id: any) {
+    return this.http.get(this.baseURL + `pedido/${id}`);
+  }
+
+  public filtrar(itensPagina: number, index: number, pesquisa: any) {
+    return this.http.get(this.baseURL + `pedido/${itensPagina}/${index}/${pesquisa}`);
   }
 
   public post(pedido: any) {
     return this.http.post(this.baseURL + "pedido", pedido);
+  }
+
+  public put(pedido: any) {
+    return this.http.put(this.baseURL + "pedido", pedido);
+  }
+
+  public delete(id: any) {
+    return this.http.delete(this.baseURL + `pedido/${id}`);
   }
 }

@@ -38,7 +38,7 @@ namespace Minato.Controllers
             return Ok(usuario);
         }
 
-        [HttpGet("filtrar/{itensPagina}/{index}/{pesquisa}")]
+        [HttpGet("{itensPagina}/{index}/{pesquisa}")]
         public IActionResult Filtrar(int itensPagina, int index, string pesquisa)
         {
             List<Usuario> lista = UsuarioBLL.Filtrar(Context, itensPagina, index, pesquisa);
@@ -47,7 +47,7 @@ namespace Minato.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Usuario usuario)
+        public IActionResult Post([FromBody]Usuario usuario)
         {
             bool salvo = UsuarioBLL.Post(Context, usuario);
 
@@ -56,11 +56,11 @@ namespace Minato.Controllers
                 return Ok();
             }
 
-            return Conflict(); //por telefone????
+            return Conflict(); 
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Usuario usuario)
+        public IActionResult Put([FromBody]Usuario usuario)
         {
             bool salvo = UsuarioBLL.Put(Context, usuario);
 

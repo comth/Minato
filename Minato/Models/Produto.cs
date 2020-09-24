@@ -6,7 +6,7 @@ namespace Minato.Models
     public class Produto
     {
         [Key]
-        //[Required]
+        [Required]
         public int IdProduto { get; set; }
 
         [Required(ErrorMessage = "O Nome é obrigatório.")]

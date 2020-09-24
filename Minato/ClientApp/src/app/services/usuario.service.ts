@@ -13,10 +13,26 @@ export class UsuarioService {
   }
 
   public getAll(itensPagina: number, index: number) {
-    return this.http.get(this.baseURL + "usuario/${itensPagina}/${index}");
+    return this.http.get(this.baseURL + `usuario/${itensPagina}/${index}`);
+  }
+
+  public get(id: any) {
+    return this.http.get(this.baseURL + `usuario/${id}`);
+  }
+
+  public filtrar(itensPagina: number, index: number, pesquisa: any) {
+    return this.http.get(this.baseURL + `usuario/${itensPagina}/${index}/${pesquisa}`);
   }
 
   public post(usuario: any) {
     return this.http.post(this.baseURL + "usuario", usuario);
+  }
+
+  public put(usuario: any) {
+    return this.http.put(this.baseURL + "usuario", usuario);
+  }
+
+  public delete(id: any) {
+    return this.http.delete(this.baseURL + `usuario/${id}`);
   }
 }

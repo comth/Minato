@@ -38,7 +38,7 @@ namespace Minato.Controllers
             return Ok(pedido);
         }
 
-        [HttpGet("filtrar/{itensPagina}/{index}/{pesquisa}")]
+        [HttpGet("{itensPagina}/{index}/{pesquisa}")]
         public IActionResult Filtrar(int itensPagina, int index, string pesquisa)
         {
             List<Pedido> lista = PedidoBLL.Filtrar(Context, itensPagina, index, pesquisa);
