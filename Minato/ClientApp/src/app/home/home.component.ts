@@ -4,6 +4,7 @@ import { ProdutoService } from '../services/produto.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
 
@@ -11,7 +12,7 @@ export class HomeComponent {
   }
 
   ngOnInit() {
-    this.post();
+    //this.post();
   }
 
   post() {

@@ -1,0 +1,17 @@
+img {
+  margin: 8%;
+}
+
+div.img-container {
+  text-align: center;
+  
+}
+
+div.img-container div {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+
+
