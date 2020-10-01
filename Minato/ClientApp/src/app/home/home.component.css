@@ -4,7 +4,6 @@ img {
 
 div.img-container {
   text-align: center;
-  
 }
 
 div.img-container div {
@@ -13,5 +12,13 @@ div.img-container div {
   flex-direction: row;
 }
 
+div.img-container div div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
+div.img-container div div a{
+  margin-top: -2%;
+}
 
