@@ -59,7 +59,7 @@ namespace Minato
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}/{id2?}");
             });
 
             app.UseSpa(spa =>
