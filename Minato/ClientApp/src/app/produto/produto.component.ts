@@ -27,7 +27,7 @@ export interface Produto {
 
 export class ProdutoComponent implements AfterViewInit, OnInit{
 
-  displayedColumns: string[] = ['idProduto', 'nome', 'nreco'];
+  displayedColumns: string[] = ['idProduto', 'nome', 'preco', 'actions'];
   dataSource: MatTableDataSource<Produto>;
   produtos: Produto[];
   expandedElement: Produto | null;
@@ -41,7 +41,6 @@ export class ProdutoComponent implements AfterViewInit, OnInit{
 
   ngOnInit(): void {
     this.produtoService.getAll(10, 1).subscribe((res: Produto[]) => {
-      console.log(res);
       this.dataSource = new MatTableDataSource(Array.from<Produto>(res));
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
