@@ -25,7 +25,7 @@ export interface Produto {
   ],
 })
 
-export class ProdutoComponent implements AfterViewInit, OnInit{
+export class ProdutoComponent implements OnInit{
 
   displayedColumns: string[] = ['idProduto', 'nome', 'preco', 'actions'];
   dataSource: MatTableDataSource<Produto>;
@@ -40,15 +40,15 @@ export class ProdutoComponent implements AfterViewInit, OnInit{
   }
 
   ngOnInit(): void {
-    this.produtoService.getAll(10, 1).subscribe((res: Produto[]) => {
+    this.produtoService.getAll().subscribe((res: Produto[]) => {
       this.dataSource = new MatTableDataSource(Array.from<Produto>(res));
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
   }
 
-  ngAfterViewInit() {
-    
+  public bla() {
+    console.log("batata");
   }
 
   applyFilter(event: Event) {

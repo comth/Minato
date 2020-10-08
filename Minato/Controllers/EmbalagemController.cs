@@ -2,46 +2,47 @@
 using Minato.BLLs;
 using Minato.Contexts;
 using Minato.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Minato.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class ProdutoController : Controller
+    public class EmbalagemController : Controller
     {
         private readonly Context Context;
-        private readonly ProdutoBLL ProdutoBLL;
+        private readonly EmbalagemBLL EmbalagemBLL;
 
-        public ProdutoController(Context context)
+        public EmbalagemController(Context context)
         {
             Context = context;
-            ProdutoBLL = new ProdutoBLL();
+            EmbalagemBLL = new EmbalagemBLL();
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(ProdutoBLL.GetAll(Context));
+            return Ok(EmbalagemBLL.GetAll(Context));
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            Produto produto = ProdutoBLL.Get(Context, id);
+            Embalagem embalagem = EmbalagemBLL.Get(Context, id);
 
-            if (produto == null)
+            if (embalagem == null)
             {
                 return NotFound();
             }
 
-            return Ok(produto);
+            return Ok(embalagem);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]Produto produto)
+        public IActionResult Post([FromBody] Embalagem embalagem)
         {
-            bool salvo = ProdutoBLL.Post(Context, produto);
+            bool salvo = EmbalagemBLL.Post(Context, embalagem);
 
             if (salvo)
             {
@@ -52,9 +53,9 @@ namespace Minato.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]Produto produto)
+        public IActionResult Put([FromBody] Embalagem embalagem)
         {
-            bool salvo = ProdutoBLL.Put(Context, produto);
+            bool salvo = EmbalagemBLL.Put(Context, embalagem);
 
             if (salvo)
             {
@@ -67,7 +68,7 @@ namespace Minato.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            bool salvo = ProdutoBLL.Delete(Context, id);
+            bool salvo = EmbalagemBLL.Delete(Context, id);
 
             if (salvo)
             {

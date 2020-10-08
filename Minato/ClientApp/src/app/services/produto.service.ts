@@ -12,16 +12,12 @@ export class ProdutoService {
     this.baseURL = baseUrl;
   }
 
-  public getAll(itensPagina: number, index: number) {
-    return this.http.get(this.baseURL + `produto/${itensPagina}/${index}`);
+  public getAll() {
+    return this.http.get(this.baseURL + `produto`);
   }
 
   public get(id: any) {
     return this.http.get(this.baseURL + `produto/${id}`);
-  }
-
-  public filtrar(itensPagina: number, index: number, pesquisa: any) {
-    return this.http.get(this.baseURL + `produto/${itensPagina}/${index}/${pesquisa}`);
   }
 
   public post(produto: any) {

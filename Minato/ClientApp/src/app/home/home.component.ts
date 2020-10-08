@@ -29,7 +29,7 @@ export class HomeComponent {
   }
 
   getAll() {
-    this.produtoService.getAll(10,1).subscribe(data => {
+    this.produtoService.getAll().subscribe(data => {
       console.log(data);
     });
   }
