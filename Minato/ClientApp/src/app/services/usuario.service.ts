@@ -13,8 +13,8 @@ export class UsuarioService {
     this.baseURL = baseUrl;
   }
 
-  public getAll(itensPagina: number, index: number) {
-    return this.http.get(this.baseURL + `usuario/${itensPagina}/${index}`);
+  public getAll() {
+    return this.http.get(this.baseURL + `usuario`);
   }
 
   public get(id: any) {

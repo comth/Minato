@@ -8,10 +8,9 @@ namespace Minato.BLLs
 {
     public class ProdutoBLL
     {
-        public List<Produto> GetAll(Context context, int itensPagina, int index)
+        public List<Produto> GetAll(Context context)
         {
-            int skip = itensPagina * (index - 1);
-            return context.Produto.Skip(skip).Take(itensPagina).ToList();
+            return context.Produto.ToList();
         }
 
         public Produto Get(Context context, int id)
@@ -65,14 +64,6 @@ namespace Minato.BLLs
                 return true;
             }
             return false;
-        }
-
-        public List<Produto> Filtrar(Context context, int itensPagina, int index, string pesquisa)
-        {
-            int skip = itensPagina * (index - 1);
-
-            return context.Produto.Where(x => x.Nome.Contains(pesquisa))
-                                  .Skip(skip).Take(itensPagina).ToList();
         }
     }
 }

@@ -2,59 +2,62 @@
 using Minato.BLLs;
 using Minato.Contexts;
 using Minato.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Minato.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PedidoController : Controller
+    public class EmbalagemController : Controller
     {
         private readonly Context Context;
-        private readonly PedidoBLL PedidoBLL;
+        private readonly EmbalagemBLL EmbalagemBLL;
 
-        public PedidoController(Context context, PedidoBLL pedidoBLL)
+        public EmbalagemController(Context context, EmbalagemBLL embalagemBLL)
         {
             Context = context;
-            PedidoBLL = pedidoBLL;
+            EmbalagemBLL = embalagemBLL;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(PedidoBLL.GetAll(Context));
+            return Ok(EmbalagemBLL.GetAll(Context));
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            Pedido pedido = PedidoBLL.Get(Context, id);
+            Embalagem embalagem = EmbalagemBLL.Get(Context, id);
 
-            if (pedido == null)
+            if (embalagem == null)
             {
                 return NotFound();
             }
 
-            return Ok(pedido);
+            return Ok(embalagem);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Pedido pedido)
+        public IActionResult Post([FromBody] Embalagem embalagem)
         {
-            bool salvo = PedidoBLL.Post(Context, pedido);
+            bool salvo = EmbalagemBLL.Post(Context, embalagem);
 
             if (salvo)
             {
                 return Ok();
             }
 
-            return Conflict(); //por telefone????
+            return Conflict();
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Pedido pedido)
+        public IActionResult Put([FromBody] Embalagem embalagem)
         {
-            bool salvo = PedidoBLL.Put(Context, pedido);
+            bool salvo = EmbalagemBLL.Put(Context, embalagem);
 
             if (salvo)
             {
@@ -67,7 +70,7 @@ namespace Minato.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            bool salvo = PedidoBLL.Delete(Context, id);
+            bool salvo = EmbalagemBLL.Delete(Context, id);
 
             if (salvo)
             {

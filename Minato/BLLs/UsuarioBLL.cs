@@ -8,10 +8,9 @@ namespace Minato.BLLs
 {
     public class UsuarioBLL
     {
-        public List<Usuario> GetAll(Context context, int itensPagina, int index)
+        public List<Usuario> GetAll(Context context)
         {
-            int skip = itensPagina * (index - 1);
-            return context.Usuario.Skip(skip).Take(itensPagina).ToList();
+            return context.Usuario.ToList();
         }
 
         public Usuario Get(Context context, int id)
@@ -53,15 +52,6 @@ namespace Minato.BLLs
                 return true;
             }
             return false;
-        }
-
-        public List<Usuario> Filtrar(Context context, int itensPagina, int index, string pesquisa)
-        {
-            int skip = itensPagina * (index - 1);
-
-            //pesquisa por telefone e nome
-            return context.Usuario.Where(x => x.Nome.Contains(pesquisa) || x.Telefones.Any(x => x.Value.Contains(pesquisa)))
-                                  .Skip(skip).Take(itensPagina).ToList();
         }
     }
 }

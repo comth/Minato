@@ -46,8 +46,8 @@
     </ng-container>
 
     <ng-container matColumnDef="actions" class="icon">
-      <th mat-header-cell *matHeaderCellDef> <mat-icon style="color: purple">add</mat-icon> </th>
-      <td mat-cell *matCellDef="let row"> <mat-icon>delete</mat-icon> </td>
+      <th mat-header-cell *matHeaderCellDef (click)="add()"> <mat-icon style="color: purple">add</mat-icon> </th>
+      <td mat-cell *matCellDef="let row"> <mat-icon (click)="delete(row.idProduto)" >delete</mat-icon> </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

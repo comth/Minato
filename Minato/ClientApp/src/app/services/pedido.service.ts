@@ -13,8 +13,8 @@ export class PedidoService {
     this.baseURL = baseUrl;
   }
 
-  public getAll(itensPagina: number, index: number) {
-    return this.http.get(this.baseURL + `pedido/${itensPagina}/${index}`);
+  public getAll() {
+    return this.http.get(this.baseURL + `pedido`);
   }
 
   public get(id: any) {

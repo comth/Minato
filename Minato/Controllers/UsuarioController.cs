@@ -19,10 +19,10 @@ namespace Minato.Controllers
             UsuarioBLL = usuarioBLL;
         }
 
-        [HttpGet("{itensPagina}/{index}")]
-        public IActionResult GetAll(int itensPagina, int index)
+        [HttpGet]
+        public IActionResult GetAll()
         {
-            return Ok(UsuarioBLL.GetAll(Context, itensPagina, index));
+            return Ok(UsuarioBLL.GetAll(Context));
         }
 
         [HttpGet("{id}")]
@@ -36,14 +36,6 @@ namespace Minato.Controllers
             }
 
             return Ok(usuario);
-        }
-
-        [HttpGet("{itensPagina}/{index}/{pesquisa}")]
-        public IActionResult Filtrar(int itensPagina, int index, string pesquisa)
-        {
-            List<Usuario> lista = UsuarioBLL.Filtrar(Context, itensPagina, index, pesquisa);
-
-            return Ok(lista);
         }
 
         [HttpPost]

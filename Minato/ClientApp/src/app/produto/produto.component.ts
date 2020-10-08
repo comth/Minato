@@ -7,9 +7,9 @@ import { MatSort } from '@angular/material/sort';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 export interface Produto {
-  idProduto: string;
+  idProduto: number;
   nome: string;
-  preco: string;
+  preco: number;
 }
 
 @Component({
@@ -25,7 +25,7 @@ export interface Produto {
   ],
 })
 
-export class ProdutoComponent implements AfterViewInit, OnInit{
+export class ProdutoComponent implements  OnInit{
 
   displayedColumns: string[] = ['idProduto', 'nome', 'preco', 'actions'];
   dataSource: MatTableDataSource<Produto>;
@@ -40,15 +40,20 @@ export class ProdutoComponent implements AfterViewInit, OnInit{
   }
 
   ngOnInit(): void {
-    this.produtoService.getAll(10, 1).subscribe((res: Produto[]) => {
+    this.produtoService.getAll().subscribe((res: Produto[]) => {
       this.dataSource = new MatTableDataSource(Array.from<Produto>(res));
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
   }
 
-  ngAfterViewInit() {
-    
+  public add() {
+    this.dataSource.data = [{ idProduto: 0, nome: "aa", preco: 0 }].concat(this.dataSource.data)
+    this.expandedElement = { idProduto: 0, nome: "aa", preco: 0 }
+  }
+
+  public delete(idProduto: any) {
+    alert(idProduto);
   }
 
   applyFilter(event: Event) {
