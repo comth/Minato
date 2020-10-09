@@ -4,6 +4,13 @@ table {
   border-spacing: 0px;
 }
 
+.escondido {
+  display: none;
+}
+
+.exibido {
+}
+
 .mat-form-field {
   margin: 1%;
 }

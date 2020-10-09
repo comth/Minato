@@ -31,13 +31,12 @@ export class ProdutoComponent implements  OnInit{
   dataSource: MatTableDataSource<Produto>;
   produtos: Produto[];
   expandedElement: Produto | null;
+  editando: boolean;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  constructor(private produtoService: ProdutoService) {
-   
-  }
+  constructor(private produtoService: ProdutoService) { }
 
   ngOnInit(): void {
     this.produtoService.getAll().subscribe((res: Produto[]) => {
@@ -48,12 +47,22 @@ export class ProdutoComponent implements  OnInit{
   }
 
   public add() {
-    this.dataSource.data = [{ idProduto: 0, nome: "aa", preco: 0 }].concat(this.dataSource.data)
-    this.expandedElement = { idProduto: 0, nome: "aa", preco: 0 }
+    if (!this.editando) {
+      let produtoFantasma = { idProduto: 0, nome: "", preco: 0 };
+      this.dataSource.data = [produtoFantasma].concat(this.dataSource.data);
+      this.expandedElement = produtoFantasma;
+      this.editando = true;
+    } 
   }
 
   public delete(idProduto: any) {
-    alert(idProduto);
+    this.produtoService.delete(idProduto).subscribe((res: any) => {
+      console.log(res)
+      //remover só do front???
+      this.produtoService.getAll().subscribe((res: Produto[]) => {
+        this.dataSource.data = res;
+      });
+    });
   }
 
   applyFilter(event: Event) {
