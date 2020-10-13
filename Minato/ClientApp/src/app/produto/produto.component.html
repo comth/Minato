@@ -28,19 +28,27 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
         <div class="example-element-detail"
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <mat-form-field>
-            <mat-label>ID</mat-label>
-            <input matInput placeholder={{element.idProduto}}>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Nome</mat-label>
-            <input matInput placeholder={{element.nome}}>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Preço</mat-label>
-            <input matInput placeholder={{element.preco}}>
-          </mat-form-field>
-          <mat-icon style="color: purple">check</mat-icon>
+          <form [formGroup]="produtoForm" (ngSubmit)="onSubmit()">
+            <mat-form-field>
+              <mat-label>ID</mat-label>
+              <input matInput formControlName="idProduto" placeholder={{element.idProduto}}>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Nome</mat-label>
+              <input matInput formControlName="nome" placeholder={{element.nome}}>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Preço</mat-label>
+              <input matInput formControlName="preco" placeholder={{element.preco}}>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Embalagem</mat-label>
+              <mat-select formControlName="embalagem">
+                <mat-option *ngFor="let element of embalagens" [(value)]="element">{{element}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-icon (click)="onSubmit()" style="color: purple">check</mat-icon>
+          </form>
         </div>
       </td>
     </ng-container>
