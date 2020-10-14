@@ -11,8 +11,16 @@ table {
 .exibido {
 }
 
-.mat-form-field {
-  margin: 1%;
+mat-icon {
+  cursor: pointer;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 2%;
 }
 
 tr.example-detail-row {

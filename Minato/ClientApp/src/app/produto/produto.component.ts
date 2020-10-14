@@ -4,14 +4,15 @@ import { AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { EmbalagemService } from '../services/embalagem.service';
 
 export interface Produto {
   idProduto: number;
   nome: string;
   preco: number;
-  //add embalagem
+  embalagem: any;
 }
 
 @Component({
@@ -29,26 +30,32 @@ export interface Produto {
 
 export class ProdutoComponent implements  OnInit{
 
-  displayedColumns: string[] = ['idProduto', 'nome', 'preco', 'actions'];
-  embalagens: string[] = ['Pequena', 'Média', 'Grande'];
-  dataSource: MatTableDataSource<Produto>;
-  produtos: Produto[];
-  expandedElement: Produto | null;
+  displayedColumns: string[] = ['idProduto', 'nome', 'preco', 'embalagem','actions'];
+  embalagens: any;
+  dataSource: MatTableDataSource<any>;
+  expandedElement: any | null;
   editando: boolean;
   produtoForm: FormGroup;
+  produto: Produto;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  constructor(private produtoService: ProdutoService,
+  constructor(
+    private produtoService: ProdutoService,
+    private embalagemService: EmbalagemService,
     private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
     this.initializeForm();
 
-    this.produtoService.getAll().subscribe((res: Produto[]) => {
-      this.dataSource = new MatTableDataSource(Array.from<Produto>(res));
+    this.embalagemService.getAll().subscribe((res: any) => {
+      this.embalagens = res;
+    });
+
+    this.produtoService.getAll().subscribe((res: any) => {
+      this.dataSource = new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
@@ -56,22 +63,33 @@ export class ProdutoComponent implements  OnInit{
 
   initializeForm() {
     this.produtoForm = this.fb.group({
-      idProduto: 0,
-      nome: '',
-      preco: 0,
-      embalagem: ''
+      idProduto: new FormControl(null, [Validators.required]),
+      nome: new FormControl('', [Validators.required]),
+      preco: new FormControl(null, [Validators.required]),
+      embalagem: new FormControl(null),
     });
   }
 
   onSubmit() {
-    console.log(this.produtoForm);
+    console.log(this.produtoForm.value);
+    this.produto = this.produtoForm.value;
+
+    this.dataSource.data = this.dataSource.data.concat(this.produto);
+    this.editando = false;
+    this.expandedElement = null;
+    this.produtoService.post(this.produto).subscribe((res: any) => {
+      
+      this.produtoService.getAll().subscribe((res: any) => {
+        this.dataSource.data = res;
+      });
+    }, err => console.log(err));
   }
 
   public add() {
     if (!this.editando) {
-      let produtoFantasma = { idProduto: 0, nome: "", preco: 0 };
-      this.dataSource.data = [produtoFantasma].concat(this.dataSource.data);
-      this.expandedElement = produtoFantasma;
+      this.produto = { idProduto: 0, nome: "", preco: 0, embalagem: null };
+      this.dataSource.data = [this.produto].concat(this.dataSource.data);
+      this.expandedElement = this.produto;
       this.editando = true;
     } 
   }
@@ -79,8 +97,7 @@ export class ProdutoComponent implements  OnInit{
   public delete(idProduto: any) {
     this.produtoService.delete(idProduto).subscribe((res: any) => {
       console.log(res);
-      //remover só do front???
-      this.produtoService.getAll().subscribe((res: Produto[]) => {
+      this.produtoService.getAll().subscribe((res: any) => {
         this.dataSource.data = res;
       });
     });

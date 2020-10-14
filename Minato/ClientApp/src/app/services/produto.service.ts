@@ -1,9 +1,17 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+export interface Produto {
+  idProduto: number;
+  nome: string;
+  preco: number;
+  embalagem: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class ProdutoService {
 
   private baseURL: string;
@@ -20,7 +28,12 @@ export class ProdutoService {
     return this.http.get(this.baseURL + `produto/${id}`);
   }
 
-  public post(produto: any) {
+  public post(produto: Produto) {
+    produto.idProduto = +produto.idProduto;
+    produto.preco = +produto.preco;
+    produto.embalagem.idEmbalagem = +produto.embalagem.idEmbalagem;
+    produto.embalagem.preco = +produto.embalagem.preco;
+    console.log(produto);
     return this.http.post(this.baseURL + "produto", produto);
   }
 

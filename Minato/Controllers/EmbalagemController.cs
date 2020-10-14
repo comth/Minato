@@ -16,10 +16,10 @@ namespace Minato.Controllers
         private readonly Context Context;
         private readonly EmbalagemBLL EmbalagemBLL;
 
-        public EmbalagemController(Context context, EmbalagemBLL embalagemBLL)
+        public EmbalagemController(Context context)
         {
             Context = context;
-            EmbalagemBLL = embalagemBLL;
+            EmbalagemBLL = new EmbalagemBLL();
         }
 
         [HttpGet]
