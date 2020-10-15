@@ -23,6 +23,20 @@ form {
   padding-top: 2%;
 }
 
+.form-add {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: -25px;
+}
+
+.icon-pad {
+  color: purple;
+  padding-right: 55px;
+}
+
 tr.example-detail-row {
   height: 0;
 }

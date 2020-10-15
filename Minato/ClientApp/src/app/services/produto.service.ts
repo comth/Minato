@@ -31,9 +31,10 @@ export class ProdutoService {
   public post(produto: Produto) {
     produto.idProduto = +produto.idProduto;
     produto.preco = +produto.preco;
-    produto.embalagem.idEmbalagem = +produto.embalagem.idEmbalagem;
-    produto.embalagem.preco = +produto.embalagem.preco;
-    console.log(produto);
+    if (produto.embalagem) {
+      produto.embalagem.idEmbalagem = +produto.embalagem.idEmbalagem;
+      produto.embalagem.preco = +produto.embalagem.preco;
+    }
     return this.http.post(this.baseURL + "produto", produto);
   }
 

@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ProdutoService } from '../services/produto.service';
 import { AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { EmbalagemService } from '../services/embalagem.service';
+import Swal from 'sweetalert2'
 
 export interface Produto {
   idProduto: number;
@@ -44,13 +46,15 @@ export class ProdutoComponent implements  OnInit{
   constructor(
     private produtoService: ProdutoService,
     private embalagemService: EmbalagemService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
     this.initializeForm();
 
     this.embalagemService.getAll().subscribe((res: any) => {
+      console.log(res);
       this.embalagens = res;
     });
 
@@ -78,7 +82,14 @@ export class ProdutoComponent implements  OnInit{
     this.editando = false;
     this.expandedElement = null;
     this.produtoService.post(this.produto).subscribe((res: any) => {
-      
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Salvo!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      this.produtoForm.reset();
       this.produtoService.getAll().subscribe((res: any) => {
         this.dataSource.data = res;
       });
@@ -95,12 +106,39 @@ export class ProdutoComponent implements  OnInit{
   }
 
   public delete(idProduto: any) {
-    this.produtoService.delete(idProduto).subscribe((res: any) => {
-      console.log(res);
-      this.produtoService.getAll().subscribe((res: any) => {
-        this.dataSource.data = res;
-      });
+
+    this.produtoService.getAll().subscribe((res: any) => {
+      this.dataSource.data = res;
     });
+
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: "Não é possível reverter essa operação",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Deletar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.produtoService.delete(idProduto).subscribe((res: any) => {
+          this.produtoService.getAll().subscribe((res: any) => {
+            this.dataSource.data = res;
+          });
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Deletado!',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        });
+        
+      }
+    })
+
+    
   }
 
   applyFilter(event: Event) {
@@ -110,6 +148,11 @@ export class ProdutoComponent implements  OnInit{
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  setEmbalagem(row: any) {
+    console.log(row);
+    this.produtoForm.get('embalagem').setValue(row.embalagem.idEmbalagem);
   }
 }
 

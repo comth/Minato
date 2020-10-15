@@ -10,7 +10,7 @@ namespace Minato.BLLs
     {
         public List<Produto> GetAll(Context context)
         {
-            return context.Produto.ToList();
+            return context.Produto.Include(x => x.Embalagem).ToList();
         }
 
         public Produto Get(Context context, int id)
@@ -20,7 +20,12 @@ namespace Minato.BLLs
 
         public bool Post(Context context, Produto produto)
         {
-            if (Exists(context, produto.IdProduto)) return false;
+            if (Exists(context, produto.IdProduto)) 
+                return false;
+
+            if(produto.Embalagem != null)
+                produto.Embalagem = context.Embalagem.Find(produto.Embalagem.IdEmbalagem);
+
             context.Produto.Add(produto);
 
             context.Database.OpenConnection();

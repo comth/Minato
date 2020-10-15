@@ -27,34 +27,35 @@
     <!-- Embalagem Column -->
     <ng-container matColumnDef="embalagem">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Embalagem </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.idProduto == 0 ? 'escondido': 'exibido'"> {{row.embalagem}} </td>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.idProduto == 0 ? 'escondido': 'exibido'"> {{row.embalagem?.nome}} </td>
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
         <div class="example-element-detail"
-             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <form [formGroup]="produtoForm" (ngSubmit)="onSubmit()">
+             [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+          <form [formGroup]="produtoForm" (ngSubmit)="onSubmit()" [ngClass]="row.idProduto == 0 ? 'form-add': 'form'">
             <mat-form-field>
               <mat-label>ID</mat-label>
-              <input matInput formControlName="idProduto" placeholder={{element.idProduto}}>
+              <input matInput formControlName="idProduto" value={{row.idProduto}}>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Nome</mat-label>
-              <input matInput formControlName="nome" placeholder={{element.nome}}>
+              <input matInput formControlName="nome" value={{row.nome}}>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Preço</mat-label>
-              <input matInput formControlName="preco" placeholder={{element.preco}}>
+              <input matInput formControlName="preco" value={{row.preco}}>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Embalagem</mat-label>
-              <mat-select formControlName="embalagem">
-                <mat-option *ngFor="let element of embalagens" [(value)]="element">{{element.nome}}</mat-option>
+              <mat-select formControlName="embalagem" [(ngModel)]="row.embalagem.idEmbalagem">
+                <mat-option *ngFor="let element of embalagens" [value]="element.idEmbalagem">{{element.nome}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div class="bla">
-              <mat-icon (click)="onSubmit()" style="color: purple">check</mat-icon>
+              <mat-icon class="icon-pad">clear</mat-icon>
+              <mat-icon (ngSubmit)="onSubmit()" class="icon-pad">check</mat-icon>
             </div>
           </form>
         </div>
