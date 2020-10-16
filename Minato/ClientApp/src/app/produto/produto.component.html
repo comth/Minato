@@ -34,7 +34,7 @@
       <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
         <div class="example-element-detail"
              [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
-          <form [formGroup]="produtoForm" (ngSubmit)="onSubmit()" [ngClass]="row.idProduto == 0 ? 'form-add': 'form'">
+          <form [formGroup]="produtoForm" [ngClass]="row.idProduto == 0 ? 'form-add': 'form'">
             <mat-form-field>
               <mat-label>ID</mat-label>
               <input matInput formControlName="idProduto" value={{row.idProduto}}>
@@ -49,13 +49,14 @@
             </mat-form-field>
             <mat-form-field>
               <mat-label>Embalagem</mat-label>
-              <mat-select formControlName="embalagem" [(ngModel)]="row.embalagem.idEmbalagem">
-                <mat-option *ngFor="let element of embalagens" [value]="element.idEmbalagem">{{element.nome}}</mat-option>
+              <mat-select formControlName="embalagem">
+                <mat-option *ngFor="let element of embalagens" [(value)]="element">{{element.nome}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <div class="bla">
+            <div>
               <mat-icon class="icon-pad">clear</mat-icon>
-              <mat-icon (ngSubmit)="onSubmit()" class="icon-pad">check</mat-icon>
+              <mat-icon *ngIf="!produtoForm.valid" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
+              <mat-icon *ngIf="produtoForm.valid" (click)="onSubmit()" class="icon-pad" >check</mat-icon>
             </div>
           </form>
         </div>

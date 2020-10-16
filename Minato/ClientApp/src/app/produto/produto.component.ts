@@ -4,7 +4,7 @@ import { AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators, FormArray, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { EmbalagemService } from '../services/embalagem.service';
@@ -39,6 +39,7 @@ export class ProdutoComponent implements  OnInit{
   editando: boolean;
   produtoForm: FormGroup;
   produto: Produto;
+  dataArr;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -68,10 +69,15 @@ export class ProdutoComponent implements  OnInit{
   initializeForm() {
     this.produtoForm = this.fb.group({
       idProduto: new FormControl(null, [Validators.required]),
-      nome: new FormControl('', [Validators.required]),
+      nome: new FormControl(null, [Validators.required, this.teste()]),
       preco: new FormControl(null, [Validators.required]),
       embalagem: new FormControl(null),
     });
+  }
+
+  teste(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null =>
+    control.value == 'blue'? null : { wrongColor: control.value }
   }
 
   onSubmit() {
@@ -81,19 +87,19 @@ export class ProdutoComponent implements  OnInit{
     this.dataSource.data = this.dataSource.data.concat(this.produto);
     this.editando = false;
     this.expandedElement = null;
-    this.produtoService.post(this.produto).subscribe((res: any) => {
-      Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Salvo!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-      this.produtoForm.reset();
-      this.produtoService.getAll().subscribe((res: any) => {
-        this.dataSource.data = res;
-      });
-    }, err => console.log(err));
+    //this.produtoService.post(this.produto).subscribe((res: any) => {
+    //  Swal.fire({
+    //    position: 'top-end',
+    //    icon: 'success',
+    //    title: 'Salvo!',
+    //    showConfirmButton: false,
+    //    timer: 1500
+    //  });
+    //  this.produtoForm.reset();
+    //  this.produtoService.getAll().subscribe((res: any) => {
+    //    this.dataSource.data = res;
+    //  });
+    //}, err => console.log(err));
   }
 
   public add() {
@@ -136,9 +142,7 @@ export class ProdutoComponent implements  OnInit{
         });
         
       }
-    })
-
-    
+    }) 
   }
 
   applyFilter(event: Event) {
