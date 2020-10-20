@@ -37,25 +37,26 @@
           <form [formGroup]="produtoForm" [ngClass]="row.idProduto == 0 ? 'form-add': 'form'">
             <mat-form-field>
               <mat-label>ID</mat-label>
-              <input matInput formControlName="idProduto" value={{row.idProduto}}>
+              <input matInput formControlName="idProduto" required>
+              
             </mat-form-field>
             <mat-form-field>
               <mat-label>Nome</mat-label>
-              <input matInput formControlName="nome" value={{row.nome}}>
+              <input matInput formControlName="nome">
             </mat-form-field>
             <mat-form-field>
               <mat-label>Preço</mat-label>
-              <input matInput formControlName="preco" value={{row.preco}}>
+              <input matInput formControlName="preco">
             </mat-form-field>
             <mat-form-field>
               <mat-label>Embalagem</mat-label>
-              <mat-select formControlName="embalagem">
+              <mat-select formControlName="embalagem" [compareWith]="compareCategoryObjects">
                 <mat-option *ngFor="let element of embalagens" [(value)]="element">{{element.nome}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div>
               <mat-icon class="icon-pad">clear</mat-icon>
-              <mat-icon *ngIf="!produtoForm.valid" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
+              <mat-icon *ngIf="!produtoForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
               <mat-icon *ngIf="produtoForm.valid" (click)="onSubmit()" class="icon-pad" >check</mat-icon>
             </div>
           </form>

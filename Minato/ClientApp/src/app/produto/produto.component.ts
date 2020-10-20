@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { ProdutoService } from '../services/produto.service';
 import { AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder, FormControl, Validators, FormArray, ValidatorFn
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { EmbalagemService } from '../services/embalagem.service';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 export interface Produto {
   idProduto: number;
@@ -30,16 +30,16 @@ export interface Produto {
   ],
 })
 
-export class ProdutoComponent implements  OnInit{
+export class ProdutoComponent implements OnInit, DoCheck {
 
   displayedColumns: string[] = ['idProduto', 'nome', 'preco', 'embalagem','actions'];
   embalagens: any;
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean;
+  OldExpandedElement: any;
   produtoForm: FormGroup;
   produto: Produto;
-  dataArr;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -47,15 +47,25 @@ export class ProdutoComponent implements  OnInit{
   constructor(
     private produtoService: ProdutoService,
     private embalagemService: EmbalagemService,
-    private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef) {
+    private fb: FormBuilder) {
+  }
+
+  ngDoCheck(): void {
+    if (this.expandedElement && this.expandedElement != this.OldExpandedElement) {
+      this.OldExpandedElement = this.expandedElement;
+      this.produtoForm.patchValue(this.expandedElement);
+    }
+  }
+
+  compareCategoryObjects(object1: any, object2: any) {
+    if (object1.idEmbalagem == object2.idEmbalagem) return true;
+    return false;
   }
 
   ngOnInit(): void {
     this.initializeForm();
 
     this.embalagemService.getAll().subscribe((res: any) => {
-      console.log(res);
       this.embalagens = res;
     });
 
@@ -63,21 +73,28 @@ export class ProdutoComponent implements  OnInit{
       this.dataSource = new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      
     });
   }
 
   initializeForm() {
     this.produtoForm = this.fb.group({
-      idProduto: new FormControl(null, [Validators.required]),
-      nome: new FormControl(null, [Validators.required, this.teste()]),
-      preco: new FormControl(null, [Validators.required]),
+      idProduto: new FormControl('', [Validators.required]),
+      nome: new FormControl('', [Validators.required, this.teste()]),
+      preco: new FormControl('', [Validators.required]),
       embalagem: new FormControl(null),
-    });
+    }, { updateOn: 'change' });
   }
+
+  get preco() { return this.produtoForm.get('preco').setValue(this.produtoForm.get('preco').value) }
 
   teste(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null =>
     control.value == 'blue'? null : { wrongColor: control.value }
+  }
+
+  error() {
+    console.log(this.produtoForm)
   }
 
   onSubmit() {
