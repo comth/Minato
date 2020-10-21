@@ -9,7 +9,7 @@ namespace Minato.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdEmbalagem { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "O Nome é obrigatório.")]
         [StringLength(100, ErrorMessage = "O Nome deve ter no máximo 100 caracteres.")]

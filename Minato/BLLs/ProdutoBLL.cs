@@ -20,11 +20,11 @@ namespace Minato.BLLs
 
         public bool Post(Context context, Produto produto)
         {
-            if (Exists(context, produto.IdProduto)) 
+            if (Exists(context, produto.Id)) 
                 return false;
 
             if(produto.Embalagem != null)
-                produto.Embalagem = context.Embalagem.Find(produto.Embalagem.IdEmbalagem);
+                produto.Embalagem = context.Embalagem.Find(produto.Embalagem.Id);
 
             context.Produto.Add(produto);
 
@@ -44,9 +44,13 @@ namespace Minato.BLLs
 
         public bool Put(Context context, Produto produto)
         {
-            if (Exists(context, produto.IdProduto))
+            if (Exists(context, produto.Id))
             {
+                if (produto.Embalagem != null)
+                    produto.Embalagem = context.Embalagem.Find(produto.Embalagem.Id);
+
                 context.Entry(produto).State = EntityState.Modified;
+                
                 context.SaveChanges();
                 return true;
             }
@@ -55,14 +59,14 @@ namespace Minato.BLLs
 
         public bool Exists(Context context, int idProduto)
         {
-            return context.Produto.Any(x => x.IdProduto.Equals(idProduto));
+            return context.Produto.Any(x => x.Id.Equals(idProduto));
         }
 
         public bool Delete(Context context, int id)
         {
             if (Exists(context, id))
             {
-                Produto produto = new Produto() { IdProduto = id };
+                Produto produto = new Produto() { Id = id };
                 context.Produto.Attach(produto);
                 context.Produto.Remove(produto);
                 context.SaveChanges();

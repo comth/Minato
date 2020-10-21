@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 export interface Produto {
-  idProduto: number;
+  id: number;
   nome: string;
   preco: number;
   embalagem: any;
@@ -29,16 +29,22 @@ export class ProdutoService {
   }
 
   public post(produto: Produto) {
-    produto.idProduto = +produto.idProduto;
+    produto.id = +produto.id;
     produto.preco = +produto.preco;
     if (produto.embalagem) {
-      produto.embalagem.idEmbalagem = +produto.embalagem.idEmbalagem;
+      produto.embalagem.id = +produto.embalagem.id;
       produto.embalagem.preco = +produto.embalagem.preco;
     }
     return this.http.post(this.baseURL + "produto", produto);
   }
 
   public put(produto: any) {
+    produto.id = +produto.id;
+    produto.preco = +produto.preco;
+    if (produto.embalagem) {
+      produto.embalagem.id = +produto.embalagem.id;
+      produto.embalagem.preco = +produto.embalagem.preco;
+    }
     return this.http.put(this.baseURL + "produto", produto);
   }
 

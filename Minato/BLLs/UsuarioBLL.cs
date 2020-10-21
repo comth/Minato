@@ -27,7 +27,7 @@ namespace Minato.BLLs
 
         public bool Put(Context context, Usuario usuario)
         {
-            if (Exists(context, usuario.IdUsuario))
+            if (Exists(context, usuario.Id))
             {
                 context.Entry(usuario).State = EntityState.Modified;
                 context.SaveChanges();
@@ -38,14 +38,14 @@ namespace Minato.BLLs
 
         public bool Exists(Context context, int idUsuario)
         {
-            return context.Usuario.Any(x => x.IdUsuario.Equals(idUsuario));
+            return context.Usuario.Any(x => x.Id.Equals(idUsuario));
         }
 
         public bool Delete(Context context, int id)
         {
             if (Exists(context, id))
             {
-                Usuario usuario = new Usuario() { IdUsuario = id };
+                Usuario usuario = new Usuario() { Id = id };
                 context.Usuario.Attach(usuario);
                 context.Usuario.Remove(usuario);
                 context.SaveChanges();

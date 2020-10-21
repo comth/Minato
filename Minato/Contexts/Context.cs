@@ -18,7 +18,7 @@ namespace Minato.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Pedido>()
-                .HasKey(p => new { p.IdPedido, p.DataPedido });
+                .HasKey(p => new { p.Id, p.DataPedido });
         }
     }
 }

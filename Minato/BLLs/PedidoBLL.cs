@@ -27,7 +27,7 @@ namespace Minato.BLLs
 
         public bool Put(Context context, Pedido pedido)
         {
-            if (Exists(context, pedido.IdPedido))
+            if (Exists(context, pedido.Id))
             {
                 context.Entry(pedido).State = EntityState.Modified;
                 context.SaveChanges();
@@ -38,14 +38,14 @@ namespace Minato.BLLs
 
         public bool Exists(Context context, int idPedido)
         {
-            return context.Pedido.Any(x => x.IdPedido.Equals(idPedido));
+            return context.Pedido.Any(x => x.Id.Equals(idPedido));
         }
 
         public bool Delete(Context context, int id)
         {
             if (Exists(context, id))
             {
-                Pedido pedido = new Pedido() { IdPedido = id };
+                Pedido pedido = new Pedido() { Id = id };
                 context.Pedido.Attach(pedido);
                 context.Pedido.Remove(pedido);
                 context.SaveChanges();

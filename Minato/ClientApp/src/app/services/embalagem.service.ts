@@ -22,7 +22,7 @@ export class EmbalagemService {
   }
 
   public post(embalagem: any) {
-    embalagem.idEmbalagem = +embalagem.idEmbalagem;
+    embalagem.id = +embalagem.id;
     embalagem.preco = +embalagem.preco;
     console.log(embalagem);
     return this.http.post(this.baseURL + "embalagem", embalagem);

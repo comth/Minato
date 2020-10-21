@@ -27,7 +27,7 @@ namespace Minato.BLLs
 
         public bool Put(Context context, Embalagem embalagem)
         {
-            if (Exists(context, embalagem.IdEmbalagem))
+            if (Exists(context, embalagem.Id))
             {
                 context.Entry(embalagem).State = EntityState.Modified;
                 context.SaveChanges();
@@ -38,14 +38,14 @@ namespace Minato.BLLs
 
         public bool Exists(Context context, int idEmbalagem)
         {
-            return context.Embalagem.Any(x => x.IdEmbalagem.Equals(idEmbalagem));
+            return context.Embalagem.Any(x => x.Id.Equals(idEmbalagem));
         }
 
         public bool Delete(Context context, int id)
         {
             if (Exists(context, id))
             {
-                Embalagem embalagem = new Embalagem() { IdEmbalagem = id };
+                Embalagem embalagem = new Embalagem() { Id = id };
                 context.Embalagem.Attach(embalagem);
                 context.Embalagem.Remove(embalagem);
                 context.SaveChanges();

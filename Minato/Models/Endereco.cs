@@ -7,7 +7,7 @@ namespace Minato.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdEndereco { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "O Bairro é obrigatório.")]
         [StringLength(60, ErrorMessage = "O Bairro deve ter no máximo 60 caracteres.")]

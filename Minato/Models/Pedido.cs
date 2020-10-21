@@ -9,7 +9,7 @@ namespace Minato.Models
     public class Pedido
     {
         [Key]
-        public int IdPedido { get; set; }
+        public int Id { get; set; }
 
         [Key]
         public DateTime DataPedido { get; set; } = DateTime.Now;
