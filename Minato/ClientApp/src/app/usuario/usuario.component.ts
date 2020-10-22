@@ -1,26 +1,24 @@
 import { Component, OnInit, DoCheck } from '@angular/core';
-import { ProdutoService } from '../services/produto.service';
+import { UsuarioService } from '../services/usuario.service';
 import { ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { FormGroup, FormBuilder, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators, ValidatorFn, AbstractControl, FormArray } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { EmbalagemService } from '../services/embalagem.service';
 import Swal from 'sweetalert2';
 
-export interface Produto {
-  idBanco: number;
-  id: number;
-  nome: string;
-  preco: number;
-  embalagem: any;
+export interface Usuario {
+  Id: number;
+  Nome: string;
+  Enderecos: any;
+  Telefones: any;
 }
 
 @Component({
-  selector: 'app-produto',
-  templateUrl: './produto.component.html',
-  styleUrls: ['./produto.component.css'],
+  selector: 'app-usuario',
+  templateUrl: './usuario.component.html',
+  styleUrls: ['./usuario.component.css'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -30,32 +28,30 @@ export interface Produto {
   ],
 })
 
-export class ProdutoComponent implements OnInit, DoCheck {
+export class UsuarioComponent implements OnInit, DoCheck {
 
-  displayedColumns: string[] = ['id','nome', 'preco', 'embalagem','actions'];
+  displayedColumns: string[] = ['nome', 'actions'];
   embalagens: any;
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean;
   OldExpandedElement: any;
-  produtoForm: FormGroup;
-  produto: Produto;
+  usuarioForm: FormGroup;
+  telefoneForm: FormGroup;
+  enderecoForm: FormGroup;
+  usuario: any;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private produtoService: ProdutoService,
-    private embalagemService: EmbalagemService,
+    private usuarioService: UsuarioService,
     private fb: FormBuilder) {
-  } 
+  }
 
   ngOnInit(): void {
     this.initializeForm();
-    this.embalagemService.getAll().subscribe((res: any) => {
-      this.embalagens = res;
-    });
-    this.produtoService.getAll().subscribe((res: any) => {
+    this.usuarioService.getAll().subscribe((res: any) => {
       this.dataSource = new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -67,49 +63,37 @@ export class ProdutoComponent implements OnInit, DoCheck {
       if (this.expandedElement && this.expandedElement != this.OldExpandedElement) {
         this.OldExpandedElement = this.expandedElement;
         if (this.expandedElement.id == 0) {
-          this.produtoForm.reset();
+          this.usuarioForm.reset();
         } else {
-          this.produtoForm.patchValue(this.expandedElement);
+          this.usuarioForm.patchValue(this.expandedElement);
         }
       }
     }
   }
 
-  compareCategoryObjects(object1: any, object2: any) {
-    if (object2) {
-      if (object1.id == object2.id) return true;
-      return false;
-    }
-  }
-
   initializeForm() {
-    this.produtoForm = this.fb.group({
-      idBanco: new FormControl(null),
-      id: new FormControl(null, [Validators.required, this.validarId()]),
-      nome: new FormControl(null, [Validators.required]),
-      preco: new FormControl(null, [Validators.required]),
-      embalagem: new FormControl(null),
+    this.usuarioForm = this.fb.group({
+      id: new FormControl(''),
+      nome: new FormControl('', [Validators.required]),
+      enderecos: new FormControl('', [Validators.required]),
+      telefones: this.fb.array([this.telefoneForm]),
     }, { updateOn: 'change' });
+
+    this.telefoneForm = this.fb.group({
+      value: new FormControl('')
+    });
+
+    this.enderecoForm = this.fb.group({
+      value: new FormControl('')
+    });
   }
 
-  validarId(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      if (!this.dataSource) return null;
-
-      if (control.value == 0) return { invalid: "Este Id não é válido" };
-
-      let repetido = this.dataSource.data.find(e => e.id == control.value)
-      
-      if (!repetido) return null;
-
-      if (repetido.id == this.expandedElement.id) return null;
-
-      else return { conflict: "Este Id já está em uso" };
-    }
-  }
+  get telefones(): FormArray {
+    return this.usuarioForm.get('telefones') as FormArray;
+  } 
 
   error() {
-    console.log(this.produtoForm)
+    console.log(this.usuarioForm)
   }
 
   cancel() {
@@ -117,7 +101,7 @@ export class ProdutoComponent implements OnInit, DoCheck {
       this.expandedElement = null;
       this.editando = false;
       this.dataSource.data.forEach((item, index) => {
-        if (item.id == 0 || item.id == this.produtoForm.get('id').value) {
+        if (item.id == 0 || item.id == this.usuarioForm.get('id').value) {
           this.dataSource.data.splice(index, 1);
           this.dataSource.data = this.dataSource.data;
         }
@@ -125,7 +109,7 @@ export class ProdutoComponent implements OnInit, DoCheck {
     }
     else {
       this.expandedElement = null;
-      this.produtoForm.reset(); 
+      this.usuarioForm.reset();
     }
   }
 
@@ -140,7 +124,7 @@ export class ProdutoComponent implements OnInit, DoCheck {
 
   put() {
     this.expandedElement = null;
-    this.produtoService.put(this.produtoForm.value).subscribe((res: any) => {
+    this.usuarioService.put(this.usuarioForm.value).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -148,22 +132,22 @@ export class ProdutoComponent implements OnInit, DoCheck {
         showConfirmButton: false,
         timer: 1500
       });
-      this.produtoForm.reset();
-      this.getProdutos();
+      this.usuarioForm.reset();
+      this.getUsuarios();
     }, err => console.log(err));
   }
 
-  getProdutos(){
-    this.produtoService.getAll().subscribe((res: any) => {
+  getUsuarios() {
+    this.usuarioService.getAll().subscribe((res: any) => {
       this.dataSource.data = res;
     });
   }
 
   post() {
-    console.log(this.produtoForm.value);
+    console.log(this.usuarioForm.value);
     this.editando = false;
     this.expandedElement = null;
-    this.produtoService.post(this.produtoForm.value).subscribe((res: any) => {
+    this.usuarioService.post(this.usuarioForm.value).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -171,21 +155,21 @@ export class ProdutoComponent implements OnInit, DoCheck {
         showConfirmButton: false,
         timer: 1500
       });
-      this.produtoForm.reset();
-      this.getProdutos();
+      this.usuarioForm.reset();
+      this.getUsuarios();
     }, err => {
-        this.getProdutos();
-        console.log(err);
+      this.getUsuarios();
+      console.log(err);
     });
   }
 
   public add() {
     if (!this.editando) {
-      this.produto = { idBanco: 0, id: 0, nome: "", preco: 0, embalagem: null };
-      this.dataSource.data = [this.produto].concat(this.dataSource.data);
-      this.expandedElement = this.produto;
+      this.usuario = { id: 0, nome: "", enderecos: null, telefones: null };
+      this.dataSource.data = [this.usuario].concat(this.dataSource.data);
+      this.expandedElement = this.usuario;
       this.editando = true;
-    } 
+    }
   }
 
   public delete(id: any) {
@@ -201,8 +185,8 @@ export class ProdutoComponent implements OnInit, DoCheck {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.produtoService.delete(id).subscribe((res: any) => {
-          this.getProdutos();
+        this.usuarioService.delete(id).subscribe((res: any) => {
+          this.getUsuarios();
           Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -210,9 +194,9 @@ export class ProdutoComponent implements OnInit, DoCheck {
             showConfirmButton: false,
             timer: 1500
           })
-        }); 
+        });
       };
-    }) 
+    })
   }
 
   applyFilter(event: Event) {
@@ -224,5 +208,3 @@ export class ProdutoComponent implements OnInit, DoCheck {
     }
   }
 }
-
-

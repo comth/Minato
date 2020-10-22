@@ -1,0 +1,64 @@
+table {
+  width: 100%;
+  border-collapse: unset;
+  border-spacing: 0px;
+}
+
+.escondido {
+  display: none;
+}
+
+.exibido {
+}
+
+mat-icon {
+  cursor: pointer;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 2%;
+}
+
+.form-add {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: -10px;
+  z-index: 5;
+}
+
+.icon-pad {
+  color: purple;
+  padding-right: 55px;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  flex-direction: row;
+  align-items: center;
+}
+
+.example-element-detail {
+  overflow: hidden;
+}
+
+.icon {
+  padding: 1%;
+}

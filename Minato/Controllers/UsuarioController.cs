@@ -13,10 +13,10 @@ namespace Minato.Controllers
         private readonly Context Context;
         private readonly UsuarioBLL UsuarioBLL;
 
-        public UsuarioController(Context context, UsuarioBLL usuarioBLL)
+        public UsuarioController(Context context)
         {
             Context = context;
-            UsuarioBLL = usuarioBLL;
+            UsuarioBLL = new UsuarioBLL();
         }
 
         [HttpGet]

@@ -28,17 +28,21 @@ export class ProdutoService {
     return this.http.get(this.baseURL + `produto/${id}`);
   }
 
-  public post(produto: Produto) {
+  public post(produto: any) {
+    produto.idBanco = 0;
     produto.id = +produto.id;
     produto.preco = +produto.preco;
     if (produto.embalagem) {
       produto.embalagem.id = +produto.embalagem.id;
       produto.embalagem.preco = +produto.embalagem.preco;
     }
+    console.log(produto)
     return this.http.post(this.baseURL + "produto", produto);
   }
 
   public put(produto: any) {
+    console.log(produto)
+    produto.idBanco = +produto.idBanco
     produto.id = +produto.id;
     produto.preco = +produto.preco;
     if (produto.embalagem) {

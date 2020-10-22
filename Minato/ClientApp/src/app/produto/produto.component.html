@@ -38,8 +38,8 @@
             <mat-form-field>
               <mat-label>ID</mat-label>
               <input matInput formControlName="id" required>
-              <mat-error *ngIf="produtoForm.controls.id.errors?.conflict">Este Id já está em uso</mat-error>
-              <mat-error *ngIf="produtoForm.controls.id.errors?.invalid">Este Id é inválido</mat-error>
+              <mat-error *ngIf="produtoForm.controls.id.errors?.conflict">{{produtoForm.controls.id.errors?.conflict}}</mat-error>
+              <mat-error *ngIf="produtoForm.controls.id.errors?.invalid">{{produtoForm.controls.id.errors?.invalid}}</mat-error>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Nome</mat-label>

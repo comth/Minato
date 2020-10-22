@@ -10,8 +10,8 @@ using Minato.Contexts;
 namespace Minato.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20201008171002_Embalagem")]
-    partial class Embalagem
+    [Migration("20201022202941_Telefones")]
+    partial class Telefones
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace Minato.Migrations
 
             modelBuilder.Entity("Minato.Models.Embalagem", b =>
                 {
-                    b.Property<int>("IdEmbalagem")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -36,14 +36,14 @@ namespace Minato.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("IdEmbalagem");
+                    b.HasKey("Id");
 
                     b.ToTable("Embalagem");
                 });
 
             modelBuilder.Entity("Minato.Models.Endereco", b =>
                 {
-                    b.Property<int>("IdEndereco")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -77,25 +77,25 @@ namespace Minato.Migrations
                         .HasColumnType("nvarchar(2)")
                         .HasMaxLength(2);
 
-                    b.Property<int?>("UsuarioIdUsuario")
+                    b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("IdEndereco");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UsuarioIdUsuario");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Endereco");
                 });
 
             modelBuilder.Entity("Minato.Models.Pedido", b =>
                 {
-                    b.Property<int>("IdPedido")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataPedido")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EnderecoSelecionadoIdEndereco")
+                    b.Property<int>("EnderecoSelecionadoId")
                         .HasColumnType("int");
 
                     b.Property<int>("IdEndereco")
@@ -104,26 +104,29 @@ namespace Minato.Migrations
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsuarioIdUsuario")
+                    b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("IdPedido", "DataPedido");
+                    b.HasKey("Id", "DataPedido");
 
-                    b.HasIndex("EnderecoSelecionadoIdEndereco");
+                    b.HasIndex("EnderecoSelecionadoId");
 
-                    b.HasIndex("UsuarioIdUsuario");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Pedido");
                 });
 
             modelBuilder.Entity("Minato.Models.Produto", b =>
                 {
-                    b.Property<int>("IdProduto")
+                    b.Property<int>("IdBanco")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("EmbalagemIdEmbalagem")
+                    b.Property<int?>("EmbalagemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
@@ -134,24 +137,46 @@ namespace Minato.Migrations
                     b.Property<DateTime?>("PedidoDataPedido")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PedidoIdPedido")
+                    b.Property<int?>("PedidoId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("IdProduto");
+                    b.HasKey("IdBanco");
 
-                    b.HasIndex("EmbalagemIdEmbalagem");
+                    b.HasIndex("EmbalagemId");
 
-                    b.HasIndex("PedidoIdPedido", "PedidoDataPedido");
+                    b.HasIndex("PedidoId", "PedidoDataPedido");
 
                     b.ToTable("Produto");
                 });
 
+            modelBuilder.Entity("Minato.Models.Telefone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(11)")
+                        .HasMaxLength(11);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Telefone");
+                });
+
             modelBuilder.Entity("Minato.Models.Usuario", b =>
                 {
-                    b.Property<int>("IdUsuario")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -161,7 +186,7 @@ namespace Minato.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.HasKey("IdUsuario");
+                    b.HasKey("Id");
 
                     b.ToTable("Usuario");
                 });
@@ -170,20 +195,20 @@ namespace Minato.Migrations
                 {
                     b.HasOne("Minato.Models.Usuario", null)
                         .WithMany("Enderecos")
-                        .HasForeignKey("UsuarioIdUsuario");
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("Minato.Models.Pedido", b =>
                 {
                     b.HasOne("Minato.Models.Endereco", "EnderecoSelecionado")
                         .WithMany()
-                        .HasForeignKey("EnderecoSelecionadoIdEndereco")
+                        .HasForeignKey("EnderecoSelecionadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Minato.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioIdUsuario")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -192,11 +217,18 @@ namespace Minato.Migrations
                 {
                     b.HasOne("Minato.Models.Embalagem", "Embalagem")
                         .WithMany()
-                        .HasForeignKey("EmbalagemIdEmbalagem");
+                        .HasForeignKey("EmbalagemId");
 
                     b.HasOne("Minato.Models.Pedido", null)
                         .WithMany("Produtos")
-                        .HasForeignKey("PedidoIdPedido", "PedidoDataPedido");
+                        .HasForeignKey("PedidoId", "PedidoDataPedido");
+                });
+
+            modelBuilder.Entity("Minato.Models.Telefone", b =>
+                {
+                    b.HasOne("Minato.Models.Usuario", null)
+                        .WithMany("Telefones")
+                        .HasForeignKey("UsuarioId");
                 });
 #pragma warning restore 612, 618
         }

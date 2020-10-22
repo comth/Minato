@@ -36,6 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201022172032_Corr~ecao.cs" />
+    <Compile Remove="Migrations\20201022172032_Corr~ecao.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="ClientApp\src\app\services\" />
   </ItemGroup>
 

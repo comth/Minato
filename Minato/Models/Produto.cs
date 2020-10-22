@@ -6,6 +6,9 @@ namespace Minato.Models
     public class Produto
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int IdBanco { get; set; }
+
         [Required]
         public int Id { get; set; }
 
@@ -14,6 +17,7 @@ namespace Minato.Models
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "O Preço é obrigatório.")]
+        //[Column(TypeName = "decimal(5, 2)")]
         public decimal Preco { get; set; }
 
         public Embalagem Embalagem { get; set; }

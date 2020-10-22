@@ -1,4 +1,5 @@
 ﻿using Minato.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,9 +23,12 @@ namespace Minato.Models
         public List<Telefone> Telefones { get; set; }
     }
 
-    [NotMapped]
     public class Telefone
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "O Telefone é obrigatório.")]
         [StringLength(11, ErrorMessage = "O telefone deve ter entre 10 e 11 caracteres", MinimumLength = 10)]
         [RegularExpression("^[0-9]*$", ErrorMessage = "O telefone só pode conter números")]

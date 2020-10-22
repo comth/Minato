@@ -10,8 +10,8 @@ using Minato.Contexts;
 namespace Minato.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20201021184743_ids")]
-    partial class ids
+    [Migration("20201022171203_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -118,12 +118,15 @@ namespace Minato.Migrations
 
             modelBuilder.Entity("Minato.Models.Produto", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdBanco")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("EmbalagemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
@@ -140,7 +143,7 @@ namespace Minato.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdBanco");
 
                     b.HasIndex("EmbalagemId");
 

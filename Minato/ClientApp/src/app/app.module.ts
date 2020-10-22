@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule, MatSortModule } from '@angular/material';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { UsuarioComponent } from './usuario/usuario.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
     CounterComponent,
     FetchDataComponent,
     ProdutoComponent,
+    UsuarioComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -43,6 +45,7 @@ import { MatSelectModule } from '@angular/material/select';
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'produto', component: ProdutoComponent },
+      { path: 'usuario', component: UsuarioComponent },
     ], { useHash: true }),
     BrowserAnimationsModule
   ],

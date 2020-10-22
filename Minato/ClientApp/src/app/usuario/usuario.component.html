@@ -1,0 +1,60 @@
+<mat-form-field style="width: 100%; font-size: 14px;">
+  <mat-label>Filtrar</mat-label>
+  <input matInput (keyup)="applyFilter($event)" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+
+    <!-- Nome Column -->
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+        <div class="example-element-detail"
+             [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+          <form [formGroup]="usuarioForm" [ngClass]="row.id == 0 ? 'form-add': 'form'">
+            <mat-form-field>
+              <mat-label>Nome</mat-label>
+              <input matInput formControlName="nome" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Endereços</mat-label>
+              <input matInput formControlName="enderecos" required>
+            </mat-form-field>
+            <div formArrayName="telefones">
+              <div *ngFor="let _ of telefones.controls; index as i">
+                <div [formGroupName]="i">
+                  <input mat-input formControlName="value" />
+                </div>
+              </div>
+            </div>
+            <div>
+              <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
+              <mat-icon *ngIf="!usuarioForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
+              <mat-icon *ngIf="usuarioForm.valid" (click)="onSubmit()" class="icon-pad">check</mat-icon>
+            </div>
+          </form>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions" class="icon">
+      <th mat-header-cell *matHeaderCellDef (click)="add()"> <mat-icon style="color: purple">add</mat-icon> </th>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> <mat-icon (click)="delete(row.id)">delete</mat-icon> </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
