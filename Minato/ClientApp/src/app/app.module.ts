@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPaginatorModule, MatSortModule } from '@angular/material';
+import { MatPaginatorModule, MatSortModule, MatCardModule, MatButtonModule } from '@angular/material';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { UsuarioComponent } from './usuario/usuario.component';
@@ -35,11 +35,13 @@ import { UsuarioComponent } from './usuario/usuario.component';
     MatTableModule,
     MatInputModule,
     FormsModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatPaginatorModule,
     MatSortModule,
     MatIconModule,
     MatSelectModule,
+    MatCardModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },

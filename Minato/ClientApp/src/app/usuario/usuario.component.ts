@@ -9,10 +9,14 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import Swal from 'sweetalert2';
 
 export interface Usuario {
-  Id: number;
-  Nome: string;
-  Enderecos: any;
-  Telefones: any;
+  id: number;
+  nome: string;
+  enderecos: any;
+  telefones: Telefone[];
+}
+
+export interface Telefone {
+  value: string;
 }
 
 @Component({
@@ -39,7 +43,7 @@ export class UsuarioComponent implements OnInit, DoCheck {
   usuarioForm: FormGroup;
   telefoneForm: FormGroup;
   enderecoForm: FormGroup;
-  usuario: any;
+  usuario: Usuario;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -76,21 +80,25 @@ export class UsuarioComponent implements OnInit, DoCheck {
       id: new FormControl(''),
       nome: new FormControl('', [Validators.required]),
       enderecos: new FormControl('', [Validators.required]),
-      telefones: this.fb.array([this.telefoneForm]),
-    }, { updateOn: 'change' });
-
-    this.telefoneForm = this.fb.group({
-      value: new FormControl('')
-    });
-
-    this.enderecoForm = this.fb.group({
-      value: new FormControl('')
-    });
+      telefones: this.fb.array([this.fb.group({
+        value: new FormControl(null)
+      })]),
+    }, { updateOn: 'change' }); 
   }
 
   get telefones(): FormArray {
     return this.usuarioForm.get('telefones') as FormArray;
-  } 
+  }
+
+  addTelefone() {
+    this.telefones.push(this.fb.group({
+      value: new FormControl(null)
+    }));
+  }
+
+  removeTelefone(index: number) {
+    this.telefones.removeAt(index);
+  }
 
   error() {
     console.log(this.usuarioForm)
@@ -165,7 +173,8 @@ export class UsuarioComponent implements OnInit, DoCheck {
 
   public add() {
     if (!this.editando) {
-      this.usuario = { id: 0, nome: "", enderecos: null, telefones: null };
+      this.usuario = {
+        id: 0, nome: "", enderecos: null, telefones: [{value: 'teste'}]};
       this.dataSource.data = [this.usuario].concat(this.dataSource.data);
       this.expandedElement = this.usuario;
       this.editando = true;

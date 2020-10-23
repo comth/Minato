@@ -25,17 +25,32 @@
               <mat-label>Endereços</mat-label>
               <input matInput formControlName="enderecos" required>
             </mat-form-field>
-            <div formArrayName="telefones">
-              <div *ngFor="let _ of telefones.controls; index as i">
-                <div [formGroupName]="i">
-                  <input mat-input formControlName="value" />
-                </div>
+
+            <div class="form-array">
+              <div formArrayName="telefones" *ngFor="let telefone of telefones.controls; index as i">
+                <ng-container [formGroupName]="i">
+                  <mat-form-field>
+                    <mat-label>Telefone</mat-label>
+                    <input matInput placeholder="teste" formControlName="value" required />
+                  </mat-form-field>
+                  <button mat-icon-button>
+                    <mat-icon (click)="removeTelefone(i)">clear</mat-icon>
+                  </button>
+                </ng-container>
               </div>
+                <mat-icon (click)="addTelefone()">add</mat-icon>
             </div>
+            
             <div>
-              <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
-              <mat-icon *ngIf="!usuarioForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
-              <mat-icon *ngIf="usuarioForm.valid" (click)="onSubmit()" class="icon-pad">check</mat-icon>
+              
+                <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
+              
+              
+                <mat-icon *ngIf="!usuarioForm.valid" (click)="error()" style="color:#DDA0DD">check</mat-icon>
+              
+              <button mat-icon-button>
+                <mat-icon *ngIf="usuarioForm.valid" (ngSubmit)="onSubmit()" >check</mat-icon>
+              </button> 
             </div>
           </form>
         </div>
