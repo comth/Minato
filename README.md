@@ -4,7 +4,7 @@ Um pequeno projeto que estou fazendo para um restaurante.
 
 Tecnologias utilizadas:
  - .NET Core 3.1
- - Angular 6.0.0
+ - Angular 8.3.29
  - Entity Framework Core
  - SQL Server
  
