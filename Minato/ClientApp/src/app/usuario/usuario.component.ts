@@ -11,12 +11,21 @@ import Swal from 'sweetalert2';
 export interface Usuario {
   id: number;
   nome: string;
-  enderecos: any;
+  enderecos: Endereco[];
   telefones: Telefone[];
 }
 
 export interface Telefone {
   value: string;
+}
+
+export interface Endereco {
+  bairro: string;
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  observacao: string;
+  uf: string;
 }
 
 @Component({
@@ -41,8 +50,6 @@ export class UsuarioComponent implements OnInit, DoCheck {
   editando: boolean;
   OldExpandedElement: any;
   usuarioForm: FormGroup;
-  telefoneForm: FormGroup;
-  enderecoForm: FormGroup;
   usuario: Usuario;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -77,9 +84,16 @@ export class UsuarioComponent implements OnInit, DoCheck {
 
   initializeForm() {
     this.usuarioForm = this.fb.group({
-      id: new FormControl(''),
+      //id: new FormControl(''),
       nome: new FormControl('', [Validators.required]),
-      enderecos: new FormControl('', [Validators.required]),
+      enderecos: this.fb.array([this.fb.group({
+        bairro: new FormControl('', [Validators.required]),
+        cep: new FormControl('', [Validators.required]),
+        logradouro: new FormControl('', [Validators.required]),
+        complemento: new FormControl('', [Validators.required]),
+        observacao: new FormControl('', [Validators.required]),
+        uf: new FormControl('', [Validators.required]),
+      })]),
       telefones: this.fb.array([this.fb.group({
         value: new FormControl(null)
       })]),
@@ -90,6 +104,10 @@ export class UsuarioComponent implements OnInit, DoCheck {
     return this.usuarioForm.get('telefones') as FormArray;
   }
 
+  get enderecos(): FormArray {
+    return this.usuarioForm.get('enderecos') as FormArray;
+  }
+
   addTelefone() {
     this.telefones.push(this.fb.group({
       value: new FormControl(null)
@@ -98,6 +116,21 @@ export class UsuarioComponent implements OnInit, DoCheck {
 
   removeTelefone(index: number) {
     this.telefones.removeAt(index);
+  }
+
+  addEndereco() {
+    this.enderecos.push(this.fb.group({
+      bairro: new FormControl('', [Validators.required]),
+      cep: new FormControl('', [Validators.required]),
+      logradouro: new FormControl('', [Validators.required]),
+      complemento: new FormControl('', [Validators.required]),
+      observacao: new FormControl('', [Validators.required]),
+      uf: new FormControl('', [Validators.required]),
+    }));
+  }
+
+  removeEndereco(index: number) {
+    this.enderecos.removeAt(index);
   }
 
   error() {
@@ -174,7 +207,7 @@ export class UsuarioComponent implements OnInit, DoCheck {
   public add() {
     if (!this.editando) {
       this.usuario = {
-        id: 0, nome: "", enderecos: null, telefones: [{value: 'teste'}]};
+        id: 0, nome: "", enderecos: null, telefones: null};
       this.dataSource.data = [this.usuario].concat(this.dataSource.data);
       this.expandedElement = this.usuario;
       this.editando = true;

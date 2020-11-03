@@ -10,7 +10,7 @@ namespace Minato.BLLs
     {
         public List<Usuario> GetAll(Context context)
         {
-            return context.Usuario.ToList();
+            return context.Usuario.Include(x => x.Telefones).Include(x => x.Enderecos).ToList();
         }
 
         public Usuario Get(Context context, int id)
