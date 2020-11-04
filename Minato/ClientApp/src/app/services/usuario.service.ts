@@ -26,7 +26,7 @@ export class UsuarioService {
   }
 
   public post(usuario: any) {
-    //usuario.id = null;
+    usuario.id = 0;
     return this.http.post(this.baseURL + "usuario", usuario);
   }
 

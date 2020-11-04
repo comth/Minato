@@ -23,6 +23,23 @@ form {
   padding-top: 2%;
 }
 
+.form-array-end {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.divIcon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.divIcon:hover {
+  background-color: #DCDCDC;
+}
+
 .form-add {
   display: flex;
   flex-wrap: wrap;

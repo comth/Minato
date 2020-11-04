@@ -17,67 +17,74 @@
         <div class="example-element-detail"
              [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
           <form [formGroup]="usuarioForm" [ngClass]="row.id == 0 ? 'form-add': 'form'">
-            <mat-form-field>
+            <mat-form-field style="width: 100%;">
               <mat-label>Nome</mat-label>
               <input matInput formControlName="nome" required>
             </mat-form-field>
-
-            <div class="form-array">
-              <div formArrayName="enderecos" *ngFor="let endereco of enderecos.controls; index as i">
-                <ng-container [formGroupName]="i">
-                  <mat-form-field>
-                    <mat-label>CEP</mat-label>
-                    <input matInput formControlName="cep" required />
-                  </mat-form-field>
-                  <mat-form-field>
-                    <mat-label>Bairro</mat-label>
-                    <input matInput formControlName="bairro" required />
-                  </mat-form-field>
-                  <mat-form-field>
-                    <mat-label>Logradouro</mat-label>
-                    <input matInput formControlName="logradouro" required />
-                  </mat-form-field>
-                  <mat-form-field>
-                    <mat-label>Complemento</mat-label>
-                    <input matInput formControlName="complemento" />
-                  </mat-form-field>
-                  <mat-form-field>
-                    <mat-label>Observação</mat-label>
-                    <input matInput formControlName="observacao" />
-                  </mat-form-field>
-                  <mat-form-field>
-                    <mat-label>UF</mat-label>
-                    <input matInput formControlName="uf" required />
-                  </mat-form-field>
-                  <button mat-icon-button>
-                    <mat-icon (click)="removeEndereco(i)">clear</mat-icon>
-                  </button>
-                </ng-container>
-              </div>
-              <div>
-                <mat-icon (click)="addEndereco()">add</mat-icon>
-              </div> 
-            </div>
-
-            <div class="form-array">
-              <div formArrayName="telefones" *ngFor="let telefone of telefones.controls; index as i">
-                <ng-container [formGroupName]="i">
-                  <mat-form-field>
-                    <mat-label>Telefone</mat-label>
-                    <input matInput formControlName="value" required />
-                  </mat-form-field>
-                  <button mat-icon-button>
-                    <mat-icon (click)="removeTelefone(i)">clear</mat-icon>
-                  </button>
-                </ng-container>
-              </div>
-              <mat-icon (click)="addTelefone()">add</mat-icon>
-            </div>
-
             <div>
-              <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
-              <mat-icon class="icon-pad" *ngIf="!usuarioForm.valid" (click)="error()" style="color:#DDA0DD">check</mat-icon>
-              <mat-icon class="icon-pad" *ngIf="usuarioForm.valid" (click)="onSubmit()">check</mat-icon>
+              <div>
+                <div formArrayName="enderecos" *ngFor="let endereco of enderecos.controls; index as i">
+                  <ng-container [formGroupName]="i">
+                    <div style="display: flex; flex-direction: row; align-items: center;">
+                      <div class="form-array-end">
+                        <mat-form-field>
+                          <mat-label>CEP</mat-label>
+                          <input matInput formControlName="cep" required />
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label>Bairro</mat-label>
+                          <input matInput formControlName="bairro" required />
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label>Logradouro</mat-label>
+                          <input matInput formControlName="logradouro" required />
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label>Complemento</mat-label>
+                          <input matInput formControlName="complemento" />
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label>Observação</mat-label>
+                          <input matInput formControlName="observacao" />
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label>UF</mat-label>
+                          <input matInput formControlName="uf" required />
+                        </mat-form-field>
+                      </div>
+                      <div>
+                        <mat-icon (click)="removeEndereco(i)">clear</mat-icon>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="divIcon">
+                  <mat-icon style="align-self: center;" (click)="addEndereco()">add</mat-icon>
+                </div>
+              </div>
+
+              <div class="form-array">
+                <div formArrayName="telefones" *ngFor="let telefone of telefones.controls; index as i">
+                  <ng-container [formGroupName]="i">
+                    <mat-form-field>
+                      <mat-label>Telefone</mat-label>
+                      <input matInput formControlName="value" required />
+                    </mat-form-field>
+                    <button mat-icon-button>
+                      <mat-icon (click)="removeTelefone(i)">clear</mat-icon>
+                    </button>
+                  </ng-container>
+                </div>
+                <div class="divIcon">
+                  <mat-icon style="align-self: center;" (click)="addTelefone()">add</mat-icon>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: row; justify-content: space-around; margin-bottom: 10px; margin-top: 10px">
+                <mat-icon style="align-self: center;" (click)="cancel()">clear</mat-icon>
+                <mat-icon style="align-self: center;" *ngIf="!usuarioForm.valid" (click)="error()" style="color:#DDA0DD">check</mat-icon>
+                <mat-icon style="align-self: center;" *ngIf="usuarioForm.valid" (click)="onSubmit()">check</mat-icon>
+              </div>
             </div>
           </form>
         </div>

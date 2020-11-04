@@ -16,10 +16,12 @@ export interface Usuario {
 }
 
 export interface Telefone {
+  id: string;
   value: string;
 }
 
 export interface Endereco {
+  id: string;
   bairro: string;
   cep: string;
   logradouro: string;
@@ -84,9 +86,10 @@ export class UsuarioComponent implements OnInit, DoCheck {
 
   initializeForm() {
     this.usuarioForm = this.fb.group({
-      //id: new FormControl(''),
+      id: new FormControl(''),
       nome: new FormControl('', [Validators.required]),
       enderecos: this.fb.array([this.fb.group({
+        id: new FormControl(0),
         bairro: new FormControl('', [Validators.required]),
         cep: new FormControl('', [Validators.required]),
         logradouro: new FormControl('', [Validators.required]),
@@ -95,6 +98,7 @@ export class UsuarioComponent implements OnInit, DoCheck {
         uf: new FormControl('', [Validators.required]),
       })]),
       telefones: this.fb.array([this.fb.group({
+        id: new FormControl(0),
         value: new FormControl(null)
       })]),
     }, { updateOn: 'change' }); 
