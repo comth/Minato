@@ -26,7 +26,16 @@ export class UsuarioService {
   }
 
   public post(usuario: any) {
-    usuario.id = 0;
+    delete usuario.id;
+    let i = 0;
+    for (i; i < usuario.enderecos.length; i++) {
+      delete usuario.enderecos[i].id
+    }
+    i = 0;
+    for (i; i < usuario.telefones.length; i++) {
+      delete usuario.telefones[i].id
+    }
+    console.log(usuario)
     return this.http.post(this.baseURL + "usuario", usuario);
   }
 

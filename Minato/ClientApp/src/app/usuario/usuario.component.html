@@ -9,7 +9,7 @@
     <!-- Nome Column -->
     <ng-container matColumnDef="nome">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.nome}} </td>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': ''"> {{row.nome}} </td>
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
@@ -52,8 +52,8 @@
                           <input matInput formControlName="uf" required />
                         </mat-form-field>
                       </div>
-                      <div>
-                        <mat-icon (click)="removeEndereco(i)">clear</mat-icon>
+                      <div style="margin-left: 6%;">
+                        <mat-icon style="margin-left: -60%;" (click)="removeEndereco(i)">clear</mat-icon>
                       </div>
                     </div>
                   </ng-container>
@@ -63,16 +63,18 @@
                 </div>
               </div>
 
-              <div class="form-array">
+              <div>
                 <div formArrayName="telefones" *ngFor="let telefone of telefones.controls; index as i">
                   <ng-container [formGroupName]="i">
-                    <mat-form-field>
-                      <mat-label>Telefone</mat-label>
-                      <input matInput formControlName="value" required />
-                    </mat-form-field>
-                    <button mat-icon-button>
-                      <mat-icon (click)="removeTelefone(i)">clear</mat-icon>
-                    </button>
+                    <div class="form-array-end">
+                      <mat-form-field>
+                        <mat-label>Telefone</mat-label>
+                        <input matInput formControlName="value" required />
+                      </mat-form-field>
+                      <div style="margin-left: 6%;">
+                        <mat-icon style="margin-left: -60%;" (click)="removeTelefone(i)">clear</mat-icon>
+                      </div>
+                    </div>
                   </ng-container>
                 </div>
                 <div class="divIcon">
@@ -81,9 +83,9 @@
               </div>
 
               <div style="display: flex; flex-direction: row; justify-content: space-around; margin-bottom: 10px; margin-top: 10px">
-                <mat-icon style="align-self: center;" (click)="cancel()">clear</mat-icon>
-                <mat-icon style="align-self: center;" *ngIf="!usuarioForm.valid" (click)="error()" style="color:#DDA0DD">check</mat-icon>
-                <mat-icon style="align-self: center;" *ngIf="usuarioForm.valid" (click)="onSubmit()">check</mat-icon>
+                <mat-icon style="align-self: center;color: purple" (click)="cancel()">clear</mat-icon>
+                <mat-icon style="align-self: center;color:#DDA0DD" *ngIf="!usuarioForm.valid" (click)="error()" >check</mat-icon>
+                <mat-icon style="align-self: center;color: purple" *ngIf="usuarioForm.valid" (click)="onSubmit()">check</mat-icon>
               </div>
             </div>
           </form>

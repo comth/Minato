@@ -35,6 +35,7 @@ namespace Minato.BLLs
         {
             if (produto.Embalagem != null)
                 produto.Embalagem = context.Embalagem.Find(produto.Embalagem.Id);
+            else produto.Embalagem = null;
 
             context.Entry(produto).State = EntityState.Modified;
 

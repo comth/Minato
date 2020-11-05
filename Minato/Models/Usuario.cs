@@ -33,5 +33,7 @@ namespace Minato.Models
         [StringLength(11, ErrorMessage = "O telefone deve ter entre 10 e 11 caracteres", MinimumLength = 10)]
         [RegularExpression("^[0-9]*$", ErrorMessage = "O telefone só pode conter números")]
         public string Value { get; set; }
+
+        //public Usuario Usuario { get; set; }
     }
 }

@@ -19,6 +19,16 @@ namespace Minato.Contexts
         {
             modelBuilder.Entity<Pedido>()
                 .HasKey(p => new { p.Id, p.DataPedido });
+
+            //modelBuilder.Entity<Endereco>()
+            //    .HasOne(p => p.Usuario)
+            //    .WithMany(b => b.Enderecos)
+            //    .OnDelete(DeleteBehavior.Cascade);
+
+            //modelBuilder.Entity<Telefone>()
+            //    .HasOne(p => p.Usuario)
+            //    .WithMany(b => b.Telefones)
+            //    .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

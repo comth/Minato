@@ -29,6 +29,7 @@ namespace Minato.BLLs
         {
             if (Exists(context, usuario.Id))
             {
+
                 context.Entry(usuario).State = EntityState.Modified;
                 context.SaveChanges();
                 return true;

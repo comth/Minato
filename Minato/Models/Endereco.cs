@@ -31,5 +31,7 @@ namespace Minato.Models
         [Required(ErrorMessage = "O UF é obrigatório.")]
         [StringLength(2, ErrorMessage = "O UF deve ter no máximo 2 caracteres.")]
         public string Uf { get; set; }
+
+        //public Usuario Usuario { get; set; }
     }
 }
