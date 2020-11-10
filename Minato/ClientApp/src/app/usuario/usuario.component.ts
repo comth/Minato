@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { FormGroup, FormBuilder, FormControl, Validators, ValidatorFn, AbstractControl, FormArray } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
+import { ViaCepService } from '../services/via-cep.service';
 
 export interface Usuario {
   id: number;
@@ -59,6 +60,7 @@ export class UsuarioComponent implements OnInit, DoCheck {
 
   constructor(
     private usuarioService: UsuarioService,
+    private cepService: ViaCepService,
     private fb: FormBuilder) {
   }
 
@@ -93,8 +95,9 @@ export class UsuarioComponent implements OnInit, DoCheck {
         bairro: new FormControl('', [Validators.required]),
         cep: new FormControl('', [Validators.required]),
         logradouro: new FormControl('', [Validators.required]),
-        complemento: new FormControl('', [Validators.required]),
-        observacao: new FormControl('', [Validators.required]),
+        localidade: new FormControl('', [Validators.required]),
+        complemento: new FormControl(''),
+        observacao: new FormControl(''),
         uf: new FormControl('', [Validators.required]),
       })]),
       telefones: this.fb.array([this.fb.group({
@@ -124,17 +127,31 @@ export class UsuarioComponent implements OnInit, DoCheck {
 
   addEndereco() {
     this.enderecos.push(this.fb.group({
+      id: new FormControl(0),
       bairro: new FormControl('', [Validators.required]),
       cep: new FormControl('', [Validators.required]),
       logradouro: new FormControl('', [Validators.required]),
-      complemento: new FormControl('', [Validators.required]),
-      observacao: new FormControl('', [Validators.required]),
+      localidade: new FormControl('', [Validators.required]),
+      complemento: new FormControl(''),
+      observacao: new FormControl(''),
       uf: new FormControl('', [Validators.required]),
     }));
   }
 
   removeEndereco(index: number) {
     this.enderecos.removeAt(index);
+  }
+
+  autoCompleteCep(i) {
+    let cep = this.usuarioForm.get('enderecos').value[i].cep as string;
+    if (cep.length == 8) {
+      this.cepService.get(cep).subscribe((res: any) => {
+        let form = this.usuarioForm.value;
+        res.cep = cep;
+        form.enderecos[i] = res;
+        this.usuarioForm.patchValue(form);
+      }, err => console.log(err));
+    }
   }
 
   error() {

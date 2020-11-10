@@ -17,6 +17,9 @@ import { MatPaginatorModule, MatSortModule, MatCardModule, MatButtonModule } fro
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { UsuarioComponent } from './usuario/usuario.component';
+import { MesasComponent } from './mesas/mesas.component';
+import { TakeAwayComponent } from './take-away/take-away.component';
+import { DeliveryComponent } from './delivery/delivery.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,9 @@ import { UsuarioComponent } from './usuario/usuario.component';
     FetchDataComponent,
     ProdutoComponent,
     UsuarioComponent,
+    MesasComponent,
+    TakeAwayComponent,
+    DeliveryComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -48,6 +54,9 @@ import { UsuarioComponent } from './usuario/usuario.component';
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'produto', component: ProdutoComponent },
       { path: 'usuario', component: UsuarioComponent },
+      { path: 'mesas', component: MesasComponent },
+      { path: 'takeaway', component: TakeAwayComponent },
+      { path: 'delivery', component: DeliveryComponent },
     ], { useHash: true }),
     BrowserAnimationsModule
   ],

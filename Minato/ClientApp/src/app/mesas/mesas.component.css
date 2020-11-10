@@ -1,0 +1,11 @@
+.flex {
+  border: solid;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.mesas {
+  background-color: coral;
+  display:flex;
+}

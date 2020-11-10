@@ -29,7 +29,7 @@
                       <div class="form-array-end">
                         <mat-form-field>
                           <mat-label>CEP</mat-label>
-                          <input matInput formControlName="cep" required />
+                          <input matInput formControlName="cep" (keyup)="autoCompleteCep(i)" required />
                         </mat-form-field>
                         <mat-form-field>
                           <mat-label>Bairro</mat-label>
@@ -38,6 +38,10 @@
                         <mat-form-field>
                           <mat-label>Logradouro</mat-label>
                           <input matInput formControlName="logradouro" required />
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-label>Localidade</mat-label>
+                          <input matInput formControlName="localidade" required />
                         </mat-form-field>
                         <mat-form-field>
                           <mat-label>Complemento</mat-label>

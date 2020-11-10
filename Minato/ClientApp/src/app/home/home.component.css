@@ -1,5 +1,6 @@
 img {
   margin: 8%;
+  cursor: pointer;
 }
 
 div.img-container {

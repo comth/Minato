@@ -21,7 +21,10 @@ namespace Minato.Models
         [StringLength(80, ErrorMessage = "O Logradouro deve ter no máximo 80 caracteres.")]
         public string Logradouro { get; set; }
 
-        [Required(ErrorMessage = "O Complemento é obrigatório.")]
+        [Required(ErrorMessage = "A Localidade é obrigatória.")]
+        [StringLength(80, ErrorMessage = "A Localidade deve ter no máximo 80 caracteres.")]
+        public string Localidade { get; set; }
+
         [StringLength(60, ErrorMessage = "O Complemento deve ter no máximo 60 caracteres.")]
         public string Complemento { get; set; }
 
