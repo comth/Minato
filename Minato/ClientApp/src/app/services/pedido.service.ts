@@ -21,10 +21,6 @@ export class PedidoService {
     return this.http.get(this.baseURL + `pedido/${id}`);
   }
 
-  public filtrar(itensPagina: number, index: number, pesquisa: any) {
-    return this.http.get(this.baseURL + `pedido/${itensPagina}/${index}/${pesquisa}`);
-  }
-
   public post(pedido: any) {
     return this.http.post(this.baseURL + "pedido", pedido);
   }

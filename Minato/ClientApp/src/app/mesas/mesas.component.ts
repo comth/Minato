@@ -7,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MesasComponent implements OnInit {
 
-  mesas = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }]
+  mesas = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 0 }]
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  addMesas() {
+    console.log('teste')
   }
 }
