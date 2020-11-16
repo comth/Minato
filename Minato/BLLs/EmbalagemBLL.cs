@@ -36,9 +36,9 @@ namespace Minato.BLLs
             return false;
         }
 
-        public bool Exists(Context context, int id)
+        public bool Exists(Context context, int idEmbalagem)
         {
-            return context.Embalagem.Any(x => x.Id.Equals(id));
+            return context.Embalagem.Any(x => x.Id.Equals(idEmbalagem));
         }
 
         public bool Delete(Context context, int id)

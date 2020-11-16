@@ -1,35 +1,11 @@
 .flex {
+  border: solid;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .mesas {
   background-color: coral;
-  display: flex;
-  position: relative;
-  width: 15%;
-  margin-top: 1.7%;
-  justify-content: center;
-}
-
-.mesas:after {
-  content: "";
-  display: block;
-  padding-bottom: 100%;
-
-}
-
-@media only screen and (max-width: 420px) {
-  .mesas {
-    font-size: small;
-    width: 30%;
-    margin-top: 4.7%;
-  }
-}
-
-.content {
-  align-self: center;
   display:flex;
 }

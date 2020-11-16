@@ -10,8 +10,6 @@ namespace Minato.Contexts
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Produto> Produto { get; set; }
         public DbSet<Embalagem> Embalagem { get; set; }
-        public DbSet<Mesa> Mesa { get; set; }
-        public DbSet<Status> Status { get; set; }
 
         public Context(DbContextOptions<Context> options)
         : base(options)
