@@ -5,6 +5,8 @@ using Minato.Models;
 
 namespace Minato.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class MesaController : Controller
     {
         private readonly Context Context;

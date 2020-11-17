@@ -5,6 +5,8 @@ using Minato.Models;
 
 namespace Minato.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class StatusController : Controller
     {
         private readonly Context Context;
