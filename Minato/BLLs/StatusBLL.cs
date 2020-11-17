@@ -12,7 +12,14 @@ namespace Minato.BLLs
     {
         public List<Status> GetAll(Context context)
         {
-            return context.Status.ToList();
+            var status = context.Status.ToList();
+
+            foreach (var s in status)
+            {
+                s.Quantidade = context.Mesa.Count(x => x.Status.Id == s.Id);
+            }
+
+            return status;
         }
 
         public Status Get(Context context, int id)

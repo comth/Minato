@@ -12,7 +12,7 @@ namespace Minato.BLLs
     {
         public List<Mesa> GetAll(Context context)
         {
-            return context.Mesa.ToList();
+            return context.Mesa.Include(x => x.Status).ToList();
         }
 
         public Mesa Get(Context context, int id)

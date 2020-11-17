@@ -1,7 +1,12 @@
+<div>
+  <div *ngFor="let s of status">
+    {{s.nome}}  Qdt:{{s.quantidade}} - 
+  </div>
+</div>
 <div class="flex">
   <div *ngFor="let mesa of mesas" class="mesas">
     <div *ngIf="mesa.id != 0" class="content">
-      Mesa {{mesa.id}}
+      Mesa {{mesa.id}} {{mesa.status?.nome}}
     </div>
     <div *ngIf="mesa.id == 0" class="content" (click)="addMesas()" style="cursor:pointer">
       <mat-icon>add</mat-icon>

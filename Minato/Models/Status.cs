@@ -12,5 +12,8 @@ namespace Minato.Models
         [Required(ErrorMessage = "O Nome é obrigatório.")]
         [StringLength(100, ErrorMessage = "O Nome deve ter no máximo 100 caracteres.")]
         public string Nome { get; set; }
+
+        [NotMapped]
+        public int Quantidade { get; set; }
     }
 }
