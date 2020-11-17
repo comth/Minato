@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": { "@angular/*": [ "./node_modules/@angular/*" ] },
     "baseUrl": "./",
     "module": "esnext",
     "outDir": "./dist/out-tsc",
