@@ -22,6 +22,7 @@ namespace Minato.BLLs
 
         public bool Post(Context context, Mesa mesa)
         {
+            mesa.Status = context.Status.Find(mesa.Status.Id);
             context.Mesa.Add(mesa);
             context.SaveChanges();
             return true;

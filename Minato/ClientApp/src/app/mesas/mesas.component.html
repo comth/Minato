@@ -6,7 +6,7 @@
 <div class="flex">
   <div *ngFor="let mesa of mesas" class="mesas">
     <div *ngIf="mesa.id != 0" class="content">
-      Mesa {{mesa.id}} {{mesa.status?.nome}}
+      Mesa {{mesa.id}} 
     </div>
     <div *ngIf="mesa.id == 0" class="content" (click)="addMesas()" style="cursor:pointer">
       <mat-icon>add</mat-icon>

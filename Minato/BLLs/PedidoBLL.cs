@@ -20,6 +20,9 @@ namespace Minato.BLLs
 
         public bool Post(Context context, Pedido pedido)
         {
+            if (!pedido.PedidoLocal && (pedido.Usuario == null && pedido.EnderecoSelecionado == null))
+                return false;
+
             context.Pedido.Add(pedido);
             context.SaveChanges();
             return true;

@@ -48,7 +48,7 @@ namespace Minato.Controllers
                 return Ok();
             }
 
-            return Conflict(); //por telefone????
+            return BadRequest(); 
         }
 
         [HttpPut]
