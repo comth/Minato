@@ -22,6 +22,9 @@ namespace Minato.BLLs
 
         public bool Post(Context context, Mesa mesa)
         {
+            if (context.Mesa.Any(x => x.Numero == mesa.Numero))
+                return false;
+
             mesa.Status = context.Status.Find(mesa.Status.Id);
             context.Mesa.Add(mesa);
             context.SaveChanges();
@@ -37,6 +40,11 @@ namespace Minato.BLLs
                 return true;
             }
             return false;
+        }
+
+        public bool ExistsNumero(Context context, int numero)
+        {
+            return context.Mesa.Any(x => x.Numero == numero);
         }
 
         public bool Exists(Context context, int id)

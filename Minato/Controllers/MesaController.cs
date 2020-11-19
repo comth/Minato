@@ -37,6 +37,15 @@ namespace Minato.Controllers
             return Ok(mesa);
         }
 
+        [HttpGet("numero/{numero}")]
+        public IActionResult ExistsNumero(int numero)
+        {
+            if (MesaBLL.ExistsNumero(Context, numero))
+                return Conflict();
+
+            return Ok();
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody] Mesa mesa)
         {

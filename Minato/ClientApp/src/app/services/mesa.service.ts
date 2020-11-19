@@ -20,6 +20,10 @@ export class MesaService {
     return this.http.get(this.baseURL + `mesa/${id}`);
   }
 
+  public existsNumero(numero: any) {
+    return this.http.get(this.baseURL + `mesa/numero/${numero}`);
+  }
+
   public post(mesa: any) {
     delete mesa.id;
     return this.http.post(this.baseURL + "mesa", mesa);
