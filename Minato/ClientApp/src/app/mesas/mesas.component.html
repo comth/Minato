@@ -1,6 +1,10 @@
-<div>
-  <div *ngFor="let s of status" style.backgroundColor="{{s.cor}}">
-    {{s.nome}}  Qdt:{{s.quantidade}} - 
+<div class="flexReverse">
+  <div *ngFor="let s of status" style.backgroundColor="{{s.cor}}" class="status">
+    <div style="align-self: center;">
+      {{s.nome}}
+      <br />
+      {{s.quantidade}}
+    </div>
   </div>
 </div>
 <div class="flex">
