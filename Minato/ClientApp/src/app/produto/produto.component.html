@@ -53,7 +53,7 @@
               <mat-label>Embalagem</mat-label>
               <mat-select formControlName="embalagem" [compareWith]="compareCategoryObjects">
                 <mat-option>Nenhuma</mat-option>
-                <mat-option *ngFor="let element of embalagens" [(value)]="element">{{element.nome}}</mat-option>
+                <mat-option *ngFor="let element of embalagens; let i = index" [(value)]="embalagens[i]">{{element.nome}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div>

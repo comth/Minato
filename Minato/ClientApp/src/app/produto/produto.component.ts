@@ -41,8 +41,8 @@ export class ProdutoComponent implements OnInit, DoCheck {
   produtoForm: FormGroup;
   produto: Produto;
 
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private produtoService: ProdutoService,
