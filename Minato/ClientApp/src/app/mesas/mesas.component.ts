@@ -51,7 +51,8 @@ export class MesasComponent implements OnInit {
   }
 
   getStatus() {
-    this.statusService.getAll().subscribe((res: any) => {
+    this.statusService.getAll().subscribe((res: any[]) => {
+      res = [{ id: 0 }].concat(res);
       this.status = res;
     });
   }
@@ -68,7 +69,8 @@ export class MesasComponent implements OnInit {
     let options = [];
 
     for (var i = 0; i < this.status.length; i++) {
-      options.push(this.status[i].nome);
+      if(this.status[i].id != 0)
+        options.push(this.status[i].nome);
     }
 
     let regexp = new RegExp('^[0-9]+$')
@@ -108,8 +110,8 @@ export class MesasComponent implements OnInit {
         }
       }
     ]).then((result: any) => {
-      if (result) {
-        this.mesaService.post({ numero: result.value[0], status: this.status[result.value[1]] }).subscribe((res) => {
+      if (result && !result.dismiss) {
+        this.mesaService.post({ numero: result.value[0], status: this.status[+result.value[1] + 1] }).subscribe((res) => {
           this.getStatus();
           this.getMesas();
         });
@@ -117,6 +119,34 @@ export class MesasComponent implements OnInit {
     })
   }
 
+  addStatus() {
+    Swal.mixin({
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      progressSteps: ['1', '2']
+    }).queue([
+      {
+        confirmButtonText: 'Próxima &rarr;',
+        title: 'Nome do Status',
+        input: 'text',
+        inputAttributes: {
+          id: "swal-input1"
+        }
+      },
+      {
+        confirmButtonText: 'Registar status',
+        title: 'Cor do Status',
+        input: 'text',
+      }
+    ]).then((result: any) => {
+      if (result && !result.dismiss) {
+        this.statusService.post({ nome: result.value[0], cor: result.value[1] }).subscribe((res) => {
+          this.getStatus();
+          this.getMesas();
+        });
+      }
+    })
+  }
 
   delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));

@@ -5,12 +5,15 @@
       <br />
       {{s.quantidade}}
     </div>
+    <div *ngIf="s.id == 0" class="status" (click)="addStatus()" style="cursor:pointer;">
+      <mat-icon style="align-self: center">add</mat-icon>
+    </div>
   </div>
 </div>
 <div class="flex">
   <div *ngFor="let mesa of mesas" class="mesas" style.backgroundColor="{{mesa.status?.cor}}">
     <div *ngIf="mesa.id != 0" class="content">
-      Mesa {{mesa.id}}
+      Mesa {{mesa.numero}}
     </div>
     <div *ngIf="mesa.id == 0" class="content" (click)="addMesas()" style="cursor:pointer">
       <mat-icon>add</mat-icon>
