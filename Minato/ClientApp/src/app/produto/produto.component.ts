@@ -204,7 +204,7 @@ export class ProdutoComponent implements OnInit, DoCheck {
         this.produtoService.delete(id).subscribe((res: any) => {
           this.getProdutos();
           Swal.fire({
-            position: 'top-end',
+            position: 'top',
             icon: 'success',
             title: 'Deletado!',
             showConfirmButton: false,

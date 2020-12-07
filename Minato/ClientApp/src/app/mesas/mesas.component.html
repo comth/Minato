@@ -4,6 +4,8 @@
       {{s.nome}}
       <br />
       {{s.quantidade}}
+      <br />
+      <mat-icon *ngIf="s.id != 0" (click)="deleteStatus(s.id)" style="cursor:pointer">delete_outline</mat-icon>
     </div>
     <div *ngIf="s.id == 0" class="status" (click)="addStatus()" style="cursor:pointer;">
       <mat-icon style="align-self: center">add</mat-icon>
@@ -12,7 +14,7 @@
 </div>
 <div class="flex">
   <div *ngFor="let mesa of mesas" class="mesas" style.backgroundColor="{{mesa.status?.cor}}">
-    <div *ngIf="mesa.id != 0" class="content">
+    <div *ngIf="mesa.id != 0" class="content" (click)="clickMesa(mesa)">
       Mesa {{mesa.numero}}
     </div>
     <div *ngIf="mesa.id == 0" class="content" (click)="addMesas()" style="cursor:pointer">
