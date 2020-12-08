@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { rejects } from 'assert';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MesaService } from '../services/mesa.service';
 import { Produto } from '../services/produto.service';
@@ -39,11 +39,11 @@ export class MesasComponent implements OnInit {
   mesas: any[];
   status: any[];
   teste: boolean;
-  mesaSelecionada: any;
 
   constructor(
     private mesaService: MesaService,
-    private statusService: StatusService
+    private statusService: StatusService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -104,7 +104,7 @@ export class MesasComponent implements OnInit {
       denyButtonText: `Deletar`,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire('pedido', '', 'success')
+          this.router.navigate(['/pedido/' + mesa.id ]) 
       } else if (result.isDenied) {
         Swal.fire({
           title: 'Tem certeza?',
@@ -132,7 +132,6 @@ export class MesasComponent implements OnInit {
         })
       }
       else if (result.dismiss.toString() == 'cancel') {
-        this.mesaSelecionada = mesa;
 
         let options = [];
 
@@ -253,10 +252,6 @@ export class MesasComponent implements OnInit {
         });
       }
     })
-  }
-
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   existsNumero(numero) {

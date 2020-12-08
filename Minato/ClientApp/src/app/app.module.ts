@@ -23,6 +23,7 @@ import { UsuarioComponent } from './usuario/usuario.component';
 import { MesasComponent } from './mesas/mesas.component';
 import { TakeAwayComponent } from './take-away/take-away.component';
 import { DeliveryComponent } from './delivery/delivery.component';
+import { PedidoComponent } from './pedido/pedido.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { DeliveryComponent } from './delivery/delivery.component';
     MesasComponent,
     TakeAwayComponent,
     DeliveryComponent,
+    PedidoComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -60,6 +62,7 @@ import { DeliveryComponent } from './delivery/delivery.component';
       { path: 'mesas', component: MesasComponent },
       { path: 'takeaway', component: TakeAwayComponent },
       { path: 'delivery', component: DeliveryComponent },
+      { path: 'pedido/:idMesa', component: PedidoComponent },
     ], { useHash: true }),
     BrowserAnimationsModule
   ],
