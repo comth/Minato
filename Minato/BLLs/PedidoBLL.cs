@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Minato.Contexts;
 using Minato.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,6 +38,11 @@ namespace Minato.BLLs
                 return true;
             }
             return false;
+        }
+
+        internal Pedido GetByMesa(Context context, int idMesa)
+        {
+            return context.Mesa.Include(x => x.Pedido).First(x => x.Id.Equals(idMesa)).Pedido;
         }
 
         public bool Exists(Context context, int idPedido)

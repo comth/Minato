@@ -2,7 +2,6 @@
 using Minato.BLLs;
 using Minato.Contexts;
 using Minato.Models;
-using System.Collections.Generic;
 
 namespace Minato.Controllers
 {
@@ -13,10 +12,10 @@ namespace Minato.Controllers
         private readonly Context Context;
         private readonly PedidoBLL PedidoBLL;
 
-        public PedidoController(Context context, PedidoBLL pedidoBLL)
+        public PedidoController(Context context)
         {
             Context = context;
-            PedidoBLL = pedidoBLL;
+            PedidoBLL = new PedidoBLL();
         }
 
         [HttpGet]
@@ -30,10 +29,13 @@ namespace Minato.Controllers
         {
             Pedido pedido = PedidoBLL.Get(Context, id);
 
-            if (pedido == null)
-            {
-                return NotFound();
-            }
+            return Ok(pedido);
+        }
+
+        [HttpGet("mesa/{idMesa}")]
+        public IActionResult GetByMesa(int idMesa)
+        {
+            Pedido pedido = PedidoBLL.GetByMesa(Context, idMesa);
 
             return Ok(pedido);
         }

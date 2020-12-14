@@ -62,7 +62,7 @@ import { PedidoComponent } from './pedido/pedido.component';
       { path: 'mesas', component: MesasComponent },
       { path: 'takeaway', component: TakeAwayComponent },
       { path: 'delivery', component: DeliveryComponent },
-      { path: 'pedido/:idMesa', component: PedidoComponent },
+      { path: 'pedido/:idMesa/:numMesa', component: PedidoComponent },
     ], { useHash: true }),
     BrowserAnimationsModule
   ],

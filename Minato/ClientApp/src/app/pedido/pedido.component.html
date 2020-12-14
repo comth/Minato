@@ -1,1 +1,85 @@
-<p>pedido works!</p>
+<mat-form-field style="width: 100%; font-size: 14px;">
+  <mat-label>Filtrar</mat-label>
+  <input matInput (keyup)="applyFilter($event)" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.id}} </td>
+    </ng-container>
+
+    <!-- Nome Column -->
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.nome}} </td>
+    </ng-container>
+
+    <!-- Preço Column -->
+    <ng-container matColumnDef="preco">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Preço </th>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.preco}} </td>
+    </ng-container>
+
+    <!-- Embalagem Column -->
+    <ng-container matColumnDef="embalagem">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Embalagem </th>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.embalagem?.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+        <div class="example-element-detail"
+             [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+          <form [formGroup]="produtoForm" [ngClass]="row.id == 0 ? 'form-add': 'form'">
+            <mat-form-field>
+              <mat-label>ID</mat-label>
+              <input matInput formControlName="id" required>
+              <mat-error *ngIf="produtoForm.controls.id.errors?.conflict">{{produtoForm.controls.id.errors?.conflict}}</mat-error>
+              <mat-error *ngIf="produtoForm.controls.id.errors?.invalid">{{produtoForm.controls.id.errors?.invalid}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Nome</mat-label>
+              <input matInput formControlName="nome" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Preço</mat-label>
+              <input matInput formControlName="preco" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Embalagem</mat-label>
+              <mat-select formControlName="embalagem" [compareWith]="compareCategoryObjects">
+                <mat-option>Nenhuma</mat-option>
+                <mat-option *ngFor="let element of embalagens; let i = index" [(value)]="embalagens[i]">{{element.nome}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div>
+              <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
+              <mat-icon *ngIf="!produtoForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
+              <mat-icon *ngIf="produtoForm.valid" (click)="onSubmit()" class="icon-pad">check</mat-icon>
+            </div>
+          </form>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions" class="icon">
+      <th mat-header-cell *matHeaderCellDef (click)="add()"> <mat-icon style="color: purple">add</mat-icon> </th>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> <mat-icon (click)="delete(row.id)">delete</mat-icon> </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+

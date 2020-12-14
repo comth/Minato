@@ -21,6 +21,10 @@ export class PedidoService {
     return this.http.get(this.baseURL + `pedido/${id}`);
   }
 
+  public getByMesa(idMesa: any) {
+    return this.http.get(this.baseURL + `pedido/mesa/${idMesa}`);
+  }
+
   public filtrar(itensPagina: number, index: number, pesquisa: any) {
     return this.http.get(this.baseURL + `pedido/${itensPagina}/${index}/${pesquisa}`);
   }
