@@ -1,3 +1,7 @@
+<ng-container>
+  Pedido para a mesa {{numMesa}}
+</ng-container>
+
 <mat-form-field style="width: 100%; font-size: 14px;">
   <mat-label>Filtrar</mat-label>
   <input matInput (keyup)="applyFilter($event)" #input>
@@ -6,60 +10,48 @@
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
 
-    <!-- ID Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+    <!-- Produto Column -->
+    <ng-container matColumnDef="produto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Produto </th>
       <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.id}} </td>
     </ng-container>
 
-    <!-- Nome Column -->
-    <ng-container matColumnDef="nome">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+    <!-- Quantidade Column -->
+    <ng-container matColumnDef="quantidade">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
       <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.nome}} </td>
-    </ng-container>
-
-    <!-- Preço Column -->
-    <ng-container matColumnDef="preco">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Preço </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.preco}} </td>
-    </ng-container>
-
-    <!-- Embalagem Column -->
-    <ng-container matColumnDef="embalagem">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Embalagem </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.embalagem?.nome}} </td>
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
       <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
         <div class="example-element-detail"
              [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
-          <form [formGroup]="produtoForm" [ngClass]="row.id == 0 ? 'form-add': 'form'">
+          <form [formGroup]="produtoPedidoForm" [ngClass]="row.id == 0 ? 'form-add': 'form'">
             <mat-form-field>
-              <mat-label>ID</mat-label>
-              <input matInput formControlName="id" required>
-              <mat-error *ngIf="produtoForm.controls.id.errors?.conflict">{{produtoForm.controls.id.errors?.conflict}}</mat-error>
-              <mat-error *ngIf="produtoForm.controls.id.errors?.invalid">{{produtoForm.controls.id.errors?.invalid}}</mat-error>
+              <input type="text"
+                     placeholder="Pick one"
+                     aria-label="Number"
+                     matInput
+                     [formControl]="myControl"
+                     [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
             </mat-form-field>
             <mat-form-field>
-              <mat-label>Nome</mat-label>
-              <input matInput formControlName="nome" required>
+              <mat-label>Quantidade</mat-label>
+              <input matInput formControlName="quantidade" required>
             </mat-form-field>
             <mat-form-field>
-              <mat-label>Preço</mat-label>
-              <input matInput formControlName="preco" required>
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Embalagem</mat-label>
-              <mat-select formControlName="embalagem" [compareWith]="compareCategoryObjects">
-                <mat-option>Nenhuma</mat-option>
-                <mat-option *ngFor="let element of embalagens; let i = index" [(value)]="embalagens[i]">{{element.nome}}</mat-option>
-              </mat-select>
+              <mat-label>Observação</mat-label>
+              <input matInput formControlName="observacao" required>
             </mat-form-field>
             <div>
               <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
-              <mat-icon *ngIf="!produtoForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
-              <mat-icon *ngIf="produtoForm.valid" (click)="onSubmit()" class="icon-pad">check</mat-icon>
+              <mat-icon *ngIf="!produtoPedidoForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
+              <mat-icon *ngIf="produtoPedidoForm.valid" (click)="onSubmit()" class="icon-pad">check</mat-icon>
             </div>
           </form>
         </div>

@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Minato.Models
 {
     public class Pedido
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Key]
@@ -21,9 +23,23 @@ namespace Minato.Models
         public Endereco EnderecoSelecionado { get; set; }
 
         [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 produto é necessário")]
-        public List<Produto> Produtos { get; set; }
+        public List<ProdutoPedido> Produtos { get; set; }
 
         //pedido que foi feito na mesa, ou com retirada no local
         public bool PedidoLocal { get; set; }
+    }
+
+    public class ProdutoPedido
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        public Produto Produto { get; set; }
+
+        [Required]
+        public int Quantidade { get; set; }
+        public string Observacao { get; set; }
     }
 }

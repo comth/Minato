@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { UsuarioComponent } from './usuario/usuario.component';
 import { MesasComponent } from './mesas/mesas.component';
 import { TakeAwayComponent } from './take-away/take-away.component';
@@ -53,6 +54,7 @@ import { PedidoComponent } from './pedido/pedido.component';
     MatIconModule,
     MatSelectModule,
     MatCardModule,
+    MatAutocompleteModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },

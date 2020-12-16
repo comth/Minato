@@ -11,8 +11,24 @@ import { ActivatedRoute } from '@angular/router';
 import { Pedido } from '../mesas/mesas.component';
 import { PedidoService } from '../services/pedido.service';
 import { MesaService } from '../services/mesa.service';
-import { Produto } from '../produto/produto.component';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
+
+export interface Produto {
+  idBanco: number;
+  id: number;
+  nome: string;
+  preco: number;
+  embalagem: any;
+}
+
+export interface ProdutoPedido {
+  id: number;
+  produto: Produto;
+  quantidade: number;
+  observacao: string;
+}
 
 @Component({
   selector: 'app-pedido',
@@ -26,20 +42,24 @@ import { ProdutoService } from '../services/produto.service';
     ]),
   ],
 })
+
 export class PedidoComponent implements OnInit {
 
+  myControl = new FormControl();
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>;
   idMesa: number;
   numMesa: number;
   pedido: Pedido;
   hasPedido: boolean;
-  displayedColumns: string[] = ['id', 'nome', 'preco', 'embalagem', 'actions'];
-  embalagens: any;
+  displayedColumns: string[] = ['produto', 'quantidade', 'actions'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean;
-  OldExpandedElement: any;
-  produtoForm: FormGroup;
+  oldExpandedElement: any;
+  produtoPedidoForm: FormGroup;
   produto: Produto;
+  produtoPedido: ProdutoPedido;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -57,66 +77,53 @@ export class PedidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.editando = false;
     this.getPedido(this.idMesa);
+    this.dataSource = new MatTableDataSource([]);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.initializeForm();
+    this.initializeAutoComplete();
   }
 
   getPedido(idMesa) {
     this.pedidoService.getByMesa(idMesa).subscribe((res: any) => {
       this.hasPedido = res = null ? true : false;
       this.pedido = res;
-      console.log(this.hasPedido);
     }, err => console.log(err));
   }
 
   ngDoCheck(): void {
     if (this.expandedElement) {
-      if (this.expandedElement && this.expandedElement != this.OldExpandedElement) {
-        this.OldExpandedElement = this.expandedElement;
+      if (this.expandedElement && this.expandedElement != this.oldExpandedElement) {
+        this.oldExpandedElement = this.expandedElement;
         if (this.expandedElement.id == 0) {
-          this.produtoForm.reset();
+          this.produtoPedidoForm.reset();
         } else {
-          this.produtoForm.patchValue(this.expandedElement);
+          this.produtoPedidoForm.patchValue(this.expandedElement);
         }
       }
     }
   }
 
-  compareCategoryObjects(object1: any, object2: any) {
-    if (object2) {
-      if (object1.id == object2.id) return true;
-      return false;
-    }
-  }
-
   initializeForm() {
-    this.produtoForm = this.fb.group({
-      idBanco: new FormControl(null),
-      id: new FormControl(null, [Validators.required, this.validarId()]),
-      nome: new FormControl(null, [Validators.required]),
-      preco: new FormControl(null, [Validators.required]),
-      embalagem: new FormControl(null),
+    this.produtoPedidoForm = this.fb.group({
+      produto: new FormControl(null),
+      quantidade: new FormControl(1, [Validators.required]),
+      observacao: new FormControl(null),
     }, { updateOn: 'change' });
   }
 
-  validarId(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      if (!this.dataSource) return null;
-
-      if (control.value == 0) return { invalid: "Este Id não é válido" };
-
-      let repetido = this.dataSource.data.find(e => e.id == control.value)
-
-      if (!repetido) return null;
-
-      if (repetido.id == this.expandedElement.id) return null;
-
-      else return { conflict: "Este Id já está em uso" };
-    }
+  initializeAutoComplete() {
+    this.filteredOptions =
+     this.myControl.valueChanges.pipe(
+       startWith(''),
+         map(value => this._filter(value))
+     );
   }
 
   error() {
-    console.log(this.produtoForm)
+    console.log(this.produtoPedidoForm)
   }
 
   cancel() {
@@ -124,7 +131,7 @@ export class PedidoComponent implements OnInit {
       this.expandedElement = null;
       this.editando = false;
       this.dataSource.data.forEach((item, index) => {
-        if (item.id == 0 || item.id == this.produtoForm.get('id').value) {
+        if (item.id == 0 || item.id == this.produtoPedidoForm.get('id').value) {
           this.dataSource.data.splice(index, 1);
           this.dataSource.data = this.dataSource.data;
         }
@@ -132,7 +139,7 @@ export class PedidoComponent implements OnInit {
     }
     else {
       this.expandedElement = null;
-      this.produtoForm.reset();
+      this.produtoPedidoForm.reset();
     }
   }
 
@@ -147,7 +154,7 @@ export class PedidoComponent implements OnInit {
 
   put() {
     this.expandedElement = null;
-    this.produtoService.put(this.produtoForm.value).subscribe((res: any) => {
+    this.produtoService.put(this.produtoPedidoForm.value).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -155,7 +162,7 @@ export class PedidoComponent implements OnInit {
         showConfirmButton: false,
         timer: 1500
       });
-      this.produtoForm.reset();
+      this.produtoPedidoForm.reset();
       this.getProdutos();
     }, err => console.log(err));
   }
@@ -167,10 +174,10 @@ export class PedidoComponent implements OnInit {
   }
 
   post() {
-    console.log(this.produtoForm.value);
+    console.log(this.produtoPedidoForm.value);
     this.editando = false;
     this.expandedElement = null;
-    this.produtoService.post(this.produtoForm.value).subscribe((res: any) => {
+    this.produtoService.post(this.produtoPedidoForm.value).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -178,7 +185,7 @@ export class PedidoComponent implements OnInit {
         showConfirmButton: false,
         timer: 1500
       });
-      this.produtoForm.reset();
+      this.produtoPedidoForm.reset();
       this.getProdutos();
     }, err => {
       this.getProdutos();
@@ -186,11 +193,11 @@ export class PedidoComponent implements OnInit {
     });
   }
 
-  public add() {
+  add() {
     if (!this.editando) {
-      this.produto = { idBanco: 0, id: 0, nome: "", preco: 0, embalagem: null };
-      this.dataSource.data = [this.produto].concat(this.dataSource.data);
-      this.expandedElement = this.produto;
+      this.produtoPedido = { id: 0, produto: null, quantidade: 0, observacao: "" };
+      this.dataSource.data = [this.produtoPedido].concat(this.dataSource.data);
+      this.expandedElement = this.produtoPedido;
       this.editando = true;
     }
   }
@@ -220,6 +227,12 @@ export class PedidoComponent implements OnInit {
         });
       };
     })
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   applyFilter(event: Event) {

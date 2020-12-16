@@ -37,7 +37,7 @@ export class ProdutoComponent implements OnInit, DoCheck {
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean;
-  OldExpandedElement: any;
+  oldExpandedElement: any;
   produtoForm: FormGroup;
   produto: Produto;
 
@@ -64,8 +64,8 @@ export class ProdutoComponent implements OnInit, DoCheck {
 
   ngDoCheck(): void {
     if (this.expandedElement) {
-      if (this.expandedElement && this.expandedElement != this.OldExpandedElement) {
-        this.OldExpandedElement = this.expandedElement;
+      if (this.expandedElement && this.expandedElement != this.oldExpandedElement) {
+        this.oldExpandedElement = this.expandedElement;
         if (this.expandedElement.id == 0) {
           this.produtoForm.reset();
         } else {
