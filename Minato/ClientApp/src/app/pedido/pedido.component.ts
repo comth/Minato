@@ -46,7 +46,7 @@ export interface ProdutoPedido {
 export class PedidoComponent implements OnInit {
 
   myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
+  options: any[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
   idMesa: number;
   numMesa: number;
@@ -83,7 +83,14 @@ export class PedidoComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.initializeForm();
+    this.getProdutos();
     this.initializeAutoComplete();
+  }
+
+  getProdutos() {
+    this.produtoService.getAll().subscribe((res: any) => {
+      this.options = res;
+    });
   }
 
   getPedido(idMesa) {
@@ -167,11 +174,7 @@ export class PedidoComponent implements OnInit {
     }, err => console.log(err));
   }
 
-  getProdutos() {
-    this.produtoService.getAll().subscribe((res: any) => {
-      this.dataSource.data = res;
-    });
-  }
+  
 
   post() {
     console.log(this.produtoPedidoForm.value);
@@ -229,10 +232,15 @@ export class PedidoComponent implements OnInit {
     })
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  private _filter(value: any): any[] {
+    let filterValue = '';
+    if (value.nome) {
+      filterValue = value.nome.toLowerCase();
+    } else {
+      filterValue = value.toLowerCase();
+    }
+    console.log(this.options.filter(option => option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)))
+    return this.options.filter(option => option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue));
   }
 
   applyFilter(event: Event) {
