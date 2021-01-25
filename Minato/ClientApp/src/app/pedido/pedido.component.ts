@@ -60,6 +60,7 @@ export class PedidoComponent implements OnInit {
   produtoPedidoForm: FormGroup;
   produto: Produto;
   produtoPedido: ProdutoPedido;
+  option: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -123,14 +124,18 @@ export class PedidoComponent implements OnInit {
 
   initializeAutoComplete() {
     this.filteredOptions =
-     this.myControl.valueChanges.pipe(
-       startWith(''),
-         map(value => this._filter(value))
-     );
+     //this.myControl.valueChanges.pipe(
+     //  startWith(''),
+     //    map(value => this._filter(value))
+     // );
+    this.produtoPedidoForm.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
   }
 
   error() {
-    console.log(this.produtoPedidoForm)
+    console.log(this.produtoPedidoForm.value)
   }
 
   cancel() {
@@ -239,8 +244,13 @@ export class PedidoComponent implements OnInit {
     } else {
       filterValue = value.toLowerCase();
     }
-    console.log(this.options.filter(option => option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)))
-    return this.options.filter(option => option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue));
+    let retorno = this.options.filter(option => option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue));
+    this.produtoPedidoForm.patchValue({
+      produto: retorno[0],
+      quantidade: 1
+    });
+    this.produtoPedidoForm = this.produtoPedidoForm;
+    return retorno;
   }
 
   applyFilter(event: Event) {

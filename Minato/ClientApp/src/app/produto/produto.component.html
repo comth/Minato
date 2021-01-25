@@ -31,7 +31,9 @@
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+      <td mat-cell
+          *matCellDef="let row"
+          [attr.colspan]="displayedColumns.length">
         <div class="example-element-detail"
              [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
           <form [formGroup]="produtoForm" [ngClass]="row.id == 0 ? 'form-add': 'form'">
@@ -67,8 +69,16 @@
     </ng-container>
 
     <ng-container matColumnDef="actions" class="icon">
-      <th mat-header-cell *matHeaderCellDef (click)="add()"> <mat-icon style="color: purple">add</mat-icon> </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> <mat-icon (click)="delete(row.id)">delete</mat-icon> </td>
+      <th mat-header-cell
+          *matHeaderCellDef
+          (click)="add()">
+        <mat-icon style="color: purple">add</mat-icon>
+      </th>
+      <td mat-cell
+          *matCellDef="let row"
+          [ngClass]="row.id == 0 ? 'escondido': 'exibido'">
+        <mat-icon (click)="delete(row.id)">delete</mat-icon>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -78,7 +88,11 @@
         [class.example-expanded-row]="expandedElement === element"
         (click)="expandedElement = expandedElement === element ? null : element">
     </tr>
-    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    <tr mat-row
+        *matRowDef="let row;
+        columns: ['expandedDetail']"
+        class="example-detail-row">
+    </tr>
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>
