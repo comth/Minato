@@ -14,6 +14,7 @@ import { MesaService } from '../services/mesa.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
+import { each } from 'jquery';
 
 export interface Produto {
   idBanco: number;
@@ -52,7 +53,7 @@ export class PedidoComponent implements OnInit {
   numMesa: number;
   pedido: Pedido;
   hasPedido: boolean;
-  displayedColumns: string[] = ['produto', 'quantidade', 'actions'];
+  displayedColumns: string[] = ['produto', 'quantidade', 'observacao','actions'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean;
@@ -60,6 +61,7 @@ export class PedidoComponent implements OnInit {
   produtoPedidoForm: FormGroup;
   produto: Produto;
   produtoPedido: ProdutoPedido;
+  checked = false;
   option: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -105,18 +107,14 @@ export class PedidoComponent implements OnInit {
     if (this.expandedElement) {
       if (this.expandedElement && this.expandedElement != this.oldExpandedElement) {
         this.oldExpandedElement = this.expandedElement;
-        if (this.expandedElement.id == 0) {
-          this.produtoPedidoForm.reset();
-        } else {
-          this.produtoPedidoForm.patchValue(this.expandedElement);
-        }
+         this.produtoPedidoForm.patchValue(this.expandedElement);
       }
     }
   }
 
   initializeForm() {
     this.produtoPedidoForm = this.fb.group({
-      produto: new FormControl(null),
+      produto: new FormControl(null, [Validators.required]),
       quantidade: new FormControl(1, [Validators.required]),
       observacao: new FormControl(null),
     }, { updateOn: 'change' });
@@ -124,14 +122,10 @@ export class PedidoComponent implements OnInit {
 
   initializeAutoComplete() {
     this.filteredOptions =
-     //this.myControl.valueChanges.pipe(
-     //  startWith(''),
-     //    map(value => this._filter(value))
-     // );
-    this.produtoPedidoForm.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+      this.produtoPedidoForm.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
   error() {
@@ -146,6 +140,7 @@ export class PedidoComponent implements OnInit {
         if (item.id == 0 || item.id == this.produtoPedidoForm.get('id').value) {
           this.dataSource.data.splice(index, 1);
           this.dataSource.data = this.dataSource.data;
+          this.produtoPedidoForm.reset();
         }
       });
     }
@@ -157,7 +152,7 @@ export class PedidoComponent implements OnInit {
 
   onSubmit() {
     if (this.editando) {
-      this.post();
+      this.addProdutoPedido();
     }
     else {
       this.put();
@@ -179,13 +174,28 @@ export class PedidoComponent implements OnInit {
     }, err => console.log(err));
   }
 
-  
-
-  post() {
-    console.log(this.produtoPedidoForm.value);
+  addProdutoPedido() {
     this.editando = false;
     this.expandedElement = null;
-    this.produtoService.post(this.produtoPedidoForm.value).subscribe((res: any) => {
+    this.dataSource.data[0] =
+    {
+      id: 'onlyFront', //adicionado somente no front
+      produto: this.produtoPedidoForm.value.produto,
+      quantidade: this.produtoPedidoForm.value.quantidade,
+      observacao: this.produtoPedidoForm.value.observacao
+    };
+    this.dataSource.data = this.dataSource.data;
+    this.produtoPedidoForm.reset();
+  }
+
+  mandarPedido() {
+    console.log('funcionando')
+    // if houver put
+    //else post
+  }
+
+  post() {
+    this.pedidoService.post(this.dataSource.data).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -194,23 +204,22 @@ export class PedidoComponent implements OnInit {
         timer: 1500
       });
       this.produtoPedidoForm.reset();
-      this.getProdutos();
     }, err => {
-      this.getProdutos();
       console.log(err);
     });
   }
 
   add() {
     if (!this.editando) {
-      this.produtoPedido = { id: 0, produto: null, quantidade: 0, observacao: "" };
-      this.dataSource.data = [this.produtoPedido].concat(this.dataSource.data);
-      this.expandedElement = this.produtoPedido;
+      let produtoPedido = { id: 0, produto: null, quantidade: 1, observacao: "" };
+      this.dataSource.data = [produtoPedido].concat(this.dataSource.data);
+      this.expandedElement = produtoPedido;
       this.editando = true;
     }
   }
 
-  public delete(id: any) {
+  delete(row: any) {
+
     this.expandedElement = null;
     Swal.fire({
       title: 'Tem certeza?',
@@ -223,34 +232,30 @@ export class PedidoComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.produtoService.delete(id).subscribe((res: any) => {
-          this.getProdutos();
-          Swal.fire({
-            position: 'top',
-            icon: 'success',
-            title: 'Deletado!',
-            showConfirmButton: false,
-            timer: 1500
-          })
-        });
+        let indice = this.dataSource.data.indexOf(row);
+        console.log(indice)
+        console.log(this.dataSource.data.splice(indice, 1));
+        this.dataSource.data = this.dataSource.data
+        console.log(this.dataSource.data)
       };
+      this.expandedElement = null;
     })
+  }
+
+  displayFn(produto: any): string {
+    return produto && produto.nome ? produto.nome : '';
   }
 
   private _filter(value: any): any[] {
     let filterValue = '';
-    if (value.nome) {
-      filterValue = value.nome.toLowerCase();
-    } else {
-      filterValue = value.toLowerCase();
+    if (value.produto?.nome) {
+      filterValue = value.produto.nome.toLowerCase();
+    } else if (value.produto) {
+      filterValue = value.produto.toLowerCase();
     }
-    let retorno = this.options.filter(option => option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue));
-    this.produtoPedidoForm.patchValue({
-      produto: retorno[0],
-      quantidade: 1
-    });
-    this.produtoPedidoForm = this.produtoPedidoForm;
-    return retorno;
+    return this.options.filter(option =>
+      option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
+    );;
   }
 
   applyFilter(event: Event) {

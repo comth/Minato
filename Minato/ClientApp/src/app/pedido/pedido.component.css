@@ -79,3 +79,9 @@ tr.example-element-row:not(.example-expanded-row):active {
 .icon {
   padding: 1%;
 }
+
+.finalButton {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.6%;
+}

@@ -20,6 +20,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UsuarioComponent } from './usuario/usuario.component';
 import { MesasComponent } from './mesas/mesas.component';
 import { TakeAwayComponent } from './take-away/take-away.component';
@@ -55,6 +56,7 @@ import { PedidoComponent } from './pedido/pedido.component';
     MatSelectModule,
     MatCardModule,
     MatAutocompleteModule,
+    MatSlideToggleModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
