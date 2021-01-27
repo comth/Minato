@@ -14,6 +14,12 @@ table {
   flex-direction: column;
 }
 
+.divColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .escondido {
   display: none;
 }

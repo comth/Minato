@@ -30,6 +30,10 @@ export class PedidoService {
   }
 
   public post(pedido: any) {
+    let i = 0;
+    for (i; i < pedido.produtos.length; i++) {
+      delete pedido.produtos[i].id
+    }
     return this.http.post(this.baseURL + "pedido", pedido);
   }
 

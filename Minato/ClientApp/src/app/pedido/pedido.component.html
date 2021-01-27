@@ -1,7 +1,7 @@
 <div class="divInicio">
-  <div>
+  <div class="divColumn">
     <div>
-      Pedido para a mesa {{numMesa}}
+      Pedido para a Mesa {{numMesa}}
     </div>
     <div>
       <mat-form-field style="font-size: 14px;">
@@ -22,17 +22,18 @@
   <div>
     <mat-slide-toggle class="example-margin"
                       color="accent"
-                      [(ngModel)]="checked">
+                      [(ngModel)]="checked"
+                      style="font-size: 14px;">
       Para entrega?
     </mat-slide-toggle>
 
-    <div [hidden]="!this.checked">
+    <div [hidden]="!this.checked" style="font-size: 14px;">
       <!--<label id="example-radio-group-label">Em qual endereço?</label>-->
       <mat-radio-group aria-labelledby="example-radio-group-label"
                        class="example-radio-group"
                        [(ngModel)]="enderecoSelecionado">
-        <mat-radio-button *ngFor="let endereco of enderecos" [value]="endereco">
-          {{endereco.bairro}}
+        <mat-radio-button *ngFor="let endereco of enderecos" [value]="endereco" style="font-size: 14px;">
+          {{endereco.logradouro}}, {{endereco.numero}} - {{endereco.bairro}}
         </mat-radio-button>
       </mat-radio-group>
     </div>
@@ -94,7 +95,7 @@
             <div>
               <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
               <mat-icon *ngIf="!produtoPedidoForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
-              <mat-icon *ngIf="produtoPedidoForm.valid" (click)="onSubmit()" class="icon-pad">check</mat-icon>
+              <mat-icon *ngIf="produtoPedidoForm.valid" (click)="onSubmitProdutoPedido(row)" class="icon-pad">check</mat-icon>
             </div>
           </form>
         </div>
@@ -118,6 +119,6 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>
 <div class="finalButton">
-  <button mat-raised-button color="primary" (click)="mandarPedido()">Finalizar Modificações</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()">Finalizar Modificações</button>
 </div>
 

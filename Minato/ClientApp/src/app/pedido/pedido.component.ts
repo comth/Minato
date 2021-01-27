@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
 import { each } from 'jquery';
-import { Usuario } from '../usuario/usuario.component';
+import { Endereco, Usuario } from '../usuario/usuario.component';
 
 export interface Produto {
   idBanco: number;
@@ -50,6 +50,7 @@ export class PedidoComponent implements OnInit {
   usuarioForm = new FormControl();
   produtos: any[] = [];
   usuarios: Usuario[] = [];
+  usuario: Usuario;
   produtosFiltrados: Observable<string[]>;
   usuariosFiltrados: Observable<string[]>;
   idMesa: number;
@@ -67,7 +68,7 @@ export class PedidoComponent implements OnInit {
   checked: boolean;
   expandido: boolean;
   option: any;
-  enderecoSelecionado: string;
+  enderecoSelecionado: Endereco;
   enderecos: any[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -99,6 +100,20 @@ export class PedidoComponent implements OnInit {
     this.initializeAutoCompleteUsuario();
   }
 
+  ngDoCheck(): void {
+    if (this.expandedElement) {
+      if (this.expandedElement && this.expandedElement != this.oldExpandedElement) {
+        this.oldExpandedElement = this.expandedElement;
+        this.produtoPedidoForm.patchValue(this.expandedElement);
+      }
+    }
+
+    if (this.checked && !this.expandido) {
+      this.expandido = true;
+      this.initializeRadioButton();
+    }
+  }
+
   getProdutos() {
     this.produtoService.getAll().subscribe((res: any) => {
       this.produtos = res;
@@ -118,23 +133,10 @@ export class PedidoComponent implements OnInit {
     }, err => console.log(err));
   }
 
-  ngDoCheck(): void {
-    if (this.expandedElement) {
-      if (this.expandedElement && this.expandedElement != this.oldExpandedElement) {
-        this.oldExpandedElement = this.expandedElement;
-         this.produtoPedidoForm.patchValue(this.expandedElement);
-      }
-    }
-
-    if (this.checked && !this.expandido) {
-      this.expandido = true;
-      this.initializeRadioButton();
-    }
-  }
-
   initializeRadioButton() {
     this.usuarios.forEach(usuario => {
       if (usuario == this.usuarioForm.value) {
+        this.usuario = usuario;
         this.enderecos = usuario.enderecos;
       }
     });
@@ -142,6 +144,7 @@ export class PedidoComponent implements OnInit {
 
   initializeForm() {
     this.produtoPedidoForm = this.fb.group({
+      id: new FormControl(null),
       produto: new FormControl(null, [Validators.required]),
       quantidade: new FormControl(1, [Validators.required]),
       observacao: new FormControl(null),
@@ -187,17 +190,40 @@ export class PedidoComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.hasPedido) {
+      this.put();
+    }
+    else {
+      this.post();
+    }
+  }
+
+  onSubmitProdutoPedido(row) {
     if (this.editando) {
       this.addProdutoPedido();
     }
     else {
-      this.put();
+      this.putProdutoPedido(row);
     }
   }
 
-  put() {
+  putProdutoPedido(row) {
     this.expandedElement = null;
-    this.produtoService.put(this.produtoPedidoForm.value).subscribe((res: any) => {
+    let indice = this.dataSource.data.indexOf(row);
+    this.dataSource.data[indice] =
+    {
+      id: this.produtoPedidoForm.value.id,
+      produto: this.produtoPedidoForm.value.produto,
+      quantidade: this.produtoPedidoForm.value.quantidade,
+      observacao: this.produtoPedidoForm.value.observacao
+    };
+    this.dataSource.data = this.dataSource.data;
+    this.produtoPedidoForm.reset();
+  }
+
+  put() {
+    this.pedido = this.montarPedido();
+    this.pedidoService.put(this.pedido).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -224,14 +250,9 @@ export class PedidoComponent implements OnInit {
     this.produtoPedidoForm.reset();
   }
 
-  mandarPedido() {
-    console.log('funcionando')
-    // if houver put
-    //else post
-  }
-
   post() {
-    this.pedidoService.post(this.dataSource.data).subscribe((res: any) => {
+    this.pedido = this.montarPedido();
+    this.pedidoService.post(this.pedido).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -243,6 +264,17 @@ export class PedidoComponent implements OnInit {
     }, err => {
       console.log(err);
     });
+  }
+
+  montarPedido(): Pedido {
+    let pedido: Pedido = {
+      id: this.pedido?.id,
+      enderecoSelecionado: this.enderecoSelecionado,
+      pedidoLocal: !this.checked,
+      produtos: this.dataSource.data,
+      usuario: this.usuario,
+    }
+    return pedido;
   }
 
   add() {
@@ -301,6 +333,7 @@ export class PedidoComponent implements OnInit {
     } else if (value.produto) {
       filterValue = value.toLowerCase();
     }
+    this.expandido = false;
     return this.usuarios.filter(option =>
       option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
     );;

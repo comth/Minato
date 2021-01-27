@@ -14,11 +14,12 @@ export interface Mesa {
 }
 
 export interface Pedido {
-  id: string;
+  id?: number;
   enderecoSelecionado: Endereco;
   produtos: Produto[];
   usuario: Usuario;
-  dataPedido: Date;
+  dataPedido?: Date;
+  pedidoLocal: boolean;
 }
 
 export interface Status {

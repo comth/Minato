@@ -28,6 +28,7 @@ export interface Endereco {
   logradouro: string;
   complemento: string;
   observacao: string;
+  numero: string;
   uf: string;
 }
 
@@ -96,6 +97,7 @@ export class UsuarioComponent implements OnInit, DoCheck {
         cep: new FormControl('', [Validators.required]),
         logradouro: new FormControl('', [Validators.required]),
         localidade: new FormControl('', [Validators.required]),
+        numero: new FormControl(''),
         complemento: new FormControl(''),
         observacao: new FormControl(''),
         uf: new FormControl('', [Validators.required]),
