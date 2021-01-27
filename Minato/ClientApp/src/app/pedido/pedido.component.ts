@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
 import { each } from 'jquery';
+import { Usuario } from '../usuario/usuario.component';
 
 export interface Produto {
   idBanco: number;
@@ -46,9 +47,11 @@ export interface ProdutoPedido {
 
 export class PedidoComponent implements OnInit {
 
-  myControl = new FormControl();
-  options: any[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
+  usuarioForm = new FormControl();
+  produtos: any[] = [];
+  usuarios: Usuario[] = [];
+  produtosFiltrados: Observable<string[]>;
+  usuariosFiltrados: Observable<string[]>;
   idMesa: number;
   numMesa: number;
   pedido: Pedido;
@@ -61,8 +64,11 @@ export class PedidoComponent implements OnInit {
   produtoPedidoForm: FormGroup;
   produto: Produto;
   produtoPedido: ProdutoPedido;
-  checked = false;
+  checked: boolean;
+  expandido: boolean;
   option: any;
+  enderecoSelecionado: string;
+  enderecos: any[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -71,6 +77,7 @@ export class PedidoComponent implements OnInit {
     private route: ActivatedRoute,
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
+    private usuarioService: UsuarioService,
     private fb: FormBuilder
   ) {
     this.route.params.subscribe(params => {
@@ -87,12 +94,20 @@ export class PedidoComponent implements OnInit {
     this.dataSource.sort = this.sort;
     this.initializeForm();
     this.getProdutos();
-    this.initializeAutoComplete();
+    this.getUsuarios();
+    this.initializeAutoCompleteProduto();
+    this.initializeAutoCompleteUsuario();
   }
 
   getProdutos() {
     this.produtoService.getAll().subscribe((res: any) => {
-      this.options = res;
+      this.produtos = res;
+    });
+  }
+
+  getUsuarios() {
+    this.usuarioService.getAll().subscribe((res: any) => {
+      this.usuarios = res;
     });
   }
 
@@ -110,6 +125,19 @@ export class PedidoComponent implements OnInit {
          this.produtoPedidoForm.patchValue(this.expandedElement);
       }
     }
+
+    if (this.checked && !this.expandido) {
+      this.expandido = true;
+      this.initializeRadioButton();
+    }
+  }
+
+  initializeRadioButton() {
+    this.usuarios.forEach(usuario => {
+      if (usuario == this.usuarioForm.value) {
+        this.enderecos = usuario.enderecos;
+      }
+    });
   }
 
   initializeForm() {
@@ -120,11 +148,19 @@ export class PedidoComponent implements OnInit {
     }, { updateOn: 'change' });
   }
 
-  initializeAutoComplete() {
-    this.filteredOptions =
+  initializeAutoCompleteProduto() {
+    this.produtosFiltrados =
       this.produtoPedidoForm.valueChanges.pipe(
         startWith(''),
-        map(value => this._filter(value))
+        map(value => this.filterProduto(value))
+      );
+  }
+
+  initializeAutoCompleteUsuario() {
+    this.usuariosFiltrados =
+      this.usuarioForm.valueChanges.pipe(
+        startWith(''),
+        map(value => this.filterUsuario(value))
       );
   }
 
@@ -242,18 +278,30 @@ export class PedidoComponent implements OnInit {
     })
   }
 
-  displayFn(produto: any): string {
-    return produto && produto.nome ? produto.nome : '';
+  displayFn(object: any): string {
+    return object && object.nome ? object.nome : '';
   }
 
-  private _filter(value: any): any[] {
+  private filterProduto(value: any): any[] {
     let filterValue = '';
     if (value.produto?.nome) {
       filterValue = value.produto.nome.toLowerCase();
     } else if (value.produto) {
       filterValue = value.produto.toLowerCase();
     }
-    return this.options.filter(option =>
+    return this.produtos.filter(option =>
+      option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
+    );;
+  }
+
+  private filterUsuario(value: any): any[] {
+    let filterValue = '';
+    if (value.produto?.nome) {
+      filterValue = value.nome.toLowerCase();
+    } else if (value.produto) {
+      filterValue = value.toLowerCase();
+    }
+    return this.usuarios.filter(option =>
       option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
     );;
   }

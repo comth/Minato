@@ -4,6 +4,16 @@ table {
   border-spacing: 0px;
 }
 
+.divInicio {
+  display: flex;
+  justify-content: space-between;
+}
+
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+}
+
 .escondido {
   display: none;
 }

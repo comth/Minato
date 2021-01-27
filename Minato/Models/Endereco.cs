@@ -28,6 +28,8 @@ namespace Minato.Models
         [StringLength(60, ErrorMessage = "O Complemento deve ter no máximo 60 caracteres.")]
         public string Complemento { get; set; }
 
+        public int Numero { get; set; }
+
         [StringLength(80, ErrorMessage = "A Observação deve ter no máximo 80 caracteres.")]
         public string Observacao { get; set; }
 
