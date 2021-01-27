@@ -24,6 +24,9 @@ namespace Minato.BLLs
             if (!pedido.PedidoLocal && (pedido.Usuario == null && pedido.EnderecoSelecionado == null))
                 return false;
 
+            if (pedido.EnderecoSelecionado != null)
+                pedido.EnderecoSelecionado = context.Endereco.Find(pedido.EnderecoSelecionado.Id);
+
             context.Pedido.Add(pedido);
             context.SaveChanges();
             return true;
