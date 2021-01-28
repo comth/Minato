@@ -128,8 +128,13 @@ export class PedidoComponent implements OnInit {
 
   getPedido(idMesa) {
     this.pedidoService.getByMesa(idMesa).subscribe((res: any) => {
-      this.hasPedido = res = null ? true : false;
-      this.pedido = res;
+      this.hasPedido = res != null ? true : false;
+      if (this.hasPedido) {
+        this.pedido = res;
+        this.dataSource.data = this.pedido.produtos;
+        this.enderecoSelecionado = this.pedido.enderecoSelecionado;
+        this.usuario = this.pedido.usuario;
+      }
     }, err => console.log(err));
   }
 

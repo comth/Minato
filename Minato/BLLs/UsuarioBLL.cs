@@ -10,7 +10,7 @@ namespace Minato.BLLs
     {
         public List<Usuario> GetAll(Context context)
         {
-            return context.Usuario.Include(x => x.Telefones).Include(x => x.Enderecos).ToList();
+            return context.Usuario.Include(x => x.Telefones).AsNoTracking().Include(x => x.Enderecos).AsNoTracking().ToList();
         }
 
         public Usuario Get(Context context, int id)
@@ -29,7 +29,6 @@ namespace Minato.BLLs
         {
             if (Exists(context, usuario.Id))
             {
-
                 context.Entry(usuario).State = EntityState.Modified;
                 context.SaveChanges();
                 return true;

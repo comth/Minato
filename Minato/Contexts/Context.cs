@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Minato.Models;
+using System.Linq;
 
 namespace Minato.Contexts
 {
@@ -12,6 +13,7 @@ namespace Minato.Contexts
         public DbSet<Embalagem> Embalagem { get; set; }
         public DbSet<Mesa> Mesa { get; set; }
         public DbSet<Status> Status { get; set; }
+        public DbSet<ProdutoPedido> ProdutoPedido { get; set; }
 
         public Context(DbContextOptions<Context> options)
         : base(options)

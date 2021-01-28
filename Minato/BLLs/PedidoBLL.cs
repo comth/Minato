@@ -24,8 +24,20 @@ namespace Minato.BLLs
             if (!pedido.PedidoLocal && (pedido.Usuario == null && pedido.EnderecoSelecionado == null))
                 return false;
 
+            if (pedido.Usuario != null)
+            {
+                pedido.Usuario = context.Usuario.Find(pedido.Usuario.Id);
+            }
+
             if (pedido.EnderecoSelecionado != null)
+            {
                 pedido.EnderecoSelecionado = context.Endereco.Find(pedido.EnderecoSelecionado.Id);
+            }
+
+            for (int i = 0; i < pedido.Produtos.Count; i++)
+            {
+                pedido.Produtos[i].Produto = context.Produto.Find(pedido.Produtos[i].Produto.IdBanco);
+            }
 
             context.Pedido.Add(pedido);
             context.SaveChanges();
@@ -45,7 +57,13 @@ namespace Minato.BLLs
 
         internal Pedido GetByMesa(Context context, int idMesa)
         {
-            return context.Mesa.Include(x => x.Pedido).First(x => x.Id.Equals(idMesa)).Pedido;
+            Pedido pedido = context.Mesa.Include(x => x.Pedido).First(x => x.Id.Equals(idMesa)).Pedido;
+            pedido = context.Pedido.Include(x => x.EnderecoSelecionado).Include(x => x.Produtos).FirstOrDefault(x => x.Id == pedido.Id);
+            for (int i = 0; i < pedido.Produtos.Count; i++)
+            {
+                pedido.Produtos[i] = context.ProdutoPedido.Include(x => x.Produto).FirstOrDefault(x => x.Id == pedido.Produtos[i].Id);
+            }
+            return pedido;
         }
 
         public bool Exists(Context context, int idPedido)
@@ -64,6 +82,6 @@ namespace Minato.BLLs
                 return true;
             }
             return false;
-        }
+        }  
     }
 }
