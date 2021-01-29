@@ -16,16 +16,13 @@ namespace Minato.Models
         [Key]
         public DateTime DataPedido { get; set; } = DateTime.Now;
 
-        //[Required(ErrorMessage = "O Usuário é obrigatório.")]
-        public Usuario Usuario { get; set; }
-
-        //[Required(ErrorMessage = "O Endereço é obrigatório.")]
-        public Endereco EnderecoSelecionado { get; set; }
-
         [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 produto é necessário")]
         public List<ProdutoPedido> Produtos { get; set; }
 
-        //pedido que foi feito na mesa, ou com retirada no local
+        public Usuario Usuario { get; set; }
+        public Endereco EnderecoSelecionado { get; set; }
+        public bool PedidoDelivery { get; set; }
+        public bool PedidoRetirada { get; set; }
         public bool PedidoLocal { get; set; }
     }
 

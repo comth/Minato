@@ -19,6 +19,8 @@ export interface Pedido {
   produtos: Produto[];
   usuario: Usuario;
   dataPedido?: Date;
+  pedidoDelivery: boolean;
+  pedidoRetirada: boolean;
   pedidoLocal: boolean;
 }
 

@@ -32,7 +32,10 @@
       <mat-radio-group aria-labelledby="example-radio-group-label"
                        class="example-radio-group"
                        [(ngModel)]="enderecoSelecionado">
-        <mat-radio-button *ngFor="let endereco of enderecos" [value]="endereco" style="font-size: 14px;">
+        <mat-radio-button *ngFor="let endereco of enderecos"
+                          [value]="endereco"
+                          [checked]="enderecoSelecionado?.id === endereco?.id"
+                          style="font-size: 14px;">
           {{endereco.logradouro}}, {{endereco.numero}} - {{endereco.bairro}}
         </mat-radio-button>
       </mat-radio-group>
@@ -67,10 +70,13 @@
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+      <td mat-cell
+          *matCellDef="let row"
+          [attr.colspan]="displayedColumns.length">
         <div class="example-element-detail"
              [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
-          <form [formGroup]="produtoPedidoForm" [ngClass]="row.id == 0 ? 'form-add': 'form'">
+          <form [formGroup]="produtoPedidoForm"
+                [ngClass]="row.id == 0 ? 'form-add': 'form'">
             <mat-form-field>
               <input type="text"
                      placeholder="Produto"
@@ -86,7 +92,7 @@
             </mat-form-field>
             <mat-form-field>
               <mat-label>Quantidade</mat-label>
-              <input matInput formControlName="quantidade" placeholder="1" value="1" required>
+              <input matInput formControlName="quantidade" value="1" required>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Observação</mat-label>
@@ -94,8 +100,16 @@
             </mat-form-field>
             <div>
               <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
-              <mat-icon *ngIf="!produtoPedidoForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
-              <mat-icon *ngIf="produtoPedidoForm.valid" (click)="onSubmitProdutoPedido(row)" class="icon-pad">check</mat-icon>
+              <mat-icon *ngIf="!produtoPedidoForm.valid"
+                        (click)="error()" class="icon-pad"
+                        style="color:#DDA0DD">
+              check
+              </mat-icon>
+              <mat-icon *ngIf="produtoPedidoForm.valid"
+                        (click)="onSubmitProdutoPedido(row)"
+                        class="icon-pad">
+              check
+              </mat-icon>
             </div>
           </form>
         </div>
@@ -103,8 +117,12 @@
     </ng-container>
 
     <ng-container matColumnDef="actions" class="icon">
-      <th mat-header-cell *matHeaderCellDef (click)="add()"> <mat-icon style="color: purple">add</mat-icon> </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> <mat-icon (click)="delete(row)">delete</mat-icon> </td>
+      <th mat-header-cell *matHeaderCellDef (click)="add()">
+        <mat-icon style="color: purple">add</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'">
+        <mat-icon (click)="delete(row)">delete</mat-icon>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

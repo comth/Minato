@@ -58,11 +58,16 @@ namespace Minato.BLLs
         internal Pedido GetByMesa(Context context, int idMesa)
         {
             Pedido pedido = context.Mesa.Include(x => x.Pedido).First(x => x.Id.Equals(idMesa)).Pedido;
-            pedido = context.Pedido.Include(x => x.EnderecoSelecionado).Include(x => x.Produtos).FirstOrDefault(x => x.Id == pedido.Id);
-            for (int i = 0; i < pedido.Produtos.Count; i++)
+            if (pedido != null)
             {
-                pedido.Produtos[i] = context.ProdutoPedido.Include(x => x.Produto).FirstOrDefault(x => x.Id == pedido.Produtos[i].Id);
+                pedido = context.Pedido.Include(x => x.EnderecoSelecionado).Include(x => x.Usuario).Include(x => x.Produtos).FirstOrDefault(x => x.Id == pedido.Id);
+
+                for (int i = 0; i < pedido.Produtos.Count; i++)
+                {
+                    pedido.Produtos[i] = context.ProdutoPedido.Include(x => x.Produto).FirstOrDefault(x => x.Id == pedido.Produtos[i].Id);
+                }
             }
+            
             return pedido;
         }
 

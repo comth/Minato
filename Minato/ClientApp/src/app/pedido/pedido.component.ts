@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Pedido } from '../mesas/mesas.component';
 import { PedidoService } from '../services/pedido.service';
 import { MesaService } from '../services/mesa.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
 import { each } from 'jquery';
@@ -65,7 +65,7 @@ export class PedidoComponent implements OnInit {
   produtoPedidoForm: FormGroup;
   produto: Produto;
   produtoPedido: ProdutoPedido;
-  checked: boolean;
+  checked = false;
   expandido: boolean;
   option: any;
   enderecoSelecionado: Endereco;
@@ -134,13 +134,22 @@ export class PedidoComponent implements OnInit {
         this.dataSource.data = this.pedido.produtos;
         this.enderecoSelecionado = this.pedido.enderecoSelecionado;
         this.usuario = this.pedido.usuario;
+        this.usuarioForm.patchValue(this.pedido.usuario);
+        
+        if (this.pedido.pedidoDelivery) {
+          //this.checked = true;
+        }
       }
     }, err => console.log(err));
   }
 
+  teste() {
+    return this.checked;
+  }
+
   initializeRadioButton() {
     this.usuarios.forEach(usuario => {
-      if (usuario == this.usuarioForm.value) {
+      if (usuario.id == this.usuarioForm.value.id) {
         this.usuario = usuario;
         this.enderecos = usuario.enderecos;
       }
@@ -306,10 +315,8 @@ export class PedidoComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         let indice = this.dataSource.data.indexOf(row);
-        console.log(indice)
-        console.log(this.dataSource.data.splice(indice, 1));
-        this.dataSource.data = this.dataSource.data
-        console.log(this.dataSource.data)
+        this.dataSource.data.splice(indice, 1);
+        this.dataSource.data = this.dataSource.data;
       };
       this.expandedElement = null;
     })
@@ -326,19 +333,21 @@ export class PedidoComponent implements OnInit {
     } else if (value.produto) {
       filterValue = value.produto.toLowerCase();
     }
-    return this.produtos.filter(option =>
+    //console.log(this.usuarioForm.value)
+    //console.log(this.usuario)
+    return this.usuarios.filter(option =>
       option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
     );;
   }
 
   private filterUsuario(value: any): any[] {
     let filterValue = '';
-    if (value.produto?.nome) {
-      filterValue = value.nome.toLowerCase();
-    } else if (value.produto) {
+    if (value?.nome) {
+      filterValue = value?.nome.toLowerCase();
+    } else if (value) {
       filterValue = value.toLowerCase();
     }
-    this.expandido = false;
+    //this.expandido = false;
     return this.usuarios.filter(option =>
       option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
     );;
