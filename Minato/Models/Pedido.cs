@@ -13,12 +13,10 @@ namespace Minato.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Key]
-        public DateTime DataPedido { get; set; } = DateTime.Now;
-
         [EnsureMinimumElements(1, ErrorMessage = "Ao menos 1 produto é necessário")]
         public List<ProdutoPedido> Produtos { get; set; }
 
+        public DateTime DataPedido { get; set; } = DateTime.Now;
         public Usuario Usuario { get; set; }
         public Endereco EnderecoSelecionado { get; set; }
         public bool PedidoDelivery { get; set; }
@@ -40,5 +38,8 @@ namespace Minato.Models
 
         [StringLength(60, ErrorMessage = "A Observação deve ter no máximo 60 caracteres.")]
         public string Observacao { get; set; }
+
+        [NotMapped]
+        public decimal Preco { get; set; }
     }
 }

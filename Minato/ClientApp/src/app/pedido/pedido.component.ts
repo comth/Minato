@@ -1,20 +1,18 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { FormGroup, FormBuilder, FormControl, Validators, ValidatorFn, AbstractControl, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { Pedido } from '../mesas/mesas.component';
 import { PedidoService } from '../services/pedido.service';
-import { MesaService } from '../services/mesa.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
-import { each } from 'jquery';
 import { Endereco, Usuario } from '../usuario/usuario.component';
 
 export interface Produto {
@@ -57,7 +55,7 @@ export class PedidoComponent implements OnInit {
   numMesa: number;
   pedido: Pedido;
   hasPedido: boolean;
-  displayedColumns: string[] = ['produto', 'quantidade', 'observacao','actions'];
+  displayedColumns: string[] = ['produto', 'quantidade', 'observacao', 'preco','actions'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean;
@@ -65,11 +63,12 @@ export class PedidoComponent implements OnInit {
   produtoPedidoForm: FormGroup;
   produto: Produto;
   produtoPedido: ProdutoPedido;
-  checked = false;
+  pedidoDelivery = false;
   expandido: boolean;
   option: any;
   enderecoSelecionado: Endereco;
   enderecos: any[] = [];
+  pedidoRetirada: boolean;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -79,23 +78,34 @@ export class PedidoComponent implements OnInit {
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
     private usuarioService: UsuarioService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdRef: ChangeDetectorRef
   ) {
     this.route.params.subscribe(params => {
       this.idMesa = params['idMesa'];
+      if (this.idMesa) {
+        this.pedidoDelivery = false;
+        this.pedidoRetirada = false;
+      } 
       this.numMesa = params['numMesa'];
     });
   }
 
   ngOnInit(): void {
     this.editando = false;
-    this.getPedido(this.idMesa);
+    this.getProdutos();
+    this.getUsuarios();
+    if (this.idMesa) {
+      this.getPedido(this.idMesa);
+    }
     this.dataSource = new MatTableDataSource([]);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.initializeForm();
-    this.getProdutos();
-    this.getUsuarios();
+    this.usuarioForm.valueChanges.subscribe((data: any) => {
+      this.expandido = false;
+    });
+
     this.initializeAutoCompleteProduto();
     this.initializeAutoCompleteUsuario();
   }
@@ -108,9 +118,9 @@ export class PedidoComponent implements OnInit {
       }
     }
 
-    if (this.checked && !this.expandido) {
+    if (this.pedidoDelivery && !this.expandido) {
       this.expandido = true;
-      this.initializeRadioButton();
+      this.updateRadioButton();
     }
   }
 
@@ -131,23 +141,30 @@ export class PedidoComponent implements OnInit {
       this.hasPedido = res != null ? true : false;
       if (this.hasPedido) {
         this.pedido = res;
-        this.dataSource.data = this.pedido.produtos;
+        this.dataSource.data = this.tratarPreco(this.pedido.produtos);
+
         this.enderecoSelecionado = this.pedido.enderecoSelecionado;
         this.usuario = this.pedido.usuario;
         this.usuarioForm.patchValue(this.pedido.usuario);
-        
-        if (this.pedido.pedidoDelivery) {
-          //this.checked = true;
-        }
+        this.pedidoDelivery = this.pedido.pedidoDelivery;
+        this.cdRef.detectChanges();
       }
     }, err => console.log(err));
   }
 
-  teste() {
-    return this.checked;
+  tratarPreco(produtos: any[]): any[] {
+    produtos.forEach(x => {
+      let preco = x.produto.preco * x.quantidade;
+      x.preco = preco;
+    })
+    return produtos;
   }
 
-  initializeRadioButton() {
+  teste() {
+    return this.pedidoDelivery;
+  }
+
+  updateRadioButton() {
     this.usuarios.forEach(usuario => {
       if (usuario.id == this.usuarioForm.value.id) {
         this.usuario = usuario;
@@ -266,7 +283,7 @@ export class PedidoComponent implements OnInit {
 
   post() {
     this.pedido = this.montarPedido();
-    this.pedidoService.post(this.pedido).subscribe((res: any) => {
+    this.pedidoService.post(this.pedido, this.idMesa).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -284,9 +301,11 @@ export class PedidoComponent implements OnInit {
     let pedido: Pedido = {
       id: this.pedido?.id,
       enderecoSelecionado: this.enderecoSelecionado,
-      pedidoLocal: !this.checked,
+      pedidoLocal: !this.pedidoDelivery,
       produtos: this.dataSource.data,
       usuario: this.usuario,
+      pedidoDelivery: this.pedidoDelivery,
+      pedidoRetirada: this.pedidoRetirada,
     }
     return pedido;
   }
@@ -333,9 +352,7 @@ export class PedidoComponent implements OnInit {
     } else if (value.produto) {
       filterValue = value.produto.toLowerCase();
     }
-    //console.log(this.usuarioForm.value)
-    //console.log(this.usuario)
-    return this.usuarios.filter(option =>
+    return this.produtos.filter(option =>
       option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
     );;
   }
@@ -347,7 +364,6 @@ export class PedidoComponent implements OnInit {
     } else if (value) {
       filterValue = value.toLowerCase();
     }
-    //this.expandido = false;
     return this.usuarios.filter(option =>
       option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
     );;

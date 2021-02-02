@@ -26,9 +26,6 @@ namespace Minato.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Pedido>()
-                .HasKey(p => new { p.Id, p.DataPedido });
-
             //modelBuilder.Entity<Endereco>()
             //    .HasOne(p => p.Usuario)
             //    .WithMany(b => b.Enderecos)

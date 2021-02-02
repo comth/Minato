@@ -10,8 +10,8 @@ using Minato.Contexts;
 namespace Minato.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20201216173801_Produtos")]
-    partial class Produtos
+    [Migration("20210202200207_DataPedido")]
+    partial class DataPedido
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,7 @@ namespace Minato.Migrations
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("Minato.Models.Embalagem", b =>
                 {
@@ -72,6 +72,9 @@ namespace Minato.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
 
+                    b.Property<int>("Numero")
+                        .HasColumnType("int");
+
                     b.Property<string>("Observacao")
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
@@ -101,9 +104,6 @@ namespace Minato.Migrations
                     b.Property<int>("Numero")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("PedidoDataPedido")
-                        .HasColumnType("datetime2");
-
                     b.Property<int?>("PedidoId")
                         .HasColumnType("int");
 
@@ -112,9 +112,9 @@ namespace Minato.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StatusId");
+                    b.HasIndex("PedidoId");
 
-                    b.HasIndex("PedidoId", "PedidoDataPedido");
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Mesa");
                 });
@@ -132,13 +132,19 @@ namespace Minato.Migrations
                     b.Property<int?>("EnderecoSelecionadoId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("PedidoDelivery")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("PedidoLocal")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PedidoRetirada")
                         .HasColumnType("bit");
 
                     b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id", "DataPedido");
+                    b.HasKey("Id");
 
                     b.HasIndex("EnderecoSelecionadoId");
 
@@ -182,8 +188,9 @@ namespace Minato.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime?>("PedidoDataPedido")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Observacao")
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<int?>("PedidoId")
                         .HasColumnType("int");
@@ -196,9 +203,9 @@ namespace Minato.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProdutoIdBanco");
+                    b.HasIndex("PedidoId");
 
-                    b.HasIndex("PedidoId", "PedidoDataPedido");
+                    b.HasIndex("ProdutoIdBanco");
 
                     b.ToTable("ProdutoPedido");
                 });
@@ -273,13 +280,13 @@ namespace Minato.Migrations
 
             modelBuilder.Entity("Minato.Models.Mesa", b =>
                 {
+                    b.HasOne("Minato.Models.Pedido", "Pedido")
+                        .WithMany()
+                        .HasForeignKey("PedidoId");
+
                     b.HasOne("Minato.Models.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
-
-                    b.HasOne("Minato.Models.Pedido", "Pedido")
-                        .WithMany()
-                        .HasForeignKey("PedidoId", "PedidoDataPedido");
 
                     b.Navigation("Pedido");
 
@@ -312,13 +319,13 @@ namespace Minato.Migrations
 
             modelBuilder.Entity("Minato.Models.ProdutoPedido", b =>
                 {
+                    b.HasOne("Minato.Models.Pedido", null)
+                        .WithMany("Produtos")
+                        .HasForeignKey("PedidoId");
+
                     b.HasOne("Minato.Models.Produto", "Produto")
                         .WithMany()
                         .HasForeignKey("ProdutoIdBanco");
-
-                    b.HasOne("Minato.Models.Pedido", null)
-                        .WithMany("Produtos")
-                        .HasForeignKey("PedidoId", "PedidoDataPedido");
 
                     b.Navigation("Produto");
                 });

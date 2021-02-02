@@ -40,10 +40,10 @@ namespace Minato.Controllers
             return Ok(pedido);
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] Pedido pedido)
+        [HttpPost("{idMesa}")]
+        public IActionResult Post([FromBody] Pedido pedido, int idMesa)
         {
-            bool salvo = PedidoBLL.Post(Context, pedido);
+            bool salvo = PedidoBLL.Post(Context, pedido, idMesa);
 
             if (salvo)
             {

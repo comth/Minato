@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Minato.Migrations
 {
-    public partial class Produtos : Migration
+    public partial class DataPedido : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -81,6 +81,7 @@ namespace Minato.Migrations
                     Logradouro = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
                     Localidade = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
                     Complemento = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true),
+                    Numero = table.Column<int>(type: "int", nullable: false),
                     Observacao = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
                     Uf = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: true)
@@ -125,11 +126,13 @@ namespace Minato.Migrations
                     DataPedido = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: true),
                     EnderecoSelecionadoId = table.Column<int>(type: "int", nullable: true),
+                    PedidoDelivery = table.Column<bool>(type: "bit", nullable: false),
+                    PedidoRetirada = table.Column<bool>(type: "bit", nullable: false),
                     PedidoLocal = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pedido", x => new { x.Id, x.DataPedido });
+                    table.PrimaryKey("PK_Pedido", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Pedido_Endereco_EnderecoSelecionadoId",
                         column: x => x.EnderecoSelecionadoId,
@@ -152,17 +155,16 @@ namespace Minato.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Numero = table.Column<int>(type: "int", nullable: false),
                     PedidoId = table.Column<int>(type: "int", nullable: true),
-                    PedidoDataPedido = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StatusId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mesa", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mesa_Pedido_PedidoId_PedidoDataPedido",
-                        columns: x => new { x.PedidoId, x.PedidoDataPedido },
+                        name: "FK_Mesa_Pedido_PedidoId",
+                        column: x => x.PedidoId,
                         principalTable: "Pedido",
-                        principalColumns: new[] { "Id", "DataPedido" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Mesa_Status_StatusId",
@@ -180,17 +182,17 @@ namespace Minato.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProdutoIdBanco = table.Column<int>(type: "int", nullable: true),
                     Quantidade = table.Column<int>(type: "int", nullable: false),
-                    PedidoDataPedido = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Observacao = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true),
                     PedidoId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProdutoPedido", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProdutoPedido_Pedido_PedidoId_PedidoDataPedido",
-                        columns: x => new { x.PedidoId, x.PedidoDataPedido },
+                        name: "FK_ProdutoPedido_Pedido_PedidoId",
+                        column: x => x.PedidoId,
                         principalTable: "Pedido",
-                        principalColumns: new[] { "Id", "DataPedido" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProdutoPedido_Produto_ProdutoIdBanco",
@@ -206,9 +208,9 @@ namespace Minato.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mesa_PedidoId_PedidoDataPedido",
+                name: "IX_Mesa_PedidoId",
                 table: "Mesa",
-                columns: new[] { "PedidoId", "PedidoDataPedido" });
+                column: "PedidoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mesa_StatusId",
@@ -231,9 +233,9 @@ namespace Minato.Migrations
                 column: "EmbalagemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProdutoPedido_PedidoId_PedidoDataPedido",
+                name: "IX_ProdutoPedido_PedidoId",
                 table: "ProdutoPedido",
-                columns: new[] { "PedidoId", "PedidoDataPedido" });
+                column: "PedidoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProdutoPedido_ProdutoIdBanco",

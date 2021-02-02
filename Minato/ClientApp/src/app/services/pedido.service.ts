@@ -29,12 +29,14 @@ export class PedidoService {
     return this.http.get(this.baseURL + `pedido/${itensPagina}/${index}/${pesquisa}`);
   }
 
-  public post(pedido: any) {
+  public post(pedido: any, idMesa) {
     let i = 0;
     for (i; i < pedido.produtos.length; i++) {
       delete pedido.produtos[i].id
     }
-    return this.http.post(this.baseURL + "pedido", pedido);
+    console.log(idMesa)
+    if (!idMesa) idMesa = 0;
+    return this.http.post(this.baseURL + "pedido/" + idMesa, pedido);
   }
 
   public put(pedido: any) {

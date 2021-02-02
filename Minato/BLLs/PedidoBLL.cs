@@ -19,8 +19,10 @@ namespace Minato.BLLs
             return context.Pedido.Find(id);
         }
 
-        public bool Post(Context context, Pedido pedido)
+        public bool Post(Context context, Pedido pedido, int idMesa)
         {
+            var mesa = context.Mesa.Find(idMesa);
+
             if (!pedido.PedidoLocal && (pedido.Usuario == null && pedido.EnderecoSelecionado == null))
                 return false;
 
@@ -40,6 +42,7 @@ namespace Minato.BLLs
             }
 
             context.Pedido.Add(pedido);
+            mesa.Pedido = pedido;
             context.SaveChanges();
             return true;
         }
@@ -48,7 +51,25 @@ namespace Minato.BLLs
         {
             if (Exists(context, pedido.Id))
             {
-                context.Entry(pedido).State = EntityState.Modified;
+                var pedidoBanco = context.Pedido.Find(pedido.Id);
+                if (pedido.Usuario != null)
+                {
+                    pedidoBanco.Usuario = context.Usuario.Find(pedido.Usuario.Id);
+                }
+
+                if (pedido.EnderecoSelecionado != null)
+                {
+                    pedidoBanco.EnderecoSelecionado = context.Endereco.Find(pedido.EnderecoSelecionado.Id);
+                }
+
+                for (int i = 0; i < pedido.Produtos.Count; i++)
+                {
+                    pedido.Produtos[i].Produto = context.Produto.Find(pedido.Produtos[i].Produto.IdBanco);
+                }
+
+                pedidoBanco.Produtos = pedido.Produtos;
+
+                //context.Entry(pedido).State = EntityState.Modified;
                 context.SaveChanges();
                 return true;
             }
