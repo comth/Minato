@@ -98,7 +98,7 @@
             </mat-form-field>
             <mat-form-field>
               <mat-label>Quantidade</mat-label>
-              <input matInput formControlName="quantidade" value="1" required>
+              <input matInput type="number" formControlName="quantidade" value="1" required>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Observação</mat-label>
@@ -143,9 +143,15 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>
 
+<br />
+
 <div class="finalPanel">
   <div>
-    {{this.precoTotal}}
+    Preço Produtos : R$ {{this.precoProdutos}}
+    <br />
+    Entrega : R$ {{this.precoEntrega}}
+    <hr />
+    Total : R$ {{this.precoProdutos + this.precoEntrega}}
   </div>
 
   <div class="finalButton">

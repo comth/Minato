@@ -29,7 +29,7 @@
                       <div class="form-array-end">
                         <mat-form-field>
                           <mat-label>CEP</mat-label>
-                          <input matInput formControlName="cep" (keyup)="autoCompleteCep(i)" required />
+                          <input matInput mask="00000-000" formControlName="cep" (keyup)="autoCompleteCep(i)" required />
                         </mat-form-field>
                         <mat-form-field>
                           <mat-label>Bairro</mat-label>
@@ -41,7 +41,7 @@
                         </mat-form-field>
                         <mat-form-field>
                           <mat-label>Número</mat-label>
-                          <input matInput formControlName="numero" required />
+                          <input matInput type="number" formControlName="numero" required />
                         </mat-form-field>
                         <mat-form-field>
                           <mat-label>Localidade</mat-label>
@@ -57,7 +57,7 @@
                         </mat-form-field>
                         <mat-form-field>
                           <mat-label>UF</mat-label>
-                          <input matInput formControlName="uf" required />
+                          <input matInput maxlength=2 formControlName="uf" required />
                         </mat-form-field>
                       </div>
                       <div style="margin-left: 6%;">
@@ -77,7 +77,7 @@
                     <div class="form-array-end">
                       <mat-form-field>
                         <mat-label>Telefone</mat-label>
-                        <input matInput formControlName="value" required />
+                        <input matInput mask="(00) 00000-0000" formControlName="value" required />
                       </mat-form-field>
                       <div style="margin-left: 6%;">
                         <mat-icon style="margin-left: -60%;" (click)="removeTelefone(i)">clear</mat-icon>

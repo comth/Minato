@@ -69,7 +69,8 @@ export class PedidoComponent implements OnInit {
   enderecoSelecionado: Endereco;
   enderecos: any[] = [];
   pedidoRetirada: boolean;
-  precoTotal: number;
+  precoProdutos: number;
+  precoEntrega: number = 5;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -167,7 +168,7 @@ export class PedidoComponent implements OnInit {
       }
     }); //AQUI
 
-    this.precoTotal = precoTotal;
+    this.precoProdutos = precoTotal;
     return produtos;
   }
 
@@ -342,7 +343,7 @@ export class PedidoComponent implements OnInit {
       if (result.isConfirmed) {
         let indice = this.dataSource.data.indexOf(row);
         this.dataSource.data.splice(indice, 1);
-        this.dataSource.data = this.dataSource.data;
+        this.dataSource.data = this.tratarPreco(this.dataSource.data);
       };
       this.expandedElement = null;
     })

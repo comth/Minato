@@ -19,6 +19,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -27,6 +28,10 @@ import { MesasComponent } from './mesas/mesas.component';
 import { TakeAwayComponent } from './take-away/take-away.component';
 import { DeliveryComponent } from './delivery/delivery.component';
 import { PedidoComponent } from './pedido/pedido.component';
+import { PainelPedidosComponent } from './painel-pedidos/painel-pedidos.component';
+import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
   declarations: [
@@ -41,6 +46,8 @@ import { PedidoComponent } from './pedido/pedido.component';
     TakeAwayComponent,
     DeliveryComponent,
     PedidoComponent,
+    PainelPedidosComponent,
+    ConfiguracoesComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -59,6 +66,7 @@ import { PedidoComponent } from './pedido/pedido.component';
     MatAutocompleteModule,
     MatSlideToggleModule,
     MatRadioModule,
+    NgxMaskModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
@@ -68,6 +76,7 @@ import { PedidoComponent } from './pedido/pedido.component';
       { path: 'mesas', component: MesasComponent },
       { path: 'takeaway', component: TakeAwayComponent },
       { path: 'delivery', component: DeliveryComponent },
+      { path: 'configuracoes', component: ConfiguracoesComponent },
       { path: 'pedido/:idMesa/:numMesa', component: PedidoComponent }, //pedidoLocal (mesa)
       { path: 'pedido', component: PedidoComponent }, //novo pedidoDelivery ou pedidoRetirada
       { path: 'pedido/:idPedido', component: PedidoComponent }, //existente pedidoDelivery ou pedidoRetirada
