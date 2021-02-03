@@ -142,7 +142,15 @@
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>
-<div class="finalButton">
-  <button mat-raised-button color="primary" (click)="onSubmit()">Finalizar Modificações</button>
+
+<div class="finalPanel">
+  <div>
+    {{this.precoTotal}}
+  </div>
+
+  <div class="finalButton">
+    <button mat-raised-button color="primary" (click)="onSubmit()">Finalizar Modificações</button>
+  </div>
 </div>
+
 

@@ -27,6 +27,13 @@ table {
 .exibido {
 }
 
+.finalPanel {
+  border: solid;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
 mat-icon {
   cursor: pointer;
 }

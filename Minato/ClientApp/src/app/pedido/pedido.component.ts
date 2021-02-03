@@ -69,6 +69,7 @@ export class PedidoComponent implements OnInit {
   enderecoSelecionado: Endereco;
   enderecos: any[] = [];
   pedidoRetirada: boolean;
+  precoTotal: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -104,6 +105,10 @@ export class PedidoComponent implements OnInit {
     this.initializeForm();
     this.usuarioForm.valueChanges.subscribe((data: any) => {
       this.expandido = false;
+    });
+
+    this.produtoPedidoForm.valueChanges.subscribe((data: any) => {
+      this.dataSource.data = this.tratarPreco(this.dataSource.data);
     });
 
     this.initializeAutoCompleteProduto();
@@ -153,15 +158,17 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarPreco(produtos: any[]): any[] {
+    let precoTotal = 0;
     produtos.forEach(x => {
-      let preco = x.produto.preco * x.quantidade;
-      x.preco = preco;
-    })
-    return produtos;
-  }
+      if (x.produto) {
+        let preco = x.produto.preco * x.quantidade;
+        x.preco = preco;
+        precoTotal = precoTotal + preco;
+      }
+    }); //AQUI
 
-  teste() {
-    return this.pedidoDelivery;
+    this.precoTotal = precoTotal;
+    return produtos;
   }
 
   updateRadioButton() {

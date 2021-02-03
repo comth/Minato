@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Minato.Contexts;
 using Minato.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,7 +41,7 @@ namespace Minato.BLLs
             }
 
             context.Pedido.Add(pedido);
-            mesa.Pedido = pedido;
+            if(mesa != null) mesa.Pedido = pedido;
             context.SaveChanges();
             return true;
         }
