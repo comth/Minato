@@ -3,6 +3,11 @@ img {
   cursor: pointer;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 div.img-container {
   text-align: center;
 }
