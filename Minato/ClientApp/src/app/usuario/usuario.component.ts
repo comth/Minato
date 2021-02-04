@@ -81,7 +81,9 @@ export class UsuarioComponent implements OnInit, DoCheck {
         if (this.expandedElement.id == 0) {
           this.usuarioForm.reset();
         } else {
+          this.usuarioForm.reset();
           this.usuarioForm.patchValue(this.expandedElement);
+          //console.log(this.usuarioForm.value)
         }
       }
     }
@@ -209,7 +211,6 @@ export class UsuarioComponent implements OnInit, DoCheck {
   }
 
   post() {
-    console.log(this.usuarioForm.value);
     this.editando = false;
     this.expandedElement = null;
     this.usuarioService.post(this.usuarioForm.value).subscribe((res: any) => {

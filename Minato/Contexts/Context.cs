@@ -14,6 +14,7 @@ namespace Minato.Contexts
         public DbSet<Mesa> Mesa { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<ProdutoPedido> ProdutoPedido { get; set; }
+        public DbSet<Telefone> Telefone { get; set; }
 
         public Context(DbContextOptions<Context> options)
         : base(options)
