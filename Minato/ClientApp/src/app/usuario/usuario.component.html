@@ -25,6 +25,7 @@
               <div>
                 <div formArrayName="enderecos" *ngFor="let endereco of enderecos.controls; index as i">
                   <ng-container [formGroupName]="i">
+                    <div color="accent" class="labelFormArray"> Endereco {{i + 1}}</div>
                     <div style="display: flex; flex-direction: row; align-items: center;">
                       <div class="form-array-end">
                         <mat-form-field>

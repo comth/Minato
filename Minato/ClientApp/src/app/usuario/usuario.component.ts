@@ -81,12 +81,37 @@ export class UsuarioComponent implements OnInit, DoCheck {
         if (this.expandedElement.id == 0) {
           this.usuarioForm.reset();
         } else {
+          console.log(this.expandedElement)
           this.usuarioForm.reset();
+          this.tratarFormArray();
           this.usuarioForm.patchValue(this.expandedElement);
-          //console.log(this.usuarioForm.value)
         }
       }
     }
+  }
+
+
+  tratarFormArray() {
+    const formArrayEnderecos = this.usuarioForm.get("enderecos") as FormArray;
+    formArrayEnderecos.clear();
+    this.expandedElement.enderecos.forEach(_ => formArrayEnderecos.push(this.fb.group({
+      id: new FormControl(0),
+      bairro: new FormControl('', [Validators.required]),
+      cep: new FormControl('', [Validators.required]),
+      logradouro: new FormControl('', [Validators.required]),
+      localidade: new FormControl('', [Validators.required]),
+      numero: new FormControl(''),
+      complemento: new FormControl(''),
+      observacao: new FormControl(''),
+      uf: new FormControl('', [Validators.required]),
+    })));
+
+    const formArrayTelefones = this.usuarioForm.get("telefones") as FormArray;
+    formArrayTelefones.clear();
+    this.expandedElement.telefones.forEach(_ => formArrayTelefones.push(this.fb.group({
+      id: new FormControl(0),
+      value: new FormControl(null)
+    })));
   }
 
   initializeForm() {
