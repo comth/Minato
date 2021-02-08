@@ -71,7 +71,17 @@ export class UsuarioComponent implements OnInit, DoCheck {
       this.dataSource = new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.dataSource.filterPredicate =
+        (data: Usuario, filter: string) => this.customFilter(data, filter);
     });
+  }
+
+  customFilter(data: any, filter: string): boolean {
+    if (data.nome.toLowerCase().includes(filter)) return true;
+    
+    let filtrados: any[] = data.telefones.filter(x => x.value.includes(filter));
+    if (filtrados.length != 0) return true;
+    return false;
   }
 
   ngDoCheck(): void {
@@ -292,6 +302,7 @@ export class UsuarioComponent implements OnInit, DoCheck {
   }
 
   applyFilter(event: Event) {
+    //console.log((event.target as HTMLInputElement).value);
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 

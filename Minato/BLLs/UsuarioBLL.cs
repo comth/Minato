@@ -135,8 +135,19 @@ namespace Minato.BLLs
         {
             if (Exists(context, id))
             {
-                Usuario usuario = new Usuario() { Id = id };
-                context.Usuario.Attach(usuario);
+                Usuario usuario = context.Usuario.Include(x => x.Telefones).Include(x => x.Enderecos)
+                                        .FirstOrDefault(x => x.Id == id);
+
+                foreach (var endereco in usuario.Enderecos)
+                {
+                    context.Endereco.Remove(endereco);
+                }
+
+                foreach (var telefone in usuario.Telefones)
+                {
+                    context.Telefone.Remove(telefone);
+                }
+
                 context.Usuario.Remove(usuario);
                 context.SaveChanges();
                 return true;

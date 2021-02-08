@@ -34,11 +34,16 @@ namespace Minato.BLLs
         public bool Put(Context context, Produto produto)
         {
             if (produto.Embalagem != null)
+            {
                 produto.Embalagem = context.Embalagem.Find(produto.Embalagem.Id);
-            else produto.Embalagem = null;
-
-            context.Entry(produto).State = EntityState.Modified;
-
+                context.Entry(produto).State = EntityState.Modified;
+            }
+            else
+            {
+                Produto produtoBanco = context.Produto.Include(x => x.Embalagem).First(x => x.Id == produto.Id);
+                produtoBanco.Embalagem = null;
+                produtoBanco = produto;
+            }
             context.SaveChanges();
             return true;
         }
