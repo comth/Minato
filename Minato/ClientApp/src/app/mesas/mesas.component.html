@@ -1,3 +1,14 @@
+<h3>Fab Buttons</h3>
+<div >
+  <div class="flexReverse">
+    <button mat-fab class="statusButton">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-fab *ngFor="let s of status" style.backgroundColor="{{s.cor}}" class="statusButton">{{s.nome}}</button>
+  </div>
+</div>
+
+
 <div class="flexReverse">
   <div *ngFor="let s of status" style.backgroundColor="{{s.cor}}" class="status">
     <div style="align-self: center;">

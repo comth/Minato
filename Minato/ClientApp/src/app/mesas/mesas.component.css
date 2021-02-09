@@ -5,6 +5,19 @@
   justify-content: flex-start;
 }
 
+.example-button-row button,
+.example-button-row a {
+  margin-right: 8px;
+}
+
+.statusButton {
+  height: 75px !important;
+  width: 75px !important;
+  margin: 1%;
+  background-color: lightgray;
+  box-shadow: none;
+}
+
 .flexReverse {
   display: flex;
   flex-direction: row-reverse;
