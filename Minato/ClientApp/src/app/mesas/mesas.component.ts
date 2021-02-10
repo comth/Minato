@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Directive, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MesaService } from '../services/mesa.service';
@@ -37,6 +37,8 @@ export interface Status {
   styleUrls: ['./mesas.component.css']
 })
 
+
+
 export class MesasComponent implements OnInit {
 
   mesas: any[];
@@ -46,7 +48,7 @@ export class MesasComponent implements OnInit {
   constructor(
     private mesaService: MesaService,
     private statusService: StatusService,
-    private router: Router,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -56,7 +58,7 @@ export class MesasComponent implements OnInit {
 
   getStatus() {
     this.statusService.getAll().subscribe((res: any[]) => {
-      res = [{ id: 0 }].concat(res);
+      //res = [{ id: 0 }].concat(res);
       this.status = res;
     });
   }
@@ -67,6 +69,52 @@ export class MesasComponent implements OnInit {
       res.push({ id: 0 });
       this.mesas = res;
     });
+  }
+
+  clickStatus(status: any) {
+    Swal.fire({
+      title: 'Que operação dejesa?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: `Editar`,
+      denyButtonText: `Deletar`,
+      cancelButtonText: `Cancelar`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.putStatus(status);
+      } else if (result.isDenied) {
+        this.deleteStatus(status.id);
+      }
+    })
+  }
+
+  putStatus(status: any) {
+    Swal.mixin({
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      progressSteps: ['1', '2']
+    }).queue([
+      {
+        confirmButtonText: 'Próxima &rarr;',
+        title: 'Nome do Status',
+        input: 'text',
+        inputValue: status.nome,
+      },
+      {
+        confirmButtonText: 'Registar status',
+        title: 'Cor do Status',
+        input: 'text',
+        inputValue: status.cor,
+      }
+    ]).then((result: any) => {
+      
+      if (result && !result.dismiss) {
+        this.statusService.put({ id: status.id ,nome: result.value[0], cor: result.value[1] }).subscribe((res) => {
+          this.getStatus();
+          this.getMesas();
+        });
+      }
+    })
   }
 
   deleteStatus(id) {
@@ -135,9 +183,7 @@ export class MesasComponent implements OnInit {
         })
       }
       else if (result.dismiss.toString() == 'cancel') {
-
         let options = [];
-
         for (var i = 0; i < this.status.length; i++) {
           if (this.status[i].id != 0)
             options.push(this.status[i].nome);

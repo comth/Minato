@@ -1,28 +1,21 @@
-<h3>Fab Buttons</h3>
+<h3>Mesas</h3>
 <div >
   <div class="flexReverse">
-    <button mat-fab class="statusButton">
+    <button mat-fab class="statusButton" (click)="addStatus()">
       <mat-icon>add</mat-icon>
     </button>
-    <button mat-fab *ngFor="let s of status" style.backgroundColor="{{s.cor}}" class="statusButton">{{s.nome}}</button>
-  </div>
-</div>
-
-
-<div class="flexReverse">
-  <div *ngFor="let s of status" style.backgroundColor="{{s.cor}}" class="status">
-    <div style="align-self: center;">
+    <button mat-fab
+            *ngFor="let s of status"
+            (click)="clickStatus(s)"
+            style.backgroundColor="{{s.cor}}"
+            class="statusButton">
       {{s.nome}}
       <br />
       {{s.quantidade}}
-      <br />
-      <mat-icon *ngIf="s.id != 0" (click)="deleteStatus(s.id)" style="cursor:pointer">delete_outline</mat-icon>
-    </div>
-    <div *ngIf="s.id == 0" class="status" (click)="addStatus()" style="cursor:pointer;">
-      <mat-icon style="align-self: center">add</mat-icon>
-    </div>
+    </button>
   </div>
 </div>
+
 <div class="flex">
   <div *ngFor="let mesa of mesas" class="mesas" style.backgroundColor="{{mesa.status?.cor}}">
     <div *ngIf="mesa.id != 0" class="content" (click)="clickMesa(mesa)">

@@ -1,9 +1,3 @@
-table {
-  width: 100%;
-  border-collapse: unset;
-  border-spacing: 0px;
-}
-
 .divInicio {
   display: flex;
   justify-content: space-between;
@@ -20,13 +14,6 @@ table {
   justify-content: space-between;
 }
 
-.escondido {
-  display: none;
-}
-
-.exibido {
-}
-
 .finalPanel {
   display: flex;
   flex-direction: column;
@@ -34,74 +21,6 @@ table {
   font-size: 14px;
 }
 
-mat-icon {
-  cursor: pointer;
-}
-
-form {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  padding-top: 2%;
-}
-
-.form-array-end {
-  display: flex !important;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.divIcon {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-  .divIcon:hover {
-    background-color: #DCDCDC;
-  }
-
-.form-add {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  top: -10px;
-  z-index: 5;
-}
-
-.icon-pad {
-  color: purple;
-  padding-right: 55px;
-}
-
-tr.example-detail-row {
-  height: 0;
-}
-
-tr.example-element-row:not(.example-expanded-row):hover {
-  background: whitesmoke;
-}
-
-tr.example-element-row:not(.example-expanded-row):active {
-  background: #efefef;
-}
-
-.example-element-row td {
-  flex-direction: row;
-  align-items: center;
-}
-
-.example-element-detail {
-  overflow: hidden;
-}
-
-.icon {
-  padding: 1%;
-}
 
 .finalButton {
   display: flex;

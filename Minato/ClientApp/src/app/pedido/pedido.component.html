@@ -1,10 +1,10 @@
+<div style="margin-bottom:6%;">
+  <h5>Pedido para a Mesa {{numMesa}}</h5>
+</div>
 <div class="divInicio">
   <div class="divColumn">
     <div>
-      Pedido para a Mesa {{numMesa}}
-    </div>
-    <div>
-      <mat-form-field style="font-size: 14px;">
+      <mat-form-field style="font-size: 14px; width: 70%">
         <input type="text"
                placeholder="Usuário"
                matInput
@@ -30,13 +30,15 @@
     <div [hidden]="(!this.pedidoDelivery)" style="font-size: 14px;">
       <mat-radio-group aria-labelledby="example-radio-group-label"
                        class="example-radio-group"
-                       [(ngModel)]="enderecoSelecionado"
-                       >
+                       [(ngModel)]="enderecoSelecionado">
         <mat-radio-button *ngFor="let endereco of enderecos"
                           [value]="endereco"
                           [checked]="enderecoSelecionado?.id === endereco?.id"
                           style="font-size: 14px;">
-          {{endereco.logradouro}}, {{endereco.numero}} - {{endereco.bairro}}
+          <a style="white-space: pre-wrap;">
+            {{endereco.logradouro}}, {{endereco.numero}} - {{endereco.bairro}}
+          </a>
+          
         </mat-radio-button>
       </mat-radio-group>
     </div>
@@ -54,25 +56,25 @@
     <!-- Produto Column -->
     <ng-container matColumnDef="produto">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Produto </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.produto?.nome}} </td>
+      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.produto?.nome}} </td>
     </ng-container>
 
     <!-- Quantidade Column -->
     <ng-container matColumnDef="quantidade">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.quantidade}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Qtd </th>
+      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.quantidade}} </td>
     </ng-container>
 
     <!-- Observação Column -->
     <ng-container matColumnDef="observacao">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Observação </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.observacao}} </td>
+      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.observacao}} </td>
     </ng-container>
 
     <!-- Preco Column -->
     <ng-container matColumnDef="preco">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Preco </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> {{row.preco}} </td>
+      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.preco}} </td>
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
@@ -126,7 +128,7 @@
       <th mat-header-cell *matHeaderCellDef (click)="add()">
         <mat-icon style="color: purple">add</mat-icon>
       </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'">
+      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0">
         <mat-icon (click)="delete(row)">delete</mat-icon>
       </td>
     </ng-container>
@@ -153,7 +155,6 @@
     <hr />
     Total : R$ {{this.precoProdutos + this.precoEntrega}}
   </div>
-
   <div class="finalButton">
     <button mat-raised-button color="primary" (click)="onSubmit()">Finalizar Modificações</button>
   </div>

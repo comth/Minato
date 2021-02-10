@@ -5,54 +5,26 @@
   justify-content: flex-start;
 }
 
-.example-button-row button,
-.example-button-row a {
-  margin-right: 8px;
-}
-
 .statusButton {
-  height: 75px !important;
-  width: 75px !important;
-  margin: 1%;
+  height: 80px;
+  width: 80px;
+  margin: 0.6%;
   background-color: lightgray;
   box-shadow: none;
+}
+  .statusButton ::ng-deep .mat-button-focus-overlay {
+    display: none;
+  }
+
+button {
+  white-space: pre-wrap !important;
 }
 
 .flexReverse {
   display: flex;
   flex-direction: row-reverse;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
   margin-bottom: 4%;
-}
-
-.circle {
-  position: relative;
-  width: 50%;
-  padding-bottom: 50%;
-  background: gold;
-  border-radius: 50%;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
-
-  .circle h3 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-  }
-
-.status {
-  width: 13vw;
-  height: 13vw;
-  border-radius: 50%;
-  text-align: center;
-  margin-left: 2%;
-  display: flex;
-  justify-content: center;
-  background-color: lightgray;
 }
 
 .mesas {

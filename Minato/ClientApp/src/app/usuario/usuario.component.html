@@ -9,7 +9,7 @@
     <!-- Nome Column -->
     <ng-container matColumnDef="nome">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': ''"> {{row.nome}} </td>
+      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.nome}} </td>
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
@@ -103,8 +103,12 @@
     </ng-container>
 
     <ng-container matColumnDef="actions" class="icon">
-      <th mat-header-cell *matHeaderCellDef (click)="add()"> <mat-icon style="color: purple">add</mat-icon> </th>
-      <td mat-cell *matCellDef="let row" [ngClass]="row.id == 0 ? 'escondido': 'exibido'"> <mat-icon (click)="delete(row.id)">delete</mat-icon> </td>
+      <th mat-header-cell *matHeaderCellDef (click)="add()">
+        <mat-icon style="color: purple">add</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0">
+        <mat-icon (click)="delete(row.id)">delete</mat-icon>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
