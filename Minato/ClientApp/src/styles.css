@@ -57,24 +57,24 @@ form {
   z-index: 5;
 }
 
-tr.example-detail-row {
+tr.expanded-detail-row {
   height: 0 !important;
 }
 
-tr.example-element-row:not(.example-expanded-row):hover {
+tr.expanded-element-row:not(.expanded-row):hover {
   background: whitesmoke;
 }
 
-tr.example-element-row:not(.example-expanded-row):active {
+tr.expanded-element-row:not(.expanded-row):active {
   background: #efefef;
 }
 
-.example-element-row td {
+.expanded-element-row td {
   flex-direction: row;
   align-items: center;
 }
 
-.example-element-detail {
+.expanded-element-detail {
   overflow: hidden;
 }
 

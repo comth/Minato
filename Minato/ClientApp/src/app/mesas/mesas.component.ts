@@ -19,6 +19,7 @@ export interface Pedido {
   produtos: Produto[];
   usuario: Usuario;
   dataPedido?: Date;
+  observacao: string;
   pedidoDelivery: boolean;
   pedidoRetirada: boolean;
   pedidoLocal: boolean;
@@ -43,7 +44,6 @@ export class MesasComponent implements OnInit {
 
   mesas: any[];
   status: any[];
-  teste: boolean;
 
   constructor(
     private mesaService: MesaService,

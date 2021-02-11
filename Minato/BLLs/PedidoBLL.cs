@@ -41,7 +41,7 @@ namespace Minato.BLLs
             }
 
             context.Pedido.Add(pedido);
-            if(mesa != null) mesa.Pedido = pedido;
+            if (mesa != null) mesa.Pedido = pedido;
             context.SaveChanges();
             return true;
         }
@@ -67,8 +67,8 @@ namespace Minato.BLLs
                 }
 
                 pedidoBanco.Produtos = pedido.Produtos;
+                pedidoBanco.Observacao = pedido.Observacao;
 
-                //context.Entry(pedido).State = EntityState.Modified;
                 context.SaveChanges();
                 return true;
             }
@@ -87,7 +87,7 @@ namespace Minato.BLLs
                     pedido.Produtos[i] = context.ProdutoPedido.Include(x => x.Produto).FirstOrDefault(x => x.Id == pedido.Produtos[i].Id);
                 }
             }
-            
+
             return pedido;
         }
 
@@ -107,6 +107,6 @@ namespace Minato.BLLs
                 return true;
             }
             return false;
-        }  
+        }
     }
 }

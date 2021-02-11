@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Minato.Contexts;
 using Minato.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -2,7 +2,6 @@
 using Minato.BLLs;
 using Minato.Contexts;
 using Minato.Models;
-using System.Collections.Generic;
 
 namespace Minato.Controllers
 {
@@ -39,7 +38,7 @@ namespace Minato.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]Usuario usuario)
+        public IActionResult Post([FromBody] Usuario usuario)
         {
             bool salvo = UsuarioBLL.Post(Context, usuario);
 
@@ -48,11 +47,11 @@ namespace Minato.Controllers
                 return Ok();
             }
 
-            return Conflict(); 
+            return Conflict();
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]Usuario usuario)
+        public IActionResult Put([FromBody] Usuario usuario)
         {
             bool salvo = UsuarioBLL.Put(Context, usuario);
 

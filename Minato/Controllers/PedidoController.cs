@@ -50,7 +50,7 @@ namespace Minato.Controllers
                 return Ok();
             }
 
-            return BadRequest(); 
+            return BadRequest();
         }
 
         [HttpPut]

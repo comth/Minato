@@ -1,17 +1,19 @@
 <h3>Mesas</h3>
 <div >
-  <div class="flexReverse">
-    <button mat-fab class="statusButton" (click)="addStatus()">
+  <div class="flex-reverse">
+    <button mat-fab class="status-button" (click)="addStatus()">
       <mat-icon>add</mat-icon>
     </button>
     <button mat-fab
             *ngFor="let s of status"
             (click)="clickStatus(s)"
             style.backgroundColor="{{s.cor}}"
-            class="statusButton">
-      {{s.nome}}
-      <br />
-      {{s.quantidade}}
+            class="status-button">
+      <div style="line-height: 19px">
+        {{s.nome}}
+        <br />
+        {{s.quantidade}}
+      </div>
     </button>
   </div>
 </div>

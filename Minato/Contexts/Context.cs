@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Minato.Models;
-using System.Linq;
 
 namespace Minato.Contexts
 {

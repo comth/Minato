@@ -1,7 +1,6 @@
 ﻿using Minato.Util;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,6 +18,7 @@ namespace Minato.Models
         public DateTime DataPedido { get; set; } = DateTime.Now;
         public Usuario Usuario { get; set; }
         public Endereco EnderecoSelecionado { get; set; }
+        public string Observacao { get; set; }
         public bool PedidoDelivery { get; set; }
         public bool PedidoRetirada { get; set; }
         public bool PedidoLocal { get; set; }

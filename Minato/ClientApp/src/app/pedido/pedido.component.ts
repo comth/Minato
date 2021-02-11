@@ -53,7 +53,6 @@ export class PedidoComponent implements OnInit {
   usuariosFiltrados: Observable<string[]>;
   idMesa: number;
   numMesa: number;
-  pedido: Pedido;
   hasPedido: boolean;
   displayedColumns: string[] = ['produto', 'quantidade', 'observacao', 'preco','actions'];
   dataSource: MatTableDataSource<any>;
@@ -71,6 +70,17 @@ export class PedidoComponent implements OnInit {
   pedidoRetirada: boolean;
   precoProdutos: number;
   precoEntrega: number = 5;
+  pedido: Pedido =
+    {
+      enderecoSelecionado: null,
+      produtos: null,
+      pedidoDelivery: null,
+      pedidoLocal: null,
+      pedidoRetirada: null,
+      dataPedido: null,
+      usuario: null,
+      observacao: null
+    };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -103,6 +113,9 @@ export class PedidoComponent implements OnInit {
     this.dataSource = new MatTableDataSource([]);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSource.filterPredicate =
+      (data: ProdutoPedido, filter: string) => this.customFilter(data, filter);
+
     this.initializeForm();
     this.usuarioForm.valueChanges.subscribe((data: any) => {
       this.expandido = false;
@@ -114,6 +127,11 @@ export class PedidoComponent implements OnInit {
 
     this.initializeAutoCompleteProduto();
     this.initializeAutoCompleteUsuario();
+  }
+
+  customFilter(data: ProdutoPedido, filter: string): boolean {
+    if (data.produto.nome.toLowerCase().includes(filter) || data.produto.id.toString().includes(filter)) return true;
+    return false;
   }
 
   ngDoCheck(): void {
@@ -306,6 +324,7 @@ export class PedidoComponent implements OnInit {
   }
 
   montarPedido(): Pedido {
+    console.log(this.pedido)
     let pedido: Pedido = {
       id: this.pedido?.id,
       enderecoSelecionado: this.enderecoSelecionado,
@@ -314,6 +333,7 @@ export class PedidoComponent implements OnInit {
       usuario: this.usuario,
       pedidoDelivery: this.pedidoDelivery,
       pedidoRetirada: this.pedidoRetirada,
+      observacao: this.pedido.observacao,
     }
     return pedido;
   }
@@ -366,14 +386,16 @@ export class PedidoComponent implements OnInit {
   }
 
   private filterUsuario(value: any): any[] {
+    console.log(value)
     let filterValue = '';
     if (value?.nome) {
       filterValue = value?.nome.toLowerCase();
     } else if (value) {
       filterValue = value.toLowerCase();
     }
-    return this.usuarios.filter(option =>
-      option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
+
+    return this.usuarios.filter(usuario =>
+      usuario.nome.toLowerCase().includes(filterValue) || usuario.telefones.filter(x => x.value.includes(filterValue)).length != 0 
     );;
   }
 

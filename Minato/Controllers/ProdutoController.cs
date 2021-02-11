@@ -2,7 +2,6 @@
 using Minato.BLLs;
 using Minato.Contexts;
 using Minato.Models;
-using System.Collections.Generic;
 
 namespace Minato.Controllers
 {
@@ -39,7 +38,7 @@ namespace Minato.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]Produto produto)
+        public IActionResult Post([FromBody] Produto produto)
         {
             bool salvo = ProdutoBLL.Post(Context, produto);
 
@@ -52,7 +51,7 @@ namespace Minato.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]Produto produto)
+        public IActionResult Put([FromBody] Produto produto)
         {
             if (!ProdutoBLL.ExistsIdBanco(Context, produto.IdBanco)) return NotFound();
 

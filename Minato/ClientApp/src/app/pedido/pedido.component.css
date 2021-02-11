@@ -1,28 +1,28 @@
-.divInicio {
+.div-inicio {
   display: flex;
   justify-content: space-between;
 }
 
-.example-radio-group {
+.radio-group {
   display: flex;
   flex-direction: column;
 }
 
-.divColumn {
+.div-column {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 50%;
 }
 
-.finalPanel {
+.final-panel {
   display: flex;
   flex-direction: column;
   text-align: right;
   font-size: 14px;
 }
 
-
-.finalButton {
+.final-button {
   display: flex;
   justify-content: flex-end;
   padding-top: 1.6%;
