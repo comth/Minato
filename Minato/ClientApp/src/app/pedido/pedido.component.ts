@@ -8,27 +8,15 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
-import { Pedido } from '../mesas/mesas.component';
 import { PedidoService } from '../services/pedido.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
-import { Endereco, Usuario } from '../usuario/usuario.component';
-
-export interface Produto {
-  idBanco: number;
-  id: number;
-  nome: string;
-  preco: number;
-  embalagem: any;
-}
-
-export interface ProdutoPedido {
-  id: number;
-  produto: Produto;
-  quantidade: number;
-  observacao: string;
-}
+import { Usuario } from '../interfaces/usuario';
+import { Produto } from '../interfaces/produto';
+import { ProdutoPedido } from '../interfaces/produto-pedido';
+import { Endereco } from '../interfaces/endereco';
+import { Pedido } from '../interfaces/pedido';
 
 @Component({
   selector: 'app-pedido',

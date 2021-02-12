@@ -33,7 +33,10 @@ namespace Minato.BLLs
         {
             if (Exists(context, mesa.Id))
             {
-                context.Entry(mesa).State = EntityState.Modified;
+                Mesa mesaBanco = context.Mesa.Find(mesa.Id);
+                mesaBanco.Status = context.Status.Find(mesa.Status.Id);
+                mesaBanco = mesa;
+                
                 context.SaveChanges();
                 return true;
             }

@@ -2,43 +2,13 @@ import { ChangeDetectorRef, Component, Directive, ElementRef, HostListener, OnIn
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MesaService } from '../services/mesa.service';
-import { Produto } from '../services/produto.service';
 import { StatusService } from '../services/status.service';
-import { Endereco, Usuario } from '../usuario/usuario.component';
-
-export interface Mesa {
-  id: string;
-  numero: number;
-  status: Status;
-  pedido: Pedido;
-}
-
-export interface Pedido {
-  id?: number;
-  enderecoSelecionado: Endereco;
-  produtos: Produto[];
-  usuario: Usuario;
-  dataPedido?: Date;
-  observacao: string;
-  pedidoDelivery: boolean;
-  pedidoRetirada: boolean;
-  pedidoLocal: boolean;
-}
-
-export interface Status {
-  id: string;
-  nome: string;
-  cor: string;
-  quantidade: number;
-}
 
 @Component({
   selector: 'app-mesas',
   templateUrl: './mesas.component.html',
   styleUrls: ['./mesas.component.css']
 })
-
-
 
 export class MesasComponent implements OnInit {
 
@@ -202,8 +172,7 @@ export class MesasComponent implements OnInit {
           }
         }).then((result) => {
           if (result.isConfirmed) {
-            console.log(result);
-            mesa.status = this.status[+result.value + 1];
+            mesa.status = this.status[+result.value];
             this.mesaService.put(mesa).subscribe((res: any) => {
               this.getStatus();
               Swal.fire({

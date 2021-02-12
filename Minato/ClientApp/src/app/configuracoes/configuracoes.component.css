@@ -1,0 +1,28 @@
+.config-container {
+  width: 100%;
+  height: 550px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.sidenav-content {
+  /*display: flex;*/
+  height: 100%;
+  /*align-items: start;
+  justify-content: start;*/
+}
+
+.sidenav {
+  padding: 20px;
+  padding-left: unset;
+}
+
+.tree-invisible {
+  display: none;
+}
+
+.tree ul,
+.tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}

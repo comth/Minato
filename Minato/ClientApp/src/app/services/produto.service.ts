@@ -1,13 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-export interface Produto {
-  id: number;
-  nome: string;
-  preco: number;
-  embalagem: any;
-}
-
 @Injectable({
   providedIn: 'root'
 })

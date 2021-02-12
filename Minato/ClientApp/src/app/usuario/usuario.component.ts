@@ -8,29 +8,7 @@ import { FormGroup, FormBuilder, FormControl, Validators, ValidatorFn, AbstractC
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
 import { ViaCepService } from '../services/via-cep.service';
-
-export interface Usuario {
-  id: number;
-  nome: string;
-  enderecos: Endereco[];
-  telefones: Telefone[];
-}
-
-export interface Telefone {
-  id: string;
-  value: string;
-}
-
-export interface Endereco {
-  id: string;
-  bairro: string;
-  cep: string;
-  logradouro: string;
-  complemento: string;
-  observacao: string;
-  numero: string;
-  uf: string;
-}
+import { Usuario } from '../interfaces/usuario';
 
 @Component({
   selector: 'app-usuario',

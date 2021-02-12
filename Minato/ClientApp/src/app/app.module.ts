@@ -10,12 +10,14 @@ import { ProdutoComponent } from './produto/produto.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { MatSelectModule } from '@angular/material/select';
@@ -51,8 +53,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ReactiveFormsModule,
     MatTableModule,
     MatInputModule,
+    MatTreeModule,
     FormsModule,
     MatButtonModule,
+    MatSidenavModule,
     MatFormFieldModule,
     MatPaginatorModule,
     MatSortModule,
