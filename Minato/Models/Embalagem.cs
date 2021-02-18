@@ -13,7 +13,7 @@ namespace Minato.Models
         [StringLength(100, ErrorMessage = "O Nome deve ter no máximo 100 caracteres.")]
         public string Nome { get; set; }
 
-        //[Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(5, 2)")]
         public decimal Preco { get; set; }
     }
 }

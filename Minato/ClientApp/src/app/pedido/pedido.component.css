@@ -21,9 +21,3 @@
   text-align: right;
   font-size: 14px;
 }
-
-.final-button {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 1.6%;
-}

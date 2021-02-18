@@ -57,6 +57,12 @@ form {
   z-index: 5;
 }
 
+.final-button {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.6%;
+}
+
 tr.expanded-detail-row {
   height: 0 !important;
 }

@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { BehaviorSubject } from 'rxjs';
+import { StatusService } from '../services/status.service';
+import { ConfiguracaoService } from '../services/configuracao.service';
+import { Configuracao } from '../interfaces/configuracao';
+import { Status } from '../interfaces/status';
+import Swal from 'sweetalert2';
 
 interface Node {
   name: string;
@@ -28,19 +34,59 @@ export class ConfiguracoesComponent implements OnInit {
 
   treeControl = new NestedTreeControl<Node>(node => node.children);
   dataSource = new MatTreeNestedDataSource<Node>();
-  nodeSelecionado: Node;
+  hasChild = (_: number, node: Node) => !!node.children && node.children.length > 0;
+  nodeSelecionado = new BehaviorSubject<Node>({ name: null });
+  configuracao: Configuracao = { statusFinalPedido: null, statusInicioPedido: null };
+  listaStatus: Status[];
 
-  ngOnInit(): void {
-  }
-
-  constructor() {
+  constructor(
+    private statusService: StatusService,
+    private configuracaoService: ConfiguracaoService,
+  ) {
     this.dataSource.data = TREE_DATA;
   }
 
-  click(data: any) {
-    this.nodeSelecionado = data;
+  ngOnInit(): void {
+    this.tratarNode();
+    this.getConfiguracao();
   }
 
-  hasChild = (_: number, node: Node) => !!node.children && node.children.length > 0;
+  put() {
+    this.configuracaoService.put(this.configuracao).subscribe(res => {
+      Swal.fire('Salvo!','','success')
+    });
+  }
+
+  getConfiguracao() {
+    this.configuracaoService.get().subscribe(res => {
+      this.configuracao = <Configuracao>res;
+    });
+  }
+
+  tratarNode() {
+    this.nodeSelecionado.subscribe(data => {
+      if (data) {
+        console.log(data)
+        if (data.name == 'Status') this.getListaStatus();
+      }
+    });
+  }
+
+  getListaStatus() {
+    this.statusService.getAll().subscribe(res => {
+      this.listaStatus = <Status[]>res;
+    });
+  }
+
+  click(data: any) {
+    this.nodeSelecionado.next(data);
+  }
+
+  compareCategoryObjects(object1: any, object2: any) {
+    if (object2) {
+      if (object1.id == object2.id) return true;
+      return false;
+    }
+  }
 
 }

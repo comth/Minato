@@ -1,5 +1,5 @@
 <mat-drawer-container class="config-container" autosize>
-  <mat-drawer #drawer class="sidenav" mode="side">
+  <mat-drawer #drawer class="sidenav" mode="side" opened="true">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
         <li class="mat-tree-node" (click)="click(node)">
@@ -26,13 +26,35 @@
     </mat-tree>
   </mat-drawer>
 
-  <div class="sidenav-content">
-    <button type="button" mat-button (click)="drawer.toggle()">
-      Mostrar Menu
+  <div class="sidenav-content" style="padding: 20px;">
+    <button mat-icon-button color="accent"  aria-label="Abrir Menu" (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
     </button>
     <br />
-    <div *ngIf="nodeSelecionado?.name == 'Status'">
-      
+
+    <div *ngIf="(nodeSelecionado | async).name == 'Status'">
+      <br />
+      <label>Para qual status mudar a mesa após iniciar o pedido? </label>
+      <mat-form-field appearance="fill" style="font-size: 14px;">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="configuracao.statusInicioPedido" [compareWith]="compareCategoryObjects">
+          <mat-option>Não mudar</mat-option>
+          <mat-option *ngFor="let s of listaStatus; let i = index" [(value)]="listaStatus[i]">{{s.nome}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <label>Para qual status mudar a mesa após finalizar o pedido? </label>
+      <mat-form-field appearance="fill" style="font-size: 14px;">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="configuracao.statusFinalPedido" [compareWith]="compareCategoryObjects">
+          <mat-option>Não mudar</mat-option>
+          <mat-option *ngFor="let s of listaStatus; let i = index" [(value)]="listaStatus[i]">{{s.nome}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+    <div class="final-button">
+      <button mat-raised-button color="primary" (click)="put()">Salvar Alterações</button>
     </div>
   </div>
 

@@ -12,14 +12,46 @@ namespace Minato.BLLs
     {
         public Configuracao Get(Context context)
         {
-            return context.Configuracao.Find(1);
+            var configuracao = context.Configuracao
+                .Include(x => x.StatusInicioPedido)
+                .Include(x => x.StatusFinalPedido)
+                .First(x => x.Id == 1);
+
+            //caso de não haver configuracao
+            if (configuracao == null)
+            {
+                configuracao = new Configuracao(){};
+                context.Add(configuracao);
+                context.SaveChanges();
+            }
+
+            return configuracao;
         }
 
         public bool Put(Context context, Configuracao configuracao)
         {
-            Configuracao configuracaoBanco = context.Configuracao.Find(1);
-            configuracaoBanco.StatusAposPedido = context.Status.Find(configuracao.StatusAposPedido.Id);
-            configuracaoBanco = configuracao;
+            if (configuracao.StatusInicioPedido != null)
+                configuracao.StatusInicioPedido = context.Status.Find(configuracao.StatusInicioPedido.Id);
+
+
+            if (configuracao.StatusFinalPedido != null)
+                configuracao.StatusFinalPedido = context.Status.Find(configuracao.StatusFinalPedido.Id);
+
+            context.Entry(configuracao).State = EntityState.Modified;
+            context.SaveChanges();
+            context.Entry(configuracao).State = EntityState.Detached;
+
+            if (configuracao.StatusInicioPedido == null || configuracao.StatusFinalPedido == null)
+            {
+                Configuracao configuracaoBanco = context.Configuracao
+                    .Include(x => x.StatusInicioPedido)
+                    .Include(x => x.StatusFinalPedido)
+                    .First(x => x.Id == configuracao.Id);
+
+                if(configuracao.StatusInicioPedido == null) configuracaoBanco.StatusInicioPedido = null;
+                if(configuracao.StatusFinalPedido == null) configuracaoBanco.StatusFinalPedido = null;
+                configuracaoBanco = configuracao;
+            }
             context.SaveChanges();
             return true;
         }

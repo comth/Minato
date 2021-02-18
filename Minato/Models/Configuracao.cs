@@ -11,6 +11,7 @@ namespace Minato.Models
 
         //public string NomeExibicao { get; set; } 
 
-        public Status StatusAposPedido { get; set; }  //status da mesa após pedido
+        public Status StatusInicioPedido { get; set; }  //status da mesa após pedido
+        public Status StatusFinalPedido { get; set; }  //status da mesa após pedido
     }
 }
