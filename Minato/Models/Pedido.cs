@@ -22,6 +22,7 @@ namespace Minato.Models
         public bool PedidoDelivery { get; set; }
         public bool PedidoRetirada { get; set; }
         public bool PedidoLocal { get; set; }
+        public bool PedidoEncerrado { get; set; }
     }
 
     public class ProdutoPedido

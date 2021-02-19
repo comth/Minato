@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Minato.Contexts;
 
 namespace Minato.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20210219172507_PedidoFechado")]
+    partial class PedidoFechado
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,7 +160,7 @@ namespace Minato.Migrations
                     b.Property<bool>("PedidoDelivery")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("PedidoEncerrado")
+                    b.Property<bool>("PedidoFechado")
                         .HasColumnType("bit");
 
                     b.Property<bool>("PedidoLocal")

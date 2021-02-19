@@ -41,7 +41,7 @@ namespace Minato.Controllers
         }
 
         [HttpPost("{idMesa}")]
-        public IActionResult Post([FromBody] Pedido pedido, int idMesa)
+        public IActionResult Post([FromBody]Pedido pedido, int idMesa)
         {
             bool salvo = PedidoBLL.Post(Context, pedido, idMesa);
 
@@ -54,7 +54,7 @@ namespace Minato.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Pedido pedido)
+        public IActionResult Put([FromBody]Pedido pedido)
         {
             bool salvo = PedidoBLL.Put(Context, pedido);
 

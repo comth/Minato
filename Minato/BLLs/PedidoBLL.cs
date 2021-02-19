@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Minato.Contexts;
 using Minato.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,7 +42,13 @@ namespace Minato.BLLs
             }
 
             context.Pedido.Add(pedido);
-            if (mesa != null) mesa.Pedido = pedido;
+
+            if (mesa != null) {
+                mesa.Pedido = pedido;
+                var config = new ConfiguracaoBLL().Get(context);
+                mesa.Status = config.StatusInicioPedido;
+            }
+            
             context.SaveChanges();
             return true;
         }
@@ -68,6 +75,12 @@ namespace Minato.BLLs
 
                 pedidoBanco.Produtos = pedido.Produtos;
                 pedidoBanco.Observacao = pedido.Observacao;
+                pedidoBanco.PedidoEncerrado = pedido.PedidoEncerrado;
+                pedidoBanco.PedidoDelivery = pedido.PedidoDelivery;
+                pedidoBanco.PedidoLocal = pedido.PedidoLocal;
+                pedidoBanco.PedidoRetirada = pedido.PedidoRetirada;
+
+                if (pedido.PedidoEncerrado) EncerrarPedido(context, pedido);
 
                 context.SaveChanges();
                 return true;
@@ -75,7 +88,15 @@ namespace Minato.BLLs
             return false;
         }
 
-        internal Pedido GetByMesa(Context context, int idMesa)
+        private void EncerrarPedido(Context context, Pedido pedido)
+        {
+            var mesa = context.Mesa.First(x => x.Pedido.Id == pedido.Id);
+            mesa.Pedido = null;
+            var config = new ConfiguracaoBLL().Get(context);
+            mesa.Status = config.StatusFinalPedido;
+        }
+
+        public Pedido GetByMesa(Context context, int idMesa)
         {
             Pedido pedido = context.Mesa.Include(x => x.Pedido).First(x => x.Id.Equals(idMesa)).Pedido;
             if (pedido != null)

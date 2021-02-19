@@ -7,7 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PedidoService } from '../services/pedido.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -75,6 +75,7 @@ export class PedidoComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
     private usuarioService: UsuarioService,
@@ -148,6 +149,35 @@ export class PedidoComponent implements OnInit {
     });
   }
 
+  encerrarPedido() {
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: "Não é possível reverter essa operação",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Encerrar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      this.pedido = this.montarPedido(true);
+      this.pedidoService.put(this.pedido).subscribe((res: any) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Pedido Encerrado!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.router.navigate(['/mesas']);
+      }, err => console.log(err));
+    });
+  }
+
+  imprimirConta() {
+    console.log(this.montarPedido(false));
+  }
+
   getPedido(idMesa) {
     this.pedidoService.getByMesa(idMesa).subscribe((res: any) => {
       this.hasPedido = res != null ? true : false;
@@ -172,7 +202,7 @@ export class PedidoComponent implements OnInit {
         x.preco = preco;
         precoTotal = precoTotal + preco;
       }
-    }); //AQUI
+    });
 
     this.precoProdutos = precoTotal;
     return produtos;
@@ -267,7 +297,7 @@ export class PedidoComponent implements OnInit {
   }
 
   put() {
-    this.pedido = this.montarPedido();
+    this.pedido = this.montarPedido(false);
     this.pedidoService.put(this.pedido).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
@@ -296,7 +326,7 @@ export class PedidoComponent implements OnInit {
   }
 
   post() {
-    this.pedido = this.montarPedido();
+    this.pedido = this.montarPedido(false);
     this.pedidoService.post(this.pedido, this.idMesa).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
@@ -311,8 +341,7 @@ export class PedidoComponent implements OnInit {
     });
   }
 
-  montarPedido(): Pedido {
-    console.log(this.pedido)
+  montarPedido(encerrarPedido: boolean): Pedido {
     let pedido: Pedido = {
       id: this.pedido?.id,
       enderecoSelecionado: this.enderecoSelecionado,
@@ -322,6 +351,7 @@ export class PedidoComponent implements OnInit {
       pedidoDelivery: this.pedidoDelivery,
       pedidoRetirada: this.pedidoRetirada,
       observacao: this.pedido.observacao,
+      pedidoEncerrado: encerrarPedido,
     }
     return pedido;
   }

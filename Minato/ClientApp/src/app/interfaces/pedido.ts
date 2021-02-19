@@ -12,4 +12,5 @@ export interface Pedido {
   pedidoDelivery: boolean;
   pedidoRetirada: boolean;
   pedidoLocal: boolean;
+  pedidoEncerrado?: boolean;
 }
