@@ -1,5 +1,5 @@
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -7,13 +7,13 @@ import { Injectable } from '@angular/core';
 
 export class DistanceMatrixService {
 
-  cepOrigem: string = '86010060';
-  key: string = '';
-  base: string = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
+  private baseURL: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    this.baseURL = baseUrl;
+  }
 
-  public get(cepDestino: any) {
-    return this.http.get(`${this.base}origins=${this.cepOrigem}&destinations=${cepDestino}&key=${this.key}`);
+  public get(cepDestino: string) {
+    return this.http.get(this.baseURL + `distanceMatrix/${cepDestino}`);
   }
 }

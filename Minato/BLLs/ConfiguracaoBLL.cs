@@ -17,6 +17,9 @@ namespace Minato.BLLs
                 .Include(x => x.StatusFinalPedido)
                 .First(x => x.Id == 1);
 
+            //nunca comentar a próxima linha
+            configuracao.KeyDistanceMatrix = null;
+
             //caso de não haver configuracao
             if (configuracao == null)
             {

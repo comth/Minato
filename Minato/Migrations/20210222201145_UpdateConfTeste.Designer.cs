@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Minato.Contexts;
 
 namespace Minato.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20210222201145_UpdateConfTeste")]
+    partial class UpdateConfTeste
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,18 +32,12 @@ namespace Minato.Migrations
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 
-                    b.Property<bool>("CobrarPorcentGar")
-                        .HasColumnType("bit");
-
                     b.Property<string>("KeyDistanceMatrix")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomeExibicao")
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
-
-                    b.Property<decimal>("PorcentGar")
-                        .HasColumnType("decimal(5,2)");
 
                     b.Property<decimal>("PrecoPorKm")
                         .HasColumnType("decimal(5,2)");

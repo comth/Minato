@@ -17,6 +17,7 @@ import { Produto } from '../interfaces/produto';
 import { ProdutoPedido } from '../interfaces/produto-pedido';
 import { Endereco } from '../interfaces/endereco';
 import { Pedido } from '../interfaces/pedido';
+import { DistanceMatrixService } from '../services/distance-matrix.service';
 
 @Component({
   selector: 'app-pedido',
@@ -79,6 +80,7 @@ export class PedidoComponent implements OnInit {
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
     private usuarioService: UsuarioService,
+    private distanceMatrixService: DistanceMatrixService,
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef
   ) {
@@ -93,6 +95,9 @@ export class PedidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //this.distanceMatrixService.get().subscribe((res: any) => {
+    //  console.log(res)
+    //}, err => console.log(err));
     this.editando = false;
     this.getProdutos();
     this.getUsuarios();
