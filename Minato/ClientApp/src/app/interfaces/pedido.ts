@@ -8,6 +8,7 @@ export interface Pedido {
   produtos: Produto[];
   usuario: Usuario;
   dataPedido?: Date;
+  precoEntrega?: number;
   observacao: string;
   pedidoDelivery: boolean;
   pedidoRetirada: boolean;

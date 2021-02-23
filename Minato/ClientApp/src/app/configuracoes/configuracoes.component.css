@@ -1,6 +1,7 @@
 .config-container {
   width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  min-height: 320px;
 }
 
 .sidenav-content {
@@ -22,4 +23,13 @@
   margin-top: 0;
   margin-bottom: 0;
   list-style-type: none;
+}
+
+mat-form-field {
+  font-size: 14px !important;
+  width: 100% !important;
+}
+
+mat-label {
+  font-size: 18px !important;
 }

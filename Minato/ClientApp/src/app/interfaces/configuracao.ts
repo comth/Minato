@@ -9,4 +9,7 @@ export interface Configuracao {
   keyDistanceMatrix?: string;
   cobrarPorcentGar?: boolean;
   porcentGar?: number;
+  cobrarEntrega?: boolean;
+  entregaFixa?: boolean;
+  valorEntregaFixa?: number;
 }

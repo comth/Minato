@@ -18,6 +18,9 @@ namespace Minato.Models
         public DateTime DataPedido { get; set; } = DateTime.Now;
         public Usuario Usuario { get; set; }
         public Endereco EnderecoSelecionado { get; set; }
+
+        [Column(TypeName = "decimal(3, 2)")]
+        public decimal PrecoEntrega { get; set; }
         public string Observacao { get; set; }
         public bool PedidoDelivery { get; set; }
         public bool PedidoRetirada { get; set; }

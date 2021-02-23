@@ -38,16 +38,16 @@
 
     <div *ngIf="(nodeSelecionado | async).name == 'Mesas'">
       <br />
-      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
-        <mat-label style="font-size: 18px;">Para qual status mudar a mesa após iniciar o pedido?</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Para qual status mudar a mesa após iniciar o pedido?</mat-label>
         <mat-select [(ngModel)]="configuracao.statusInicioPedido" [compareWith]="compareCategoryObjects">
           <mat-option>Não mudar</mat-option>
           <mat-option *ngFor="let s of listaStatus; let i = index" [(value)]="listaStatus[i]">{{s.nome}}</mat-option>
         </mat-select>
       </mat-form-field>
       <br />
-      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
-        <mat-label style="font-size: 18px;">Para qual status mudar a mesa após finalizar o pedido?</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Para qual status mudar a mesa após finalizar o pedido?</mat-label>
         <mat-select [(ngModel)]="configuracao.statusFinalPedido" [compareWith]="compareCategoryObjects">
           <mat-option>Não mudar</mat-option>
           <mat-option *ngFor="let s of listaStatus; let i = index" [(value)]="listaStatus[i]">{{s.nome}}</mat-option>
@@ -57,13 +57,13 @@
 
     <div *ngIf="(nodeSelecionado | async).name == 'Entregas'">
       <br />
-      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
-        <mat-label style="font-size: 18px;">CEP do Restaurante</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>CEP do Restaurante</mat-label>
         <input matInput mask="00000-000" [(ngModel)]="configuracao.cepRestaurante">
       </mat-form-field>
       <br />
-      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
-        <mat-label style="font-size: 18px;">Preço da Entrega por Km</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Preço da Entrega por Km</mat-label>
         <span style="position: relative; bottom: 3.4px;" matPrefix>R$&nbsp;</span>
         <input matInput type="number" [(ngModel)]="configuracao.precoPorKm">
       </mat-form-field>
@@ -79,8 +79,8 @@
       </mat-slide-toggle>
       <br />
       <br />
-      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
-        <mat-label style="font-size: 18px;">Cota para Garçom</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Cota para Garçom</mat-label>
         <span style="position: relative; bottom: 3.4px;" matSuffix>%&nbsp;</span>
         <input [disabled]="!configuracao.cobrarPorcentGar" matInput type="number" [(ngModel)]="configuracao.porcentGar">
       </mat-form-field>
@@ -88,8 +88,8 @@
 
     <div *ngIf="(nodeSelecionado | async).name == 'Chaves'">
       <br />
-      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
-        <mat-label>Chave DistanceMatrix Google</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label style="font-size: 14px !important;">Chave DistanceMatrix Google</mat-label>
         <input matInput [(ngModel)]="configuracao.keyDistanceMatrix">
       </mat-form-field>
     </div>

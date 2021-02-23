@@ -16,6 +16,13 @@ namespace Minato.Models
         [StringLength(8, ErrorMessage = "O CEP deve ter 8 caracteres.")]
         public string CepRestaurante { get; set; }
 
+        public bool CobrarEntrega { get; set; }
+
+        public bool EntregaFixa { get; set; }
+
+        [Column(TypeName = "decimal(3, 2)")]
+        public decimal ValorEntregaFixa { get; set; }
+
         [Column(TypeName = "decimal(5, 2)")]
         public decimal PrecoPorKm { get; set; }
         public bool CobrarPorcentGar { get; set; } //cobrar porcentagem garçom
