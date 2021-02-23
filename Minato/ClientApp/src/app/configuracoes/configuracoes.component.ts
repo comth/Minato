@@ -16,11 +16,12 @@ interface Node {
 const TREE_DATA: Node[] = [
   {
     name: 'Mesas',
-    children: [
-      { name: 'Status' }
-    ]
   }, {
     name: 'Entregas',
+  }, {
+    name: 'Cobranças',
+  }, {
+    name: 'Chaves',
   }
 ];
 
@@ -44,6 +45,9 @@ export class ConfiguracoesComponent implements OnInit {
     private configuracaoService: ConfiguracaoService,
   ) {
     this.dataSource.data = TREE_DATA;
+    this.nodeSelecionado.next({
+      name: 'Mesas',
+    })
   }
 
   ngOnInit(): void {
@@ -66,8 +70,7 @@ export class ConfiguracoesComponent implements OnInit {
   tratarNode() {
     this.nodeSelecionado.subscribe(data => {
       if (data) {
-        console.log(data)
-        if (data.name == 'Status') this.getListaStatus();
+        if (data.name == 'Mesas') this.getListaStatus();
       }
     });
   }

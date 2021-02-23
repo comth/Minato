@@ -2,9 +2,11 @@
   <mat-drawer #drawer class="sidenav" mode="side" opened="true">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-        <li class="mat-tree-node" (click)="click(node)">
+        <li class="mat-tree-node" (click)="click(node)" >
           <button mat-icon-button disabled></button>
-          {{node.name}}
+          <div style="cursor:pointer">
+            {{node.name}}
+          </div>
         </li>
       </mat-tree-node>
       <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
@@ -12,11 +14,13 @@
           <div class="mat-tree-node">
             <button mat-icon-button matTreeNodeToggle
                     [attr.aria-label]="'Toggle ' + node.name">
-              <mat-icon class="mat-icon-rtl-mirror">
+              <mat-icon class="mat-icon-rtl-mirror" color="primary">
                 {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
             </button>
-            {{node.name}}
+            <div style="cursor:pointer">
+              {{node.name}}
+            </div>
           </div>
           <ul [class.tree-invisible]="!treeControl.isExpanded(node)">
             <ng-container matTreeNodeOutlet></ng-container>
@@ -27,32 +31,69 @@
   </mat-drawer>
 
   <div class="sidenav-content" style="padding: 20px;">
-    <button mat-icon-button color="accent"  aria-label="Abrir Menu" (click)="drawer.toggle()">
+    <button mat-icon-button color="primary" aria-label="Abrir Menu" (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
     <br />
 
-    <div *ngIf="(nodeSelecionado | async).name == 'Status'">
+    <div *ngIf="(nodeSelecionado | async).name == 'Mesas'">
       <br />
-      <label>Para qual status mudar a mesa após iniciar o pedido? </label>
-      <mat-form-field appearance="fill" style="font-size: 14px;">
-        <mat-label>Status</mat-label>
+      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
+        <mat-label style="font-size: 18px;">Para qual status mudar a mesa após iniciar o pedido?</mat-label>
         <mat-select [(ngModel)]="configuracao.statusInicioPedido" [compareWith]="compareCategoryObjects">
           <mat-option>Não mudar</mat-option>
           <mat-option *ngFor="let s of listaStatus; let i = index" [(value)]="listaStatus[i]">{{s.nome}}</mat-option>
         </mat-select>
       </mat-form-field>
-
-      <label>Para qual status mudar a mesa após finalizar o pedido? </label>
-      <mat-form-field appearance="fill" style="font-size: 14px;">
-        <mat-label>Status</mat-label>
+      <br />
+      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
+        <mat-label style="font-size: 18px;">Para qual status mudar a mesa após finalizar o pedido?</mat-label>
         <mat-select [(ngModel)]="configuracao.statusFinalPedido" [compareWith]="compareCategoryObjects">
           <mat-option>Não mudar</mat-option>
           <mat-option *ngFor="let s of listaStatus; let i = index" [(value)]="listaStatus[i]">{{s.nome}}</mat-option>
         </mat-select>
       </mat-form-field>
-
     </div>
+
+    <div *ngIf="(nodeSelecionado | async).name == 'Entregas'">
+      <br />
+      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
+        <mat-label style="font-size: 18px;">CEP do Restaurante</mat-label>
+        <input matInput mask="00000-000" [(ngModel)]="configuracao.cepRestaurante">
+      </mat-form-field>
+      <br />
+      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
+        <mat-label style="font-size: 18px;">Preço da Entrega por Km</mat-label>
+        <span style="position: relative; bottom: 3.4px;" matPrefix>R$&nbsp;</span>
+        <input matInput type="number" [(ngModel)]="configuracao.precoPorKm">
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="(nodeSelecionado | async).name == 'Cobranças'">
+      <br />
+      <mat-slide-toggle class="example-margin"
+                        color="primary"
+                        [(ngModel)]="configuracao.cobrarPorcentGar"
+                        style="font-size: 14px;">
+        Cobrar Porcentagem para os Garçons?
+      </mat-slide-toggle>
+      <br />
+      <br />
+      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
+        <mat-label style="font-size: 18px;">Cota para Garçom</mat-label>
+        <span style="position: relative; bottom: 3.4px;" matSuffix>%&nbsp;</span>
+        <input [disabled]="!configuracao.cobrarPorcentGar" matInput type="number" [(ngModel)]="configuracao.porcentGar">
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="(nodeSelecionado | async).name == 'Chaves'">
+      <br />
+      <mat-form-field appearance="outline" style="font-size: 14px; width: 100%;">
+        <mat-label>Chave DistanceMatrix Google</mat-label>
+        <input matInput [(ngModel)]="configuracao.keyDistanceMatrix">
+      </mat-form-field>
+    </div>
+
     <div class="final-button">
       <button mat-raised-button color="primary" (click)="put()">Salvar Alterações</button>
     </div>

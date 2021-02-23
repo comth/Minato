@@ -19,7 +19,9 @@ namespace Minato.Controllers
         [HttpGet("{cepDestino}")]
         public IActionResult Get(string cepDestino)
         {
-            return Ok(DistanceMatrixService.Get(cepDestino).Result);
+            var result = DistanceMatrixService.Get(cepDestino).Result;
+            if (result != null) return Ok(result);
+            return StatusCode(500);
         }
     }
 }

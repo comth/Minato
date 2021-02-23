@@ -6,6 +6,7 @@ export interface Configuracao {
   cepRestaurante?: string;
   nomeExibicao?: string;
   precoPorKm?: string;
-  CobrarPorcentGar?: boolean;
-  PorcentGar?: number;
+  keyDistanceMatrix?: string;
+  cobrarPorcentGar?: boolean;
+  porcentGar?: number;
 }
