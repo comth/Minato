@@ -4,6 +4,10 @@
   min-height: 320px;
 }
 
+.disabled {
+  color: rgba(0, 0, 0, 0.4);
+}
+
 .sidenav-content {
   height: 100%;
 }
@@ -25,6 +29,11 @@
   list-style-type: none;
 }
 
+span {
+  position: relative;
+  bottom: 3.4px;
+}
+
 mat-form-field {
   font-size: 14px !important;
   width: 100% !important;
@@ -32,4 +41,11 @@ mat-form-field {
 
 mat-label {
   font-size: 18px !important;
+}
+
+mat-slide-toggle {
+  margin-bottom: 15px;
+  margin-left: 0px;
+  margin-right: 4%;
+  font-size: 14px !important;
 }

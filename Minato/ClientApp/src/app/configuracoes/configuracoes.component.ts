@@ -22,6 +22,8 @@ const TREE_DATA: Node[] = [
     name: 'Cobranças',
   }, {
     name: 'Chaves',
+  }, {
+    name: 'Gerais',
   }
 ];
 

@@ -57,15 +57,49 @@
 
     <div *ngIf="(nodeSelecionado | async).name == 'Entregas'">
       <br />
+      <div style="display: flex; flex-direction: column; margin-bottom: 10px;">
+        <mat-slide-toggle class="example-margin"
+                          color="primary"
+                          [(ngModel)]="configuracao.cobrarEntrega">
+          Cobrar Entrega?
+        </mat-slide-toggle>
+        <mat-slide-toggle [disabled]="!configuracao.cobrarEntrega"
+                          class="example-margin"
+                          color="primary"
+                          [(ngModel)]="configuracao.entregaFixa">
+          Cobrar valor fixo na entrega?
+        </mat-slide-toggle>
+      </div>
       <mat-form-field appearance="outline">
         <mat-label>CEP do Restaurante</mat-label>
-        <input matInput mask="00000-000" [(ngModel)]="configuracao.cepRestaurante">
+        <input matInput
+               mask="00000-000"
+               [(ngModel)]="configuracao.cepRestaurante"
+               [disabled]="!configuracao.cobrarEntrega || configuracao.entregaFixa">
       </mat-form-field>
       <br />
       <mat-form-field appearance="outline">
         <mat-label>Preço da Entrega por Km</mat-label>
-        <span style="position: relative; bottom: 3.4px;" matPrefix>R$&nbsp;</span>
-        <input matInput type="number" [(ngModel)]="configuracao.precoPorKm">
+        <span [class.disabled]="!configuracao.cobrarEntrega || configuracao.entregaFixa"
+              matPrefix>
+          R$&nbsp;
+        </span>
+        <input matInput
+               type="number"
+               [(ngModel)]="configuracao.precoPorKm"
+               [disabled]="!configuracao.cobrarEntrega || configuracao.entregaFixa">
+      </mat-form-field>
+      <br />
+      <mat-form-field appearance="outline">
+        <mat-label>Preço fixo da Entrega</mat-label>
+        <span [class.disabled]="!configuracao.cobrarEntrega || !configuracao.entregaFixa"
+              matPrefix>
+          R$&nbsp;
+        </span>
+        <input matInput
+               type="number"
+               [(ngModel)]="configuracao.valorEntregaFixa"
+               [disabled]="!configuracao.cobrarEntrega || !configuracao.entregaFixa">
       </mat-form-field>
     </div>
 
@@ -74,14 +108,15 @@
       <mat-slide-toggle class="example-margin"
                         color="primary"
                         [(ngModel)]="configuracao.cobrarPorcentGar"
-                        style="font-size: 14px;">
+                        style="margin-bottom: 20px;">
         Cobrar Porcentagem para os Garçons?
       </mat-slide-toggle>
-      <br />
-      <br />
       <mat-form-field appearance="outline">
         <mat-label>Cota para Garçom</mat-label>
-        <span style="position: relative; bottom: 3.4px;" matSuffix>%&nbsp;</span>
+        <span [class.disabled]="!configuracao.cobrarPorcentGar"
+              matSuffix>
+          %&nbsp;
+        </span>
         <input [disabled]="!configuracao.cobrarPorcentGar" matInput type="number" [(ngModel)]="configuracao.porcentGar">
       </mat-form-field>
     </div>
@@ -91,6 +126,14 @@
       <mat-form-field appearance="outline">
         <mat-label style="font-size: 14px !important;">Chave DistanceMatrix Google</mat-label>
         <input matInput [(ngModel)]="configuracao.keyDistanceMatrix">
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="(nodeSelecionado | async).name == 'Gerais'">
+      <br />
+      <mat-form-field appearance="outline">
+        <mat-label>Nome do Restaurante</mat-label>
+        <input matInput [(ngModel)]="configuracao.nomeExibicao">
       </mat-form-field>
     </div>
 
