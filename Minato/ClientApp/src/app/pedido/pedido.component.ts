@@ -18,6 +18,8 @@ import { ProdutoPedido } from '../interfaces/produto-pedido';
 import { Endereco } from '../interfaces/endereco';
 import { Pedido } from '../interfaces/pedido';
 import { DistanceMatrixService } from '../services/distance-matrix.service';
+import { DistanceMatrix } from '../interfaces/distance-matrix';
+import { Configuracao } from '../interfaces/configuracao';
 
 @Component({
   selector: 'app-pedido',
@@ -38,10 +40,12 @@ export class PedidoComponent implements OnInit {
   produtos: any[] = [];
   usuarios: Usuario[] = [];
   usuario: Usuario;
+  configuracao: Configuracao = {};
   produtosFiltrados: Observable<string[]>;
   usuariosFiltrados: Observable<string[]>;
   idMesa: number;
   numMesa: number;
+  entregaCalculada: boolean = false;
   hasPedido: boolean;
   displayedColumns: string[] = ['produto', 'quantidade', 'observacao', 'preco','actions'];
   dataSource: MatTableDataSource<any>;
@@ -55,10 +59,11 @@ export class PedidoComponent implements OnInit {
   expandido: boolean;
   option: any;
   enderecoSelecionado: Endereco;
+  oldEnderecoSelecionado: Endereco;
   enderecos: any[] = [];
   pedidoRetirada: boolean;
   precoProdutos: number;
-  precoEntrega: number = 5;
+  precoEntrega: number;
   pedido: Pedido =
     {
       enderecoSelecionado: null,
@@ -95,12 +100,10 @@ export class PedidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.distanceMatrixService.get().subscribe((res: any) => {
-    //  console.log(res)
-    //}, err => console.log(err));
     this.editando = false;
     this.getProdutos();
     this.getUsuarios();
+    this.getConfiguracao();
     if (this.idMesa) {
       this.getPedido(this.idMesa);
     }
@@ -123,22 +126,58 @@ export class PedidoComponent implements OnInit {
     this.initializeAutoCompleteUsuario();
   }
 
+  ngDoCheck(): void {
+    this.tratarExpansaoTabela();
+    this.tratarRadioButton();
+    this.tratarEntrega();
+  }
+
   customFilter(data: ProdutoPedido, filter: string): boolean {
     if (data.produto.nome.toLowerCase().includes(filter) || data.produto.id.toString().includes(filter)) return true;
     return false;
   }
 
-  ngDoCheck(): void {
+  tratarExpansaoTabela() {
     if (this.expandedElement) {
       if (this.expandedElement && this.expandedElement != this.oldExpandedElement) {
         this.oldExpandedElement = this.expandedElement;
         this.produtoPedidoForm.patchValue(this.expandedElement);
       }
     }
+  }
 
+  tratarRadioButton() {
     if (this.pedidoDelivery && !this.expandido) {
       this.expandido = true;
       this.updateRadioButton();
+    }
+  }
+
+  tratarEntrega() {
+    if (this.enderecoSelecionado && !this.entregaCalculada) {
+      this.oldEnderecoSelecionado = this.enderecoSelecionado;
+      this.entregaCalculada = true;
+      if (this.enderecoSelecionado.cep) this.calcularEntrega();
+    }
+  }
+
+  calcularEntrega() {
+    this.distanceMatrixService.get(this.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
+      this.precoEntrega = res.distance.value * this.configuracao.precoPorKm;
+    }, err => console.log(err));
+  }
+
+  getConfiguracao() {
+    this.configuracao.precoPorKm = 5;
+  }
+
+  tratarEndereco() {
+    if (this.enderecoSelecionado && this.oldEnderecoSelecionado) {
+      if (this.enderecoSelecionado.id != this.oldEnderecoSelecionado.id) {
+        this.oldEnderecoSelecionado = this.enderecoSelecionado;
+        console.log('Entrou')
+        this.entregaCalculada = false;
+      }
     }
   }
 
@@ -409,7 +448,6 @@ export class PedidoComponent implements OnInit {
   }
 
   private filterUsuario(value: any): any[] {
-    console.log(value)
     let filterValue = '';
     if (value?.nome) {
       filterValue = value?.nome.toLowerCase();

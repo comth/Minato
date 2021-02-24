@@ -29,7 +29,8 @@
 
     <div [hidden]="(!this.pedidoDelivery)" style="font-size: 14px;">
       <mat-radio-group class="radio-group"
-                       [(ngModel)]="enderecoSelecionado">
+                       [(ngModel)]="enderecoSelecionado"
+                       (change)="tratarEndereco()">
         <mat-radio-button *ngFor="let endereco of enderecos"
                           [value]="endereco"
                           [checked]="enderecoSelecionado?.id === endereco?.id"

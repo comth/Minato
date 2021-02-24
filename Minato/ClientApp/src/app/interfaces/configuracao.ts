@@ -1,11 +1,11 @@
 import { Status } from "./status";
 
 export interface Configuracao {
-  statusInicioPedido: Status;
-  statusFinalPedido: Status;
+  statusInicioPedido?: Status;
+  statusFinalPedido?: Status;
   cepRestaurante?: string;
   nomeExibicao?: string;
-  precoPorKm?: string;
+  precoPorKm?: number;
   keyDistanceMatrix?: string;
   cobrarPorcentGar?: boolean;
   porcentGar?: number;
