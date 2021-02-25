@@ -157,11 +157,11 @@
 
 <div class="final-panel">
   <div>
-    Preço Produtos : R$ {{this.precoProdutos}}
+    Preço Produtos : {{this.precoProdutos | currency:'R$ ' }}
     <br />
-    Entrega : R$ {{this.precoEntrega}}
+    Entrega : {{this.precoEntrega | currency:'R$ ' }}
     <hr />
-    Total : R$ {{this.precoProdutos + this.precoEntrega}}
+    Total : {{(this.precoProdutos + this.precoEntrega) | currency:'R$ ' }}
   </div>
   <div class="final-button">
     <button mat-raised-button color="primary" (click)="onSubmit()">Finalizar Modificações</button>

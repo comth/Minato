@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Minato.Contexts;
 using Minato.Models;
+using Minato.Util;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
@@ -15,11 +17,11 @@ namespace Minato.Services
         private string CepOrigem { get; set; }
         private string Key { get; set; }
 
-        public DistanceMatrixService(Context context, IHttpClientFactory clientFactory)
+        public DistanceMatrixService(Context context, IHttpClientFactory clientFactory, IDataProtectionProvider dataProtectionProvider)
         {
             _clientFactory = clientFactory;
             Configuracao conf = context.Configuracao.Find(1);
-            Key = conf.KeyDistanceMatrix;
+            Key = new ProtectionProvider(dataProtectionProvider).Decrypt(conf.KeyDistanceMatrix);
             CepOrigem = conf.CepRestaurante;
         }
 

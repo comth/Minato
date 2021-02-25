@@ -22,6 +22,8 @@ namespace Minato
         {
             services.AddHttpClient();
 
+            services.AddDataProtection();
+
             services.AddControllersWithViews();
 
             services.AddDbContext<Context>(options =>

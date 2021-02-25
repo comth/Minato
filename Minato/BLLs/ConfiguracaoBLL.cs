@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
 using Minato.Contexts;
 using Minato.Models;
+using Minato.Util;
 using System.Linq;
 
 namespace Minato.BLLs
@@ -28,7 +30,7 @@ namespace Minato.BLLs
             return configuracao;
         }
 
-        public bool Put(Context context, Configuracao configuracao)
+        public bool Put(Context context, Configuracao configuracao, IDataProtectionProvider dataProtectionProvider)
         {
             if (configuracao.StatusInicioPedido != null)
                 configuracao.StatusInicioPedido = context.Status.Find(configuracao.StatusInicioPedido.Id);
@@ -41,17 +43,23 @@ namespace Minato.BLLs
             context.SaveChanges();
             context.Entry(configuracao).State = EntityState.Detached;
 
-            if (configuracao.StatusInicioPedido == null || configuracao.StatusFinalPedido == null)
-            {
-                Configuracao configuracaoBanco = context.Configuracao
+            Configuracao configuracaoBanco = context.Configuracao
                     .Include(x => x.StatusInicioPedido)
                     .Include(x => x.StatusFinalPedido)
                     .First(x => x.Id == configuracao.Id);
 
+            if (configuracao.StatusInicioPedido == null || configuracao.StatusFinalPedido == null)
+            {
                 if(configuracao.StatusInicioPedido == null) configuracaoBanco.StatusInicioPedido = null;
                 if(configuracao.StatusFinalPedido == null) configuracaoBanco.StatusFinalPedido = null;
-                configuracaoBanco = configuracao;
             }
+
+            if (configuracao.KeyDistanceMatrix.Trim().Length != 0)
+            {
+                var protectionProvider = new ProtectionProvider(dataProtectionProvider);
+                configuracaoBanco.KeyDistanceMatrix = protectionProvider.Encrypt(configuracao.KeyDistanceMatrix);
+            }
+            //configuracaoBanco = configuracao;
             context.SaveChanges();
             return true;
         }

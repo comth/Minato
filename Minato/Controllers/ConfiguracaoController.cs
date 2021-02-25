@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc;
 using Minato.BLLs;
 using Minato.Contexts;
 using Minato.Models;
@@ -9,11 +10,13 @@ namespace Minato.Controllers
     [Route("[controller]")]
     public class ConfiguracaoController : Controller
     {
+        private readonly IDataProtectionProvider _dataProtectionProvider;
         private readonly Context Context;
         private readonly ConfiguracaoBLL ConfiguracaoBLL;
 
-        public ConfiguracaoController(Context context)
+        public ConfiguracaoController(Context context, IDataProtectionProvider dataProtectionProvider)
         {
+            _dataProtectionProvider = dataProtectionProvider;
             Context = context;
             ConfiguracaoBLL = new ConfiguracaoBLL();
         }
@@ -25,9 +28,9 @@ namespace Minato.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Configuracao configuracao)
+        public IActionResult Put([FromBody]Configuracao configuracao)
         {
-            bool salvo = ConfiguracaoBLL.Put(Context, configuracao);
+            bool salvo = ConfiguracaoBLL.Put(Context, configuracao, _dataProtectionProvider);
 
             if (salvo)
             {

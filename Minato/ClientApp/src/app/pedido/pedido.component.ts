@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PedidoService } from '../services/pedido.service';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { first, map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
 import { Usuario } from '../interfaces/usuario';
 import { Produto } from '../interfaces/produto';
@@ -20,6 +20,7 @@ import { Pedido } from '../interfaces/pedido';
 import { DistanceMatrixService } from '../services/distance-matrix.service';
 import { DistanceMatrix } from '../interfaces/distance-matrix';
 import { Configuracao } from '../interfaces/configuracao';
+
 
 @Component({
   selector: 'app-pedido',
@@ -162,9 +163,11 @@ export class PedidoComponent implements OnInit {
   }
 
   calcularEntrega() {
-    this.distanceMatrixService.get(this.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
-      this.precoEntrega = res.distance.value * this.configuracao.precoPorKm;
-    }, err => console.log(err));
+    this.precoEntrega = 23.954;
+    //this.distanceMatrixService.get(this.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
+    //  console.log(res.distance);
+    //  this.precoEntrega = res.distance.value * (this.configuracao.precoPorKm / 1000);
+    //}, err => console.log(err));
   }
 
   getConfiguracao() {
