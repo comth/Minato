@@ -20,7 +20,7 @@ namespace Minato.Models
 
         public bool EntregaFixa { get; set; }
 
-        [Column(TypeName = "decimal(3, 2)")]
+        [Column(TypeName = "decimal(5, 2)")]
         public decimal ValorEntregaFixa { get; set; }
 
         [Column(TypeName = "decimal(5, 2)")]

@@ -22,12 +22,12 @@
   <div>
     <mat-slide-toggle class="example-margin"
                       color="accent"
-                      [(ngModel)]="pedidoDelivery"
+                      [(ngModel)]="pedido.pedidoDelivery"
                       style="font-size: 14px;">
       Para entrega?
     </mat-slide-toggle>
 
-    <div [hidden]="(!this.pedidoDelivery)" style="font-size: 14px;">
+    <div [hidden]="(!this.pedido.pedidoDelivery)" style="font-size: 14px;">
       <mat-radio-group class="radio-group"
                        [(ngModel)]="enderecoSelecionado"
                        (change)="tratarEndereco()">
@@ -159,9 +159,9 @@
   <div>
     Preço Produtos : {{this.precoProdutos | currency:'R$ ' }}
     <br />
-    Entrega : {{this.precoEntrega | currency:'R$ ' }}
+    Entrega : {{this.pedido?.precoEntrega | currency:'R$ ' }}
     <hr />
-    Total : {{(this.precoProdutos + this.precoEntrega) | currency:'R$ ' }}
+    Total : {{(this.precoProdutos + this.pedido?.precoEntrega) | currency:'R$ ' }}
   </div>
   <div class="final-button">
     <button mat-raised-button color="primary" (click)="onSubmit()">Finalizar Modificações</button>

@@ -19,7 +19,7 @@ namespace Minato.Models
         public Usuario Usuario { get; set; }
         public Endereco EnderecoSelecionado { get; set; }
 
-        [Column(TypeName = "decimal(3, 2)")]
+        [Column(TypeName = "decimal(5, 2)")]
         public decimal PrecoEntrega { get; set; }
         public string Observacao { get; set; }
         public bool PedidoDelivery { get; set; }

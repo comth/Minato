@@ -8,14 +8,7 @@ import { FormGroup, FormBuilder, FormControl, Validators, ValidatorFn, AbstractC
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { EmbalagemService } from '../services/embalagem.service';
 import Swal from 'sweetalert2';
-
-export interface Produto {
-  idBanco: number;
-  id: number;
-  nome: string;
-  preco: number;
-  embalagem: any;
-}
+import { Produto } from '../interfaces/produto';
 
 @Component({
   selector: 'app-produto',

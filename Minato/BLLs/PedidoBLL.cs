@@ -41,6 +41,8 @@ namespace Minato.BLLs
                 pedido.Produtos[i].Produto = context.Produto.Find(pedido.Produtos[i].Produto.IdBanco);
             }
 
+            Math.Round(pedido.PrecoEntrega, 2);
+
             context.Pedido.Add(pedido);
 
             if (mesa != null) {
@@ -58,6 +60,7 @@ namespace Minato.BLLs
             if (Exists(context, pedido.Id))
             {
                 var pedidoBanco = context.Pedido.Find(pedido.Id);
+
                 if (pedido.Usuario != null)
                 {
                     pedidoBanco.Usuario = context.Usuario.Find(pedido.Usuario.Id);
@@ -79,6 +82,9 @@ namespace Minato.BLLs
                 pedidoBanco.PedidoDelivery = pedido.PedidoDelivery;
                 pedidoBanco.PedidoLocal = pedido.PedidoLocal;
                 pedidoBanco.PedidoRetirada = pedido.PedidoRetirada;
+                pedidoBanco.PrecoEntrega = pedido.PrecoEntrega;
+
+                Math.Round(pedidoBanco.PrecoEntrega, 2);
 
                 if (pedido.PedidoEncerrado) EncerrarPedido(context, pedido);
 

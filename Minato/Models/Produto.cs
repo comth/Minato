@@ -18,7 +18,7 @@ namespace Minato.Models
 
         [Required(ErrorMessage = "O Preço é obrigatório.")]
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(7, 2)")]
         public decimal Preco { get; set; }
 
         public Embalagem Embalagem { get; set; }

@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PedidoService } from '../services/pedido.service';
 import { Observable } from 'rxjs';
-import { first, map, startWith } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
 import { Usuario } from '../interfaces/usuario';
 import { Produto } from '../interfaces/produto';
@@ -38,9 +38,8 @@ import { Configuracao } from '../interfaces/configuracao';
 export class PedidoComponent implements OnInit {
 
   usuarioForm = new FormControl();
-  produtos: any[] = [];
+  produtos: Produto[] = [];
   usuarios: Usuario[] = [];
-  usuario: Usuario;
   configuracao: Configuracao = {};
   produtosFiltrados: Observable<string[]>;
   usuariosFiltrados: Observable<string[]>;
@@ -54,17 +53,11 @@ export class PedidoComponent implements OnInit {
   editando: boolean;
   oldExpandedElement: any;
   produtoPedidoForm: FormGroup;
-  produto: Produto;
-  produtoPedido: ProdutoPedido;
-  pedidoDelivery = false;
   expandido: boolean;
-  option: any;
   enderecoSelecionado: Endereco;
   oldEnderecoSelecionado: Endereco;
-  enderecos: any[] = [];
-  pedidoRetirada: boolean;
+  enderecos: Endereco[] = [];
   precoProdutos: number;
-  precoEntrega: number;
   pedido: Pedido =
     {
       enderecoSelecionado: null,
@@ -93,8 +86,8 @@ export class PedidoComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.idMesa = params['idMesa'];
       if (this.idMesa) {
-        this.pedidoDelivery = false;
-        this.pedidoRetirada = false;
+        this.pedido.pedidoDelivery = false;
+        this.pedido.pedidoRetirada = false;
       } 
       this.numMesa = params['numMesa'];
     });
@@ -148,7 +141,7 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarRadioButton() {
-    if (this.pedidoDelivery && !this.expandido) {
+    if (this.pedido.pedidoDelivery && !this.expandido) {
       this.expandido = true;
       this.updateRadioButton();
     }
@@ -163,7 +156,7 @@ export class PedidoComponent implements OnInit {
   }
 
   calcularEntrega() {
-    this.precoEntrega = 23.954;
+    this.pedido.precoEntrega = 23.954;
     //this.distanceMatrixService.get(this.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
     //  console.log(res.distance);
     //  this.precoEntrega = res.distance.value * (this.configuracao.precoPorKm / 1000);
@@ -233,9 +226,7 @@ export class PedidoComponent implements OnInit {
         this.dataSource.data = this.tratarPreco(this.pedido.produtos);
 
         this.enderecoSelecionado = this.pedido.enderecoSelecionado;
-        this.usuario = this.pedido.usuario;
         this.usuarioForm.patchValue(this.pedido.usuario);
-        this.pedidoDelivery = this.pedido.pedidoDelivery;
         this.cdRef.detectChanges();
       }
     }, err => console.log(err));
@@ -258,7 +249,7 @@ export class PedidoComponent implements OnInit {
   updateRadioButton() {
     this.usuarios.forEach(usuario => {
       if (usuario.id == this.usuarioForm.value.id) {
-        this.usuario = usuario;
+        this.pedido.usuario = usuario;
         this.enderecos = usuario.enderecos;
       }
     });
@@ -389,17 +380,20 @@ export class PedidoComponent implements OnInit {
   }
 
   montarPedido(encerrarPedido: boolean): Pedido {
+    
     let pedido: Pedido = {
       id: this.pedido?.id,
       enderecoSelecionado: this.enderecoSelecionado,
-      pedidoLocal: !this.pedidoDelivery,
+      pedidoLocal: !this.pedido.pedidoDelivery,
       produtos: this.dataSource.data,
-      usuario: this.usuario,
-      pedidoDelivery: this.pedidoDelivery,
-      pedidoRetirada: this.pedidoRetirada,
+      usuario: this.pedido.usuario,
+      pedidoDelivery: this.pedido.pedidoDelivery,
+      pedidoRetirada: this.pedido.pedidoRetirada,
       observacao: this.pedido.observacao,
       pedidoEncerrado: encerrarPedido,
+      precoEntrega: this.pedido.precoEntrega
     }
+    console.log(pedido)
     return pedido;
   }
 
