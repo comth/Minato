@@ -26,6 +26,9 @@ namespace Minato.Models
         public bool PedidoRetirada { get; set; }
         public bool PedidoLocal { get; set; }
         public bool PedidoEncerrado { get; set; }
+
+        [Column(TypeName = "decimal(7, 2)")]
+        public decimal Preco { get; set; }
     }
 
     public class ProdutoPedido

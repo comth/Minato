@@ -11,7 +11,21 @@ namespace Minato.BLLs
     {
         public List<Pedido> GetAll(Context context)
         {
-            return context.Pedido.ToList();
+            return context.Pedido.Select(x => new Pedido()
+            {
+                DataPedido = x.DataPedido,
+                PedidoDelivery = x.PedidoDelivery,
+                PedidoEncerrado = x.PedidoEncerrado,
+                PedidoLocal = x.PedidoLocal,
+                PedidoRetirada = x.PedidoRetirada,
+                PrecoEntrega = x.PrecoEntrega,
+                EnderecoSelecionado = x.EnderecoSelecionado,
+                Observacao = x.Observacao,
+                Usuario = new Usuario{ Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
+                Preco = x.Preco
+            }).ToList();
+
+           
         }
 
         public Pedido Get(Context context, int id)
@@ -43,14 +57,14 @@ namespace Minato.BLLs
 
             Math.Round(pedido.PrecoEntrega, 2);
 
-            context.Pedido.Add(pedido);
+            pedido.Preco = TratarPreco(pedido);
 
             if (mesa != null) {
                 mesa.Pedido = pedido;
                 var config = new ConfiguracaoBLL().Get(context);
                 mesa.Status = config.StatusInicioPedido;
             }
-            
+            context.Pedido.Add(pedido);
             context.SaveChanges();
             return true;
         }
@@ -83,6 +97,7 @@ namespace Minato.BLLs
                 pedidoBanco.PedidoLocal = pedido.PedidoLocal;
                 pedidoBanco.PedidoRetirada = pedido.PedidoRetirada;
                 pedidoBanco.PrecoEntrega = pedido.PrecoEntrega;
+                pedidoBanco.Preco = TratarPreco(pedido);
 
                 Math.Round(pedidoBanco.PrecoEntrega, 2);
 
@@ -92,6 +107,16 @@ namespace Minato.BLLs
                 return true;
             }
             return false;
+        }
+        private decimal TratarPreco(Pedido pedido)
+        {
+            decimal precoProdutos = 0;
+
+            pedido.Produtos.ForEach(x => {
+                precoProdutos = precoProdutos + (x.Preco * x.Quantidade);
+            });
+
+            return precoProdutos + pedido.PrecoEntrega;
         }
 
         private void EncerrarPedido(Context context, Pedido pedido)

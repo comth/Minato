@@ -26,7 +26,7 @@ import { Pedido } from '../interfaces/pedido';
 
 export class TakeAwayComponent implements OnInit {
 
-  displayedColumns: string[] = ['usuario', 'dataPedido', 'observacao', 'preco']; //preço?
+  displayedColumns: string[] = ['usuario', 'dataPedido', 'preco','observacao'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean;
@@ -60,8 +60,19 @@ export class TakeAwayComponent implements OnInit {
     this.expandedElement = null;
   }
 
-  public add() {
+  add() {
     //abrir dialog
+  }
+
+  encerrarPedido() {
+    //fazer método específico para encerrar no back
+  }
+
+  delete() {
+    //Testar isso
+    this.pedidoService.delete(this.pedido.id).subscribe((res: any) => {
+
+    });
   }
 
   applyFilter(event: Event) {
