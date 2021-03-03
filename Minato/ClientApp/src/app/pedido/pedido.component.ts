@@ -20,6 +20,7 @@ import { Pedido } from '../interfaces/pedido';
 import { DistanceMatrixService } from '../services/distance-matrix.service';
 import { DistanceMatrix } from '../interfaces/distance-matrix';
 import { Configuracao } from '../interfaces/configuracao';
+import { ConfiguracaoService } from '../services/configuracao.service';
 
 
 @Component({
@@ -50,7 +51,7 @@ export class PedidoComponent implements OnInit {
   displayedColumns: string[] = ['produto', 'quantidade', 'observacao', 'preco','actions'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
-  editando: boolean;
+  editando: boolean = false;
   oldExpandedElement: any;
   produtoPedidoForm: FormGroup;
   expandido: boolean;
@@ -58,17 +59,7 @@ export class PedidoComponent implements OnInit {
   oldEnderecoSelecionado: Endereco;
   enderecos: Endereco[] = [];
   precoProdutos: number;
-  pedido: Pedido =
-    {
-      enderecoSelecionado: null,
-      produtos: null,
-      pedidoDelivery: null,
-      pedidoLocal: null,
-      pedidoRetirada: null,
-      dataPedido: null,
-      usuario: null,
-      observacao: null
-    };
+  pedido: Pedido = {};
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -79,43 +70,26 @@ export class PedidoComponent implements OnInit {
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
     private usuarioService: UsuarioService,
+    private configService: ConfiguracaoService,
     private distanceMatrixService: DistanceMatrixService,
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef
   ) {
     this.route.params.subscribe(params => {
+      console.log(params)
       this.idMesa = params['idMesa'];
-      if (this.idMesa) {
-        this.pedido.pedidoDelivery = false;
-        this.pedido.pedidoRetirada = false;
-      } 
+      this.pedido.id = params['idPedido'];
       this.numMesa = params['numMesa'];
     });
   }
 
   ngOnInit(): void {
-    this.editando = false;
+    if (this.pedido.id) this.getPedido();
     this.getProdutos();
     this.getUsuarios();
     this.getConfiguracao();
-    if (this.idMesa) {
-      this.getPedido(this.idMesa);
-    }
-    this.dataSource = new MatTableDataSource([]);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.filterPredicate =
-      (data: ProdutoPedido, filter: string) => this.customFilter(data, filter);
-
+    this.initializeMatTable();
     this.initializeForm();
-    this.usuarioForm.valueChanges.subscribe((data: any) => {
-      this.expandido = false;
-    });
-
-    this.produtoPedidoForm.valueChanges.subscribe((data: any) => {
-      this.dataSource.data = this.tratarPreco(this.dataSource.data);
-    });
-
     this.initializeAutoCompleteProduto();
     this.initializeAutoCompleteUsuario();
   }
@@ -124,6 +98,24 @@ export class PedidoComponent implements OnInit {
     this.tratarExpansaoTabela();
     this.tratarRadioButton();
     this.tratarEntrega();
+  }
+
+  subscribesForm() {
+    this.usuarioForm.valueChanges.subscribe((data: any) => {
+      this.expandido = false;
+    });
+
+    this.produtoPedidoForm.valueChanges.subscribe((data: any) => {
+      this.dataSource.data = this.tratarPreco(this.dataSource.data);
+    });
+  }
+
+  initializeMatTable() {
+    this.dataSource = new MatTableDataSource([]);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.filterPredicate =
+      (data: ProdutoPedido, filter: string) => this.customFilter(data, filter);
   }
 
   customFilter(data: ProdutoPedido, filter: string): boolean {
@@ -164,14 +156,15 @@ export class PedidoComponent implements OnInit {
   }
 
   getConfiguracao() {
-    this.configuracao.precoPorKm = 5;
+    this.configService.get().subscribe(res => {
+      this.configuracao = <Configuracao>res;
+    });
   }
 
   tratarEndereco() {
     if (this.enderecoSelecionado && this.oldEnderecoSelecionado) {
       if (this.enderecoSelecionado.id != this.oldEnderecoSelecionado.id) {
         this.oldEnderecoSelecionado = this.enderecoSelecionado;
-        console.log('Entrou')
         this.entregaCalculada = false;
       }
     }
@@ -218,13 +211,12 @@ export class PedidoComponent implements OnInit {
     console.log(this.montarPedido(false));
   }
 
-  getPedido(idMesa) {
-    this.pedidoService.getByMesa(idMesa).subscribe((res: any) => {
+  getPedido() {
+    this.pedidoService.get(this.pedido.id).subscribe((res: any) => {
       this.hasPedido = res != null ? true : false;
       if (this.hasPedido) {
         this.pedido = res;
         this.dataSource.data = this.tratarPreco(this.pedido.produtos);
-
         this.enderecoSelecionado = this.pedido.enderecoSelecionado;
         this.usuarioForm.patchValue(this.pedido.usuario);
         this.cdRef.detectChanges();
@@ -232,12 +224,11 @@ export class PedidoComponent implements OnInit {
     }, err => console.log(err));
   }
 
-  tratarPreco(produtos: any[]): any[] {
+  tratarPreco(produtos: ProdutoPedido[]): ProdutoPedido[] {
     let precoTotal = 0;
     produtos.forEach(x => {
       if (x.produto) {
-        let preco = x.produto.preco * x.quantidade;
-        x.preco = preco;
+        let preco = <number>(x.produto.preco + x.produto.embalagem.preco) * x.quantidade;
         precoTotal = precoTotal + preco;
       }
     });
@@ -262,6 +253,7 @@ export class PedidoComponent implements OnInit {
       quantidade: new FormControl(1, [Validators.required]),
       observacao: new FormControl(null),
     }, { updateOn: 'change' });
+    
   }
 
   initializeAutoCompleteProduto() {

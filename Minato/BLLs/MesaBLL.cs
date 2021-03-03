@@ -10,7 +10,13 @@ namespace Minato.BLLs
     {
         public List<Mesa> GetAll(Context context)
         {
-            return context.Mesa.Include(x => x.Status).ToList();
+            return context.Mesa.Select(x => new Mesa()
+            {
+                Id = x.Id,
+                Status = x.Status,
+                Numero = x.Numero,
+                Pedido = x.Pedido != null ? new Pedido { Id = x.Pedido.Id } : null
+            }).ToList();
         }
 
         public Mesa Get(Context context, int id)

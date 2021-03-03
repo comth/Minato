@@ -1,11 +1,11 @@
 import { Endereco } from "./endereco";
-import { Produto } from "./produto";
+import { ProdutoPedido } from "./produto-pedido";
 import { Usuario } from "./usuario";
 
 export interface Pedido {
   id?: number;
   enderecoSelecionado?: Endereco;
-  produtos?: Produto[];
+  produtos?: ProdutoPedido[];
   usuario?: Usuario;
   dataPedido?: Date;
   precoEntrega?: number;

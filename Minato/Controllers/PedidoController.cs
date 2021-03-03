@@ -32,13 +32,13 @@ namespace Minato.Controllers
             return Ok(pedido);
         }
 
-        [HttpGet("mesa/{idMesa}")]
-        public IActionResult GetByMesa(int idMesa)
-        {
-            Pedido pedido = PedidoBLL.GetByMesa(Context, idMesa);
+        //[HttpGet("mesa/{idMesa}")]
+        //public IActionResult GetByMesa(int idMesa)
+        //{
+        //    Pedido pedido = PedidoBLL.GetByMesa(Context, idMesa);
 
-            return Ok(pedido);
-        }
+        //    return Ok(pedido);
+        //}
 
         [HttpPost("{idMesa}")]
         public IActionResult Post([FromBody]Pedido pedido, int idMesa)
@@ -57,6 +57,19 @@ namespace Minato.Controllers
         public IActionResult Put([FromBody]Pedido pedido)
         {
             bool salvo = PedidoBLL.Put(Context, pedido);
+
+            if (salvo)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        [HttpPut("encerrar/{id}")]
+        public IActionResult EncerrarPedido(decimal id)
+        {
+            bool salvo = PedidoBLL.EncerrarPedido(Context, id);
 
             if (salvo)
             {

@@ -43,6 +43,10 @@ export class PedidoService {
     return this.http.put(this.baseURL + "pedido", pedido);
   }
 
+  public encerrarPedido(id: number) {
+    return this.http.put(this.baseURL + "pedido/encerrar/" + id, {});
+  }
+
   public delete(id: any) {
     return this.http.delete(this.baseURL + `pedido/${id}`);
   }

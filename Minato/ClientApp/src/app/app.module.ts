@@ -75,9 +75,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
       { path: 'takeaway', component: TakeAwayComponent },
       { path: 'delivery', component: DeliveryComponent },
       { path: 'configuracoes', component: ConfiguracoesComponent },
-      { path: 'pedido/:idMesa/:numMesa', component: PedidoComponent }, //pedidoLocal (mesa)
-      { path: 'pedido', component: PedidoComponent }, //novo pedidoDelivery ou pedidoRetirada
-      { path: 'pedido/:idPedido', component: PedidoComponent }, //existente pedidoDelivery ou pedidoRetirada
+      { path: 'pedido/:idMesa/:numMesa/:idPedido', component: PedidoComponent }, //update pedido mesa
+      { path: 'pedido/:idMesa/:numMesa/', component: PedidoComponent }, //novo pedido mesa
+      { path: 'pedido/:idPedido', component: PedidoComponent }, //update pedido existente
+      { path: 'pedido/', component: PedidoComponent }, //novo pedido 
     ], { useHash: true }),
     BrowserAnimationsModule
   ],

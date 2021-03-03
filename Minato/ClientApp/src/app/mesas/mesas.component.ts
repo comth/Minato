@@ -125,7 +125,12 @@ export class MesasComponent implements OnInit {
       denyButtonText: `Deletar`,
     }).then((result) => {
       if (result.isConfirmed) {
-          this.router.navigate(['/pedido/' + mesa.id + '/' + mesa.numero ]) 
+        if (mesa.pedido) {
+          this.router.navigate(['/pedido/' + mesa.id + '/' + mesa.numero + '/' + mesa.pedido.id])
+        } else {
+          this.router.navigate(['/pedido/' + mesa.id + '/' + mesa.numero])
+        }
+        
       } else if (result.isDenied) {
         Swal.fire({
           title: 'Tem certeza?',

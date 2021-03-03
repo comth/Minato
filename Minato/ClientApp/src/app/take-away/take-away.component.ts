@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { Produto } from '../interfaces/produto';
 import { PedidoService } from '../services/pedido.service';
 import { Pedido } from '../interfaces/pedido';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-take-away',
@@ -31,14 +32,13 @@ export class TakeAwayComponent implements OnInit {
   expandedElement: any | null;
   editando: boolean;
   oldExpandedElement: any;
-  pedido: Pedido;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private pedidoService: PedidoService,
-    private fb: FormBuilder) {
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -49,11 +49,10 @@ export class TakeAwayComponent implements OnInit {
     });
   }
 
-  compareCategoryObjects(object1: any, object2: any) {
-    if (object2) {
-      if (object1.id == object2.id) return true;
-      return false;
-    }
+  getPedidos() {
+    this.pedidoService.getAll().subscribe((res: any) => {
+      this.dataSource.data = res;
+    });
   }
 
   cancel() {
@@ -61,18 +60,23 @@ export class TakeAwayComponent implements OnInit {
   }
 
   add() {
+    this.router.navigate(['/pedido']) 
+  }
+
+  put(pedido: Pedido) {
     //abrir dialog
   }
 
-  encerrarPedido() {
-    //fazer método específico para encerrar no back
+  encerrarPedido(id: number) {
+    this.pedidoService.encerrarPedido(id).subscribe((res: any) => {
+      console.log(res)
+    }, err => console.log(err));
   }
 
-  delete() {
-    //Testar isso
-    this.pedidoService.delete(this.pedido.id).subscribe((res: any) => {
-
-    });
+  delete(id: number) {
+    this.pedidoService.delete(id).subscribe((res: any) => {
+      console.log(res)
+    }, err => console.log(err));
   }
 
   applyFilter(event: Event) {

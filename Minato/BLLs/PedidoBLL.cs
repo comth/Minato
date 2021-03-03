@@ -13,6 +13,7 @@ namespace Minato.BLLs
         {
             return context.Pedido.Select(x => new Pedido()
             {
+                Id = x.Id,
                 DataPedido = x.DataPedido,
                 PedidoDelivery = x.PedidoDelivery,
                 PedidoEncerrado = x.PedidoEncerrado,
@@ -30,12 +31,29 @@ namespace Minato.BLLs
 
         public Pedido Get(Context context, int id)
         {
-            return context.Pedido.Find(id);
+            Pedido pedido = context.Pedido.Select(x => new Pedido()
+            {
+                Id = x.Id,
+                DataPedido = x.DataPedido,
+                PedidoDelivery = x.PedidoDelivery,
+                PedidoEncerrado = x.PedidoEncerrado,
+                PedidoLocal = x.PedidoLocal,
+                Produtos = x.Produtos,
+                PedidoRetirada = x.PedidoRetirada,
+                PrecoEntrega = x.PrecoEntrega,
+                EnderecoSelecionado = x.EnderecoSelecionado,
+                Observacao = x.Observacao,
+                Usuario = new Usuario { Id =x.Usuario.Id, Nome = x.Usuario.Nome },
+                Preco = x.Preco
+            }).First(x => x.Id == id);
+
+            return pedido;
         }
 
         public bool Post(Context context, Pedido pedido, int idMesa)
         {
-            var mesa = context.Mesa.Find(idMesa);
+            Mesa mesa = null;
+            if(idMesa != 0) mesa = context.Mesa.Find(idMesa);
 
             if (!pedido.PedidoLocal && (pedido.Usuario == null && pedido.EnderecoSelecionado == null))
                 return false;
@@ -101,7 +119,7 @@ namespace Minato.BLLs
 
                 Math.Round(pedidoBanco.PrecoEntrega, 2);
 
-                if (pedido.PedidoEncerrado) EncerrarPedido(context, pedido);
+                if (pedido.PedidoEncerrado) EncerrarPedido(context, pedido.Id);
 
                 context.SaveChanges();
                 return true;
@@ -113,18 +131,19 @@ namespace Minato.BLLs
             decimal precoProdutos = 0;
 
             pedido.Produtos.ForEach(x => {
-                precoProdutos = precoProdutos + (x.Preco * x.Quantidade);
+                precoProdutos = precoProdutos + ((x.Preco + x.Produto.Embalagem.Preco) * x.Quantidade);
             });
 
             return precoProdutos + pedido.PrecoEntrega;
         }
 
-        private void EncerrarPedido(Context context, Pedido pedido)
+        public bool EncerrarPedido(Context context, decimal id)
         {
-            var mesa = context.Mesa.First(x => x.Pedido.Id == pedido.Id);
+            var mesa = context.Mesa.First(x => x.Pedido.Id == id);
             mesa.Pedido = null;
             var config = new ConfiguracaoBLL().Get(context);
             mesa.Status = config.StatusFinalPedido;
+            return true;
         }
 
         public Pedido GetByMesa(Context context, int idMesa)
@@ -152,8 +171,18 @@ namespace Minato.BLLs
         {
             if (Exists(context, id))
             {
-                Pedido pedido = new Pedido() { Id = id };
-                context.Pedido.Attach(pedido);
+                if(context.Mesa.Any(x => x.Pedido.Id == id))
+                {
+                    return false; //caso a mesa esteja ligado a esse pedido
+                }
+
+                Pedido pedido = context.Pedido.Include(x => x.Produtos).First(x => x.Id == id);
+
+                foreach (ProdutoPedido produtoPedido in pedido.Produtos)
+                {
+                    context.ProdutoPedido.Remove(produtoPedido);
+                }
+
                 context.Pedido.Remove(pedido);
                 context.SaveChanges();
                 return true;

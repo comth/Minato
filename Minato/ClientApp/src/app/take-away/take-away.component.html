@@ -15,7 +15,7 @@
     <!-- Date Column -->
     <ng-container matColumnDef="dataPedido">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
-      <td mat-cell *matCellDef="let row"> {{row.dataPedido | date: 'dd/MM/yyyy'}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.dataPedido | date: 'dd/MM/yyyy hh:mm'}} </td>
     </ng-container>
 
     <!-- Preço Column -->
@@ -44,7 +44,7 @@
               </div>
             </div>
             <div class="painel-button">
-              <button mat-raised-button color="primary" (click)="put()">Modificar Pedido</button>
+              <button mat-raised-button color="primary" (click)="put(row)">Modificar Pedido</button>
               <button mat-raised-button style="background-color:red; color:white" (click)="encerrarPedido(row.id)">Encerrar Pedido</button>
               <button mat-raised-button style="background-color:black; color:white" (click)="delete(row.id)">Excluir Pedido</button>
             </div>
@@ -59,7 +59,8 @@
         (click)="add()">
       <mat-icon style="color: purple">add</mat-icon>
     </th>
-  </ng-container>-->
+      <td></td>
+    </ng-container>-->
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
