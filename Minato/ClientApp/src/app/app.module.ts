@@ -30,6 +30,7 @@ import { DeliveryComponent } from './delivery/delivery.component';
 import { PedidoComponent } from './pedido/pedido.component';
 import { PainelPedidosComponent } from './painel-pedidos/painel-pedidos.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
+import { RouterExtService } from './services/router-ext-service.service';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -76,17 +77,18 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
       { path: 'delivery', component: DeliveryComponent },
       { path: 'configuracoes', component: ConfiguracoesComponent },
       { path: 'pedido/:idMesa/:numMesa/:idPedido', component: PedidoComponent }, //update pedido mesa
-      { path: 'pedido/:idMesa/:numMesa/', component: PedidoComponent }, //novo pedido mesa
+      { path: 'pedido/:idMesa/:numMesa', component: PedidoComponent }, //novo pedido mesa
       { path: 'pedido/:idPedido', component: PedidoComponent }, //update pedido existente
-      { path: 'pedido/', component: PedidoComponent }, //novo pedido 
+      { path: 'pedido', component: PedidoComponent }, //novo pedido 
     ], { useHash: true }),
     BrowserAnimationsModule
   ],
   providers: [{
     provide: DEFAULT_CURRENCY_CODE,
     useValue: 'BRL'
-    }
+  }, RouterExtService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

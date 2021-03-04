@@ -70,7 +70,7 @@ namespace Minato.BLLs
 
             for (int i = 0; i < pedido.Produtos.Count; i++)
             {
-                pedido.Produtos[i].Produto = context.Produto.Find(pedido.Produtos[i].Produto.IdBanco);
+                pedido.Produtos[i].Produto = context.Produto.Include(x => x.Embalagem).First(x => x.IdBanco == pedido.Produtos[i].Produto.IdBanco);
             }
 
             Math.Round(pedido.PrecoEntrega, 2);
@@ -126,6 +126,7 @@ namespace Minato.BLLs
             }
             return false;
         }
+
         private decimal TratarPreco(Pedido pedido)
         {
             decimal precoProdutos = 0;

@@ -21,6 +21,7 @@ import { DistanceMatrixService } from '../services/distance-matrix.service';
 import { DistanceMatrix } from '../interfaces/distance-matrix';
 import { Configuracao } from '../interfaces/configuracao';
 import { ConfiguracaoService } from '../services/configuracao.service';
+import { RouterExtService } from '../services/router-ext-service.service';
 
 
 @Component({
@@ -72,11 +73,11 @@ export class PedidoComponent implements OnInit {
     private usuarioService: UsuarioService,
     private configService: ConfiguracaoService,
     private distanceMatrixService: DistanceMatrixService,
+    private routerExtService: RouterExtService,
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef
   ) {
     this.route.params.subscribe(params => {
-      console.log(params)
       this.idMesa = params['idMesa'];
       this.pedido.id = params['idPedido'];
       this.numMesa = params['numMesa'];
@@ -84,14 +85,39 @@ export class PedidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.pedido.id) this.getPedido();
     this.getProdutos();
-    this.getUsuarios();
-    this.getConfiguracao();
+
+    if (this.pedido.id) {
+      this.getPedido();
+    } else {
+      this.hasPedido = false;
+      this.identificarTipoPedido();
+    } 
+
+    if (!this.idMesa) {
+      this.getUsuarios();
+      this.getConfiguracao();
+      this.subscribesUsuarioForm();
+      this.initializeAutoCompleteUsuario();
+    }
+    
     this.initializeMatTable();
     this.initializeForm();
+    this.subscribesProdutoPedidoForm();
     this.initializeAutoCompleteProduto();
-    this.initializeAutoCompleteUsuario();
+  }
+
+  identificarTipoPedido() {
+    if (this.idMesa) {
+      this.pedido.pedidoLocal = true;
+    } else {
+      let previousUrl = this.routerExtService.getPreviousUrl();
+      if (previousUrl.includes('delivery')) {
+        this.pedido.pedidoDelivery = true;
+      } else if (previousUrl.includes('takeaway')) {
+        this.pedido.pedidoRetirada = true;
+      }
+    }
   }
 
   ngDoCheck(): void {
@@ -100,11 +126,13 @@ export class PedidoComponent implements OnInit {
     this.tratarEntrega();
   }
 
-  subscribesForm() {
+  subscribesUsuarioForm() {
     this.usuarioForm.valueChanges.subscribe((data: any) => {
       this.expandido = false;
     });
+  }
 
+  subscribesProdutoPedidoForm() {
     this.produtoPedidoForm.valueChanges.subscribe((data: any) => {
       this.dataSource.data = this.tratarPreco(this.dataSource.data);
     });
@@ -228,7 +256,12 @@ export class PedidoComponent implements OnInit {
     let precoTotal = 0;
     produtos.forEach(x => {
       if (x.produto) {
-        let preco = <number>(x.produto.preco + x.produto.embalagem.preco) * x.quantidade;
+        let preco = 0;
+        if (this.pedido.pedidoRetirada || this.pedido.pedidoDelivery) {
+          preco = <number>(x.produto.preco + x.produto.embalagem.preco) * x.quantidade;
+        } else {
+          preco = <number> x.produto.preco * x.quantidade;
+        }
         precoTotal = precoTotal + preco;
       }
     });
@@ -252,6 +285,7 @@ export class PedidoComponent implements OnInit {
       produto: new FormControl(null, [Validators.required]),
       quantidade: new FormControl(1, [Validators.required]),
       observacao: new FormControl(null),
+      preco: new FormControl(null),
     }, { updateOn: 'change' });
     
   }
