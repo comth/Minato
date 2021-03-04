@@ -56,11 +56,11 @@ export class PedidoComponent implements OnInit {
   oldExpandedElement: any;
   produtoPedidoForm: FormGroup;
   expandido: boolean;
-  enderecoSelecionado: Endereco;
+  //enderecoSelecionado: Endereco;
   oldEnderecoSelecionado: Endereco;
   enderecos: Endereco[] = [];
-  precoProdutos: number;
-  pedido: Pedido = {};
+  precoProdutos: number = 0;
+  pedido: Pedido = { precoEntrega: 0, preco: 0 };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -168,14 +168,15 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarEntrega() {
-    if (this.enderecoSelecionado && !this.entregaCalculada) {
-      this.oldEnderecoSelecionado = this.enderecoSelecionado;
+    if (this.pedido.enderecoSelecionado && !this.entregaCalculada && this.pedido.pedidoDelivery) {
+      this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
       this.entregaCalculada = true;
-      if (this.enderecoSelecionado.cep) this.calcularEntrega();
+      if (this.pedido.enderecoSelecionado.cep) this.calcularEntrega();
     }
   }
 
   calcularEntrega() {
+    console.log('Cálculo entrega')
     this.pedido.precoEntrega = 23.954;
     //this.distanceMatrixService.get(this.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
     //  console.log(res.distance);
@@ -190,9 +191,9 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarEndereco() {
-    if (this.enderecoSelecionado && this.oldEnderecoSelecionado) {
-      if (this.enderecoSelecionado.id != this.oldEnderecoSelecionado.id) {
-        this.oldEnderecoSelecionado = this.enderecoSelecionado;
+    if (this.pedido.enderecoSelecionado && this.oldEnderecoSelecionado) {
+      if (this.pedido.enderecoSelecionado.id != this.oldEnderecoSelecionado.id) {
+        this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
         this.entregaCalculada = false;
       }
     }
@@ -221,7 +222,7 @@ export class PedidoComponent implements OnInit {
       confirmButtonText: 'Encerrar!',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
-      this.pedido = this.montarPedido(true);
+      this.pedido.pedidoEncerrado = true;
       this.pedidoService.put(this.pedido).subscribe((res: any) => {
         Swal.fire({
           position: 'center',
@@ -236,16 +237,17 @@ export class PedidoComponent implements OnInit {
   }
 
   imprimirConta() {
-    console.log(this.montarPedido(false));
+    console.log(this.pedido);
   }
 
   getPedido() {
     this.pedidoService.get(this.pedido.id).subscribe((res: any) => {
       this.hasPedido = res != null ? true : false;
       if (this.hasPedido) {
+        this.entregaCalculada = true;
         this.pedido = res;
         this.dataSource.data = this.tratarPreco(this.pedido.produtos);
-        this.enderecoSelecionado = this.pedido.enderecoSelecionado;
+        //this.enderecoSelecionado = this.pedido.enderecoSelecionado;
         this.usuarioForm.patchValue(this.pedido.usuario);
         this.cdRef.detectChanges();
       }
@@ -253,7 +255,7 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarPreco(produtos: ProdutoPedido[]): ProdutoPedido[] {
-    let precoTotal = 0;
+    let precoProdutos = 0;
     produtos.forEach(x => {
       if (x.produto) {
         let preco = 0;
@@ -262,11 +264,14 @@ export class PedidoComponent implements OnInit {
         } else {
           preco = <number> x.produto.preco * x.quantidade;
         }
-        precoTotal = precoTotal + preco;
+        precoProdutos = precoProdutos + preco;
       }
     });
 
-    this.precoProdutos = precoTotal;
+    this.precoProdutos = precoProdutos;
+
+    this.pedido.preco = precoProdutos + this.pedido.precoEntrega;
+    this.cdRef.detectChanges();
     return produtos;
   }
 
@@ -361,7 +366,7 @@ export class PedidoComponent implements OnInit {
   }
 
   put() {
-    this.pedido = this.montarPedido(false);
+    //this.pedido = this.montarPedido(false);
     this.pedidoService.put(this.pedido).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
@@ -390,7 +395,7 @@ export class PedidoComponent implements OnInit {
   }
 
   post() {
-    this.pedido = this.montarPedido(false);
+    //this.pedido = this.montarPedido(false);
     this.pedidoService.post(this.pedido, this.idMesa).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
@@ -400,28 +405,29 @@ export class PedidoComponent implements OnInit {
         timer: 1500
       });
       this.produtoPedidoForm.reset();
+      this.getPedido();
     }, err => {
       console.log(err);
     });
   }
 
-  montarPedido(encerrarPedido: boolean): Pedido {
+  //montarPedido(encerrarPedido: boolean): Pedido {
     
-    let pedido: Pedido = {
-      id: this.pedido?.id,
-      enderecoSelecionado: this.enderecoSelecionado,
-      pedidoLocal: !this.pedido.pedidoDelivery,
-      produtos: this.dataSource.data,
-      usuario: this.pedido.usuario,
-      pedidoDelivery: this.pedido.pedidoDelivery,
-      pedidoRetirada: this.pedido.pedidoRetirada,
-      observacao: this.pedido.observacao,
-      pedidoEncerrado: encerrarPedido,
-      precoEntrega: this.pedido.precoEntrega
-    }
-    console.log(pedido)
-    return pedido;
-  }
+  //  let pedido: Pedido = {
+  //    id: this.pedido?.id,
+  //    enderecoSelecionado: this.pedido.enderecoSelecionado,
+  //    pedidoLocal: !this.pedido.pedidoDelivery,
+  //    produtos: this.dataSource.data,
+  //    usuario: this.pedido.usuario,
+  //    pedidoDelivery: this.pedido.pedidoDelivery,
+  //    pedidoRetirada: this.pedido.pedidoRetirada,
+  //    observacao: this.pedido.observacao,
+  //    pedidoEncerrado: this.pedido.pedidoEncerrado,
+  //    precoEntrega: this.pedido.precoEntrega,
+  //    preco: this.pedido.preco
+  //  }
+  //  return pedido;
+  //}
 
   add() {
     if (!this.editando) {

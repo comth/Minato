@@ -43,9 +43,13 @@ namespace Minato.BLLs
                 PrecoEntrega = x.PrecoEntrega,
                 EnderecoSelecionado = x.EnderecoSelecionado,
                 Observacao = x.Observacao,
-                Usuario = new Usuario { Id =x.Usuario.Id, Nome = x.Usuario.Nome },
+                Usuario = x.Usuario != null ? new Usuario { Id = x.Usuario.Id, Nome = x.Usuario.Nome } : null,
                 Preco = x.Preco
-            }).First(x => x.Id == id);
+            }).AsSplitQuery().First(x => x.Id == id);
+
+            pedido.Produtos.ForEach(produtoPedido => {
+                produtoPedido = context.ProdutoPedido.Include(x => x.Produto).AsSplitQuery().First(x => x.Id == produtoPedido.Id);
+            });
 
             return pedido;
         }
@@ -70,7 +74,9 @@ namespace Minato.BLLs
 
             for (int i = 0; i < pedido.Produtos.Count; i++)
             {
-                pedido.Produtos[i].Produto = context.Produto.Include(x => x.Embalagem).First(x => x.IdBanco == pedido.Produtos[i].Produto.IdBanco);
+                pedido.Produtos[i].Produto = context.Produto
+                    .Include(x => x.Embalagem)
+                    .First(x => x.IdBanco == pedido.Produtos[i].Produto.IdBanco);
             }
 
             Math.Round(pedido.PrecoEntrega, 2);
@@ -105,7 +111,9 @@ namespace Minato.BLLs
 
                 for (int i = 0; i < pedido.Produtos.Count; i++)
                 {
-                    pedido.Produtos[i].Produto = context.Produto.Find(pedido.Produtos[i].Produto.IdBanco);
+                    pedido.Produtos[i].Produto = context.Produto
+                        .Include(x => x.Embalagem)
+                        .First(x => x.IdBanco == pedido.Produtos[i].Produto.IdBanco);
                 }
 
                 pedidoBanco.Produtos = pedido.Produtos;
@@ -131,9 +139,19 @@ namespace Minato.BLLs
         {
             decimal precoProdutos = 0;
 
-            pedido.Produtos.ForEach(x => {
-                precoProdutos = precoProdutos + ((x.Preco + x.Produto.Embalagem.Preco) * x.Quantidade);
-            });
+            foreach (var produtoPedido in pedido.Produtos)
+            {
+                decimal precoProdutoPedido = 0;
+                if (pedido.PedidoDelivery || pedido.PedidoRetirada)
+                {
+                    precoProdutoPedido = produtoPedido.Produto.Preco + produtoPedido.Produto.Embalagem.Preco;
+                } 
+                else
+                {
+                    precoProdutoPedido = produtoPedido.Produto.Preco;
+                }
+                precoProdutos = precoProdutos + (precoProdutoPedido * produtoPedido.Quantidade);
+            }
 
             return precoProdutos + pedido.PrecoEntrega;
         }

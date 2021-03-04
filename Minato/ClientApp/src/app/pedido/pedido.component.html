@@ -31,7 +31,7 @@
 
     <div [hidden]="(!this.pedido.pedidoDelivery)" style="font-size: 14px;">
       <mat-radio-group class="radio-group"
-                       [(ngModel)]="enderecoSelecionado"
+                       [(ngModel)]="pedido.enderecoSelecionado"
                        (change)="tratarEndereco()">
         <mat-radio-button *ngFor="let endereco of enderecos"
                           [value]="endereco"
@@ -162,10 +162,10 @@
     Preço Produtos : {{this.precoProdutos | currency:'R$ ' }}
     <br />
     <ng-container *ngIf="pedido.pedidoDelivery">
-    Entrega : {{this.pedido?.precoEntrega | currency:'R$ ' }}
+      Entrega : {{this.pedido?.precoEntrega | currency:'R$ ' }}
     </ng-container>
     <hr />
-    Total : {{(this.precoProdutos + this.pedido?.precoEntrega) | currency:'R$ ' }}
+    Total : {{this.pedido.preco | currency:'R$ ' }}
   </div>
   <div class="final-button">
     <button mat-raised-button color="primary" (click)="onSubmit()">Finalizar Modificações</button>
