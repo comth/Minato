@@ -1,4 +1,5 @@
-﻿using Minato.Util;
+﻿using Minato.Enums;
+using Minato.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,16 +20,15 @@ namespace Minato.Models
         public Usuario Usuario { get; set; }
         public Endereco EnderecoSelecionado { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
-        public decimal PrecoEntrega { get; set; }
         public string Observacao { get; set; }
-        public bool PedidoDelivery { get; set; }
-        public bool PedidoRetirada { get; set; }
-        public bool PedidoLocal { get; set; }
         public bool PedidoEncerrado { get; set; }
+        public TipoPedido TipoPedido { get; set; }
+
+        [Column(TypeName = "decimal(5, 2)")]
+        public decimal PrecoEntrega { get; set; } 
 
         [Column(TypeName = "decimal(7, 2)")]
-        public decimal Preco { get; set; }
+        public decimal Preco { get; set; } //inclui o preço da entrega
     }
 
     public class ProdutoPedido

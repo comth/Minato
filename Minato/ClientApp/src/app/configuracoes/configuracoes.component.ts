@@ -7,6 +7,7 @@ import { ConfiguracaoService } from '../services/configuracao.service';
 import { Configuracao } from '../interfaces/configuracao';
 import { Status } from '../interfaces/status';
 import Swal from 'sweetalert2';
+import { NavMenuComponent } from '../nav-menu/nav-menu.component';
 
 interface Node {
   name: string;
@@ -45,6 +46,7 @@ export class ConfiguracoesComponent implements OnInit {
   constructor(
     private statusService: StatusService,
     private configuracaoService: ConfiguracaoService,
+    //private navComponent: NavMenuComponent
   ) {
     this.dataSource.data = TREE_DATA;
     this.nodeSelecionado.next({
@@ -59,7 +61,9 @@ export class ConfiguracoesComponent implements OnInit {
 
   put() {
     this.configuracaoService.put(this.configuracao).subscribe(res => {
-      Swal.fire('Salvo!','','success')
+      Swal.fire('Salvo!', '', 'success');
+      this.getConfiguracao();
+      //this.navComponent.nomeExibicao = this.configuracao.nomeExibicao;
     });
   }
 

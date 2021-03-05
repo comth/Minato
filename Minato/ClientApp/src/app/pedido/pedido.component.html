@@ -1,9 +1,9 @@
 <div style="margin-bottom:6%;">
-  <h5 *ngIf="pedido.pedidoLocal">Pedido para a Mesa {{numMesa}}</h5>
-  <h5 *ngIf="pedido.pedidoRetirada">Pedido Take Away</h5>
-  <h5 *ngIf="pedido.pedidoDelivery">Pedido Delivery</h5>
+  <h5 *ngIf="this.pedido.tipoPedido == TipoPedido.local">Pedido para a Mesa {{numMesa}}</h5>
+  <h5 *ngIf="this.pedido.tipoPedido == TipoPedido.takeAway">Pedido Take Away</h5>
+  <h5 *ngIf="pedido.tipoPedido == TipoPedido.delivery">Pedido Delivery</h5>
 </div>
-<div class="div-inicio" *ngIf="pedido.pedidoRetirada || pedido.pedidoDelivery">
+<div class="div-inicio" *ngIf="this.pedido.tipoPedido == TipoPedido.takeAway || pedido.tipoPedido == TipoPedido.delivery">
   <div class="div-column">
     <div>
       <mat-form-field style="font-size: 14px; width: 85%;">
@@ -21,21 +21,22 @@
     </div>
   </div>
 
-  <div *ngIf="pedido.pedidoDelivery">
+  <div *ngIf="pedido.tipoPedido == TipoPedido.delivery">
     <mat-slide-toggle class="example-margin"
                       color="accent"
-                      [(ngModel)]="pedido.pedidoDelivery"
+                      [(ngModel)]="pedidoDelivery"
+                      (change)="changeToggle()"
                       style="font-size: 14px;">
       Para entrega?
     </mat-slide-toggle>
 
-    <div [hidden]="(!this.pedido.pedidoDelivery)" style="font-size: 14px;">
+    <div [hidden]="(pedido.tipoPedido != TipoPedido.delivery)" style="font-size: 14px;">
       <mat-radio-group class="radio-group"
                        [(ngModel)]="pedido.enderecoSelecionado"
                        (change)="tratarEndereco()">
         <mat-radio-button *ngFor="let endereco of enderecos"
                           [value]="endereco"
-                          [checked]="enderecoSelecionado?.id === endereco?.id"
+                          [checked]="this.pedido.enderecoSelecionado?.id === endereco?.id"
                           style="font-size: 14px;">
           <a style="white-space: pre-wrap;">
             {{endereco.logradouro}}, {{endereco.numero}} - {{endereco.bairro}}
@@ -161,7 +162,7 @@
   <div>
     Preço Produtos : {{this.precoProdutos | currency:'R$ ' }}
     <br />
-    <ng-container *ngIf="pedido.pedidoDelivery">
+    <ng-container *ngIf="pedido.tipoPedido == TipoPedido.delivery">
       Entrega : {{this.pedido?.precoEntrega | currency:'R$ ' }}
     </ng-container>
     <hr />

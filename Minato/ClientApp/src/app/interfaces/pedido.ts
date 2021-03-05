@@ -1,3 +1,4 @@
+import { TipoPedido } from "../enums/tipo-pedido";
 import { Endereco } from "./endereco";
 import { ProdutoPedido } from "./produto-pedido";
 import { Usuario } from "./usuario";
@@ -10,9 +11,7 @@ export interface Pedido {
   dataPedido?: Date;
   precoEntrega?: number;
   observacao?: string;
-  pedidoDelivery?: boolean;
-  pedidoRetirada?: boolean;
-  pedidoLocal?: boolean;
   pedidoEncerrado?: boolean;
   preco?: number;
+  tipoPedido?: TipoPedido
 }

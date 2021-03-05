@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Minato.Contexts;
+using Minato.Enums;
 using Minato.Models;
 using System;
 using System.Collections.Generic;
@@ -15,18 +16,27 @@ namespace Minato.BLLs
             {
                 Id = x.Id,
                 DataPedido = x.DataPedido,
-                PedidoDelivery = x.PedidoDelivery,
                 PedidoEncerrado = x.PedidoEncerrado,
-                PedidoLocal = x.PedidoLocal,
-                PedidoRetirada = x.PedidoRetirada,
                 PrecoEntrega = x.PrecoEntrega,
                 EnderecoSelecionado = x.EnderecoSelecionado,
                 Observacao = x.Observacao,
                 Usuario = new Usuario{ Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
                 Preco = x.Preco
-            }).ToList();
+            }).ToList(); 
+        }
 
-           
+        public List<Pedido> GetEspecifico(Context context, TipoPedido tipoPedido)
+        {
+            return context.Pedido.Select(x => new Pedido()
+            {
+                Id = x.Id,
+                DataPedido = x.DataPedido,
+                PedidoEncerrado = x.PedidoEncerrado,
+                EnderecoSelecionado = x.EnderecoSelecionado,
+                Observacao = x.Observacao,
+                Usuario = new Usuario { Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
+                Preco = x.Preco
+            }).Where(x => x.TipoPedido == tipoPedido).ToList();
         }
 
         public Pedido Get(Context context, int id)
@@ -35,11 +45,8 @@ namespace Minato.BLLs
             {
                 Id = x.Id,
                 DataPedido = x.DataPedido,
-                PedidoDelivery = x.PedidoDelivery,
                 PedidoEncerrado = x.PedidoEncerrado,
-                PedidoLocal = x.PedidoLocal,
                 Produtos = x.Produtos,
-                PedidoRetirada = x.PedidoRetirada,
                 PrecoEntrega = x.PrecoEntrega,
                 EnderecoSelecionado = x.EnderecoSelecionado,
                 Observacao = x.Observacao,
@@ -59,7 +66,7 @@ namespace Minato.BLLs
             Mesa mesa = null;
             if(idMesa != 0) mesa = context.Mesa.Find(idMesa);
 
-            if (!pedido.PedidoLocal && (pedido.Usuario == null && pedido.EnderecoSelecionado == null))
+            if (pedido.TipoPedido == TipoPedido.Delivery && (pedido.Usuario == null && pedido.EnderecoSelecionado == null))
                 return false;
 
             if (pedido.Usuario != null)
@@ -119,9 +126,6 @@ namespace Minato.BLLs
                 pedidoBanco.Produtos = pedido.Produtos;
                 pedidoBanco.Observacao = pedido.Observacao;
                 pedidoBanco.PedidoEncerrado = pedido.PedidoEncerrado;
-                pedidoBanco.PedidoDelivery = pedido.PedidoDelivery;
-                pedidoBanco.PedidoLocal = pedido.PedidoLocal;
-                pedidoBanco.PedidoRetirada = pedido.PedidoRetirada;
                 pedidoBanco.PrecoEntrega = pedido.PrecoEntrega;
                 pedidoBanco.Preco = TratarPreco(pedido);
 
@@ -142,7 +146,7 @@ namespace Minato.BLLs
             foreach (var produtoPedido in pedido.Produtos)
             {
                 decimal precoProdutoPedido = 0;
-                if (pedido.PedidoDelivery || pedido.PedidoRetirada)
+                if (pedido.TipoPedido == TipoPedido.Delivery || pedido.TipoPedido == TipoPedido.TakeAway)
                 {
                     precoProdutoPedido = produtoPedido.Produto.Preco + produtoPedido.Produto.Embalagem.Preco;
                 } 
@@ -163,22 +167,6 @@ namespace Minato.BLLs
             var config = new ConfiguracaoBLL().Get(context);
             mesa.Status = config.StatusFinalPedido;
             return true;
-        }
-
-        public Pedido GetByMesa(Context context, int idMesa)
-        {
-            Pedido pedido = context.Mesa.Include(x => x.Pedido).First(x => x.Id.Equals(idMesa)).Pedido;
-            if (pedido != null)
-            {
-                pedido = context.Pedido.Include(x => x.EnderecoSelecionado).Include(x => x.Usuario).Include(x => x.Produtos).FirstOrDefault(x => x.Id == pedido.Id);
-
-                for (int i = 0; i < pedido.Produtos.Count; i++)
-                {
-                    pedido.Produtos[i] = context.ProdutoPedido.Include(x => x.Produto).FirstOrDefault(x => x.Id == pedido.Produtos[i].Id);
-                }
-            }
-
-            return pedido;
         }
 
         public bool Exists(Context context, int idPedido)

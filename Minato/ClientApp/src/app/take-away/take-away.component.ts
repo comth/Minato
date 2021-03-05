@@ -27,7 +27,7 @@ import { Router } from '@angular/router';
 
 export class TakeAwayComponent implements OnInit {
 
-  displayedColumns: string[] = ['usuario', 'dataPedido', 'preco','observacao'];
+  displayedColumns: string[] = ['usuario', 'dataPedido', 'preco','observacao', 'actions'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean;
@@ -64,7 +64,7 @@ export class TakeAwayComponent implements OnInit {
   }
 
   put(pedido: Pedido) {
-    //abrir dialog
+    this.router.navigate(['/pedido/' + pedido.id]) 
   }
 
   encerrarPedido(id: number) {

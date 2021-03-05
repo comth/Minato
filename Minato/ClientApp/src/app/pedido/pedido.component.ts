@@ -14,6 +14,7 @@ import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
 import { Usuario } from '../interfaces/usuario';
 import { Produto } from '../interfaces/produto';
+import { TipoPedido } from '../enums/tipo-pedido';
 import { ProdutoPedido } from '../interfaces/produto-pedido';
 import { Endereco } from '../interfaces/endereco';
 import { Pedido } from '../interfaces/pedido';
@@ -56,6 +57,7 @@ export class PedidoComponent implements OnInit {
   oldExpandedElement: any;
   produtoPedidoForm: FormGroup;
   expandido: boolean;
+  pedidoDelivery: boolean = false;
   //enderecoSelecionado: Endereco;
   oldEnderecoSelecionado: Endereco;
   enderecos: Endereco[] = [];
@@ -109,13 +111,14 @@ export class PedidoComponent implements OnInit {
 
   identificarTipoPedido() {
     if (this.idMesa) {
-      this.pedido.pedidoLocal = true;
+      this.pedido.tipoPedido = TipoPedido.local;
     } else {
       let previousUrl = this.routerExtService.getPreviousUrl();
       if (previousUrl.includes('delivery')) {
-        this.pedido.pedidoDelivery = true;
+        this.pedidoDelivery = true;
+        this.pedido.tipoPedido = TipoPedido.delivery;
       } else if (previousUrl.includes('takeaway')) {
-        this.pedido.pedidoRetirada = true;
+        this.pedido.tipoPedido = TipoPedido.takeAway;
       }
     }
   }
@@ -130,6 +133,15 @@ export class PedidoComponent implements OnInit {
     this.usuarioForm.valueChanges.subscribe((data: any) => {
       this.expandido = false;
     });
+  }
+
+  changeToggle() {
+    if (this.pedidoDelivery) this.pedido.tipoPedido = TipoPedido.delivery;
+    else this.pedido.tipoPedido = TipoPedido.takeAway;
+  }
+
+  get TipoPedido(): typeof TipoPedido {
+    return TipoPedido;
   }
 
   subscribesProdutoPedidoForm() {
@@ -161,14 +173,14 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarRadioButton() {
-    if (this.pedido.pedidoDelivery && !this.expandido) {
+    if (this.pedido.tipoPedido == TipoPedido.delivery && !this.expandido) {
       this.expandido = true;
       this.updateRadioButton();
     }
   }
 
   tratarEntrega() {
-    if (this.pedido.enderecoSelecionado && !this.entregaCalculada && this.pedido.pedidoDelivery) {
+    if (this.pedido.enderecoSelecionado && !this.entregaCalculada && this.pedido.tipoPedido == TipoPedido.delivery) {
       this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
       this.entregaCalculada = true;
       if (this.pedido.enderecoSelecionado.cep) this.calcularEntrega();
@@ -259,7 +271,7 @@ export class PedidoComponent implements OnInit {
     produtos.forEach(x => {
       if (x.produto) {
         let preco = 0;
-        if (this.pedido.pedidoRetirada || this.pedido.pedidoDelivery) {
+        if (this.pedido.tipoPedido == TipoPedido.takeAway || this.pedido.tipoPedido == TipoPedido.delivery) {
           preco = <number>(x.produto.preco + x.produto.embalagem.preco) * x.quantidade;
         } else {
           preco = <number> x.produto.preco * x.quantidade;
@@ -396,19 +408,29 @@ export class PedidoComponent implements OnInit {
 
   post() {
     //this.pedido = this.montarPedido(false);
-    this.pedidoService.post(this.pedido, this.idMesa).subscribe((res: any) => {
+    if (this.pedido.tipoPedido == TipoPedido.delivery && !this.pedido.enderecoSelecionado) {
       Swal.fire({
         position: 'center',
-        icon: 'success',
-        title: 'Salvo!',
+        icon: 'error',
+        title: 'É necessário selecionar um endereço para a entrega!',
         showConfirmButton: false,
         timer: 1500
       });
-      this.produtoPedidoForm.reset();
-      this.getPedido();
-    }, err => {
-      console.log(err);
-    });
+    } else {
+      this.pedidoService.post(this.pedido, this.idMesa).subscribe((res: any) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Salvo!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.produtoPedidoForm.reset();
+        this.getPedido();
+      }, err => {
+        console.log(err);
+      });
+    } 
   }
 
   //montarPedido(encerrarPedido: boolean): Pedido {

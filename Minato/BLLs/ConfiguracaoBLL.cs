@@ -54,7 +54,7 @@ namespace Minato.BLLs
                 if(configuracao.StatusFinalPedido == null) configuracaoBanco.StatusFinalPedido = null;
             }
 
-            if (configuracao.KeyDistanceMatrix.Trim().Length != 0)
+            if (configuracao.KeyDistanceMatrix != null && configuracao.KeyDistanceMatrix.Trim().Length != 0)
             {
                 var protectionProvider = new ProtectionProvider(dataProtectionProvider);
                 configuracaoBanco.KeyDistanceMatrix = protectionProvider.Encrypt(configuracao.KeyDistanceMatrix);

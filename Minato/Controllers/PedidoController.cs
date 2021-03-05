@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Minato.BLLs;
 using Minato.Contexts;
+using Minato.Enums;
 using Minato.Models;
 
 namespace Minato.Controllers
@@ -24,6 +25,12 @@ namespace Minato.Controllers
             return Ok(PedidoBLL.GetAll(Context));
         }
 
+        [HttpGet("especifico/{tipoPedido}")]
+        public IActionResult GetEspecifico(TipoPedido tipoPedido)
+        {
+            return Ok(PedidoBLL.GetEspecifico(Context, tipoPedido));
+        }
+
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -31,14 +38,6 @@ namespace Minato.Controllers
 
             return Ok(pedido);
         }
-
-        //[HttpGet("mesa/{idMesa}")]
-        //public IActionResult GetByMesa(int idMesa)
-        //{
-        //    Pedido pedido = PedidoBLL.GetByMesa(Context, idMesa);
-
-        //    return Ok(pedido);
-        //}
 
         [HttpPost("{idMesa}")]
         public IActionResult Post([FromBody]Pedido pedido, int idMesa)

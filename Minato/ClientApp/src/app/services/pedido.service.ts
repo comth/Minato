@@ -1,6 +1,7 @@
 import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Pedido } from "../interfaces/pedido";
+import { TipoPedido } from "../enums/tipo-pedido";
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +23,13 @@ export class PedidoService {
     return this.http.get(this.baseURL + `pedido/${id}`);
   }
 
-  public getByMesa(idMesa: any) {
-    return this.http.get(this.baseURL + `pedido/mesa/${idMesa}`);
+  public getEspecifico(tipoPedido: TipoPedido) {
+    return this.http.get(this.baseURL + `pedido/especifico/${tipoPedido}`);
   }
 
-  public filtrar(itensPagina: number, index: number, pesquisa: any) {
-    return this.http.get(this.baseURL + `pedido/${itensPagina}/${index}/${pesquisa}`);
-  }
+  //public filtrar(itensPagina: number, index: number, pesquisa: any) {
+  //  return this.http.get(this.baseURL + `pedido/${itensPagina}/${index}/${pesquisa}`);
+  //}
 
   public post(pedido: Pedido, idMesa?) {
     let i = 0;
