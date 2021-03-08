@@ -31,6 +31,7 @@ import { PedidoComponent } from './pedido/pedido.component';
 import { PainelPedidosComponent } from './painel-pedidos/painel-pedidos.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { RouterExtService } from './services/router-ext-service.service';
+import { ConfiguracaoService } from './services/configuracao.service';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -79,7 +80,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
       { path: 'pedido/:idMesa/:numMesa/:idPedido', component: PedidoComponent }, //update pedido local
       { path: 'pedido/:idMesa/:numMesa', component: PedidoComponent }, //novo pedido mesa
       { path: 'pedido/:idPedido', component: PedidoComponent }, //update pedido existente
-      { path: 'pedido', component: PedidoComponent }, //novo pedido 
+      { path: 'pedido/:tipoPedido', component: PedidoComponent }, //novo pedido 
     ], { useHash: true }),
     BrowserAnimationsModule
   ],
@@ -91,4 +92,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
   bootstrap: [AppComponent]
 })
 export class AppModule {
+
+  constructor(private configuracaoService: ConfiguracaoService) {
+    this.configuracaoService.get().subscribe(res => {
+      this.configuracaoService.configuracao = res;
+    });
+  }
+
 }

@@ -9,18 +9,7 @@ import { ConfiguracaoService } from '../services/configuracao.service';
 })
 export class NavMenuComponent {
 
-  public nomeExibicao: string
-
-  constructor(private configuracaoService: ConfiguracaoService) {
-    this.getConfiguracao();
-  }
-
-  getConfiguracao() {
-    this.configuracaoService.get().subscribe(res => {
-      let configuracao = <Configuracao>res;
-      this.nomeExibicao = configuracao.nomeExibicao;
-    });
-  }
+  constructor(public configuracaoService: ConfiguracaoService) { }
 
   isExpanded = false;
 

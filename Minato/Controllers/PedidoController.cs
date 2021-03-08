@@ -25,10 +25,10 @@ namespace Minato.Controllers
             return Ok(PedidoBLL.GetAll(Context));
         }
 
-        [HttpGet("especifico/{tipoPedido}")]
-        public IActionResult GetEspecifico(TipoPedido tipoPedido)
+        [HttpGet("especifico/{tipoPedido}/{mostrarFechados}")]
+        public IActionResult GetEspecifico(TipoPedido tipoPedido, bool mostrarFechados)
         {
-            return Ok(PedidoBLL.GetEspecifico(Context, tipoPedido));
+            return Ok(PedidoBLL.GetEspecifico(Context, tipoPedido, mostrarFechados));
         }
 
         [HttpGet("{id}")]
@@ -46,7 +46,7 @@ namespace Minato.Controllers
 
             if (salvo)
             {
-                return Ok();
+                return Ok(pedido);
             }
 
             return BadRequest();

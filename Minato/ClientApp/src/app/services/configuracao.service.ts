@@ -9,7 +9,7 @@ import { Configuracao } from '../interfaces/configuracao';
 export class ConfiguracaoService {
 
   private baseURL: string;
-  //public configuracao: Configuracao;
+  public configuracao: Configuracao;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseURL = baseUrl;

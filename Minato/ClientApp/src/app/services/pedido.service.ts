@@ -23,8 +23,8 @@ export class PedidoService {
     return this.http.get(this.baseURL + `pedido/${id}`);
   }
 
-  public getEspecifico(tipoPedido: TipoPedido) {
-    return this.http.get(this.baseURL + `pedido/especifico/${tipoPedido}`);
+  public getEspecifico(tipoPedido: TipoPedido, mostrarFechados: boolean) { //get das ultimas 12h
+    return this.http.get(this.baseURL + `pedido/especifico/${tipoPedido}/${mostrarFechados}`);
   }
 
   //public filtrar(itensPagina: number, index: number, pesquisa: any) {

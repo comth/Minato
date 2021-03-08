@@ -73,7 +73,7 @@ export class PedidoComponent implements OnInit {
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
     private usuarioService: UsuarioService,
-    private configService: ConfiguracaoService,
+    private configuracaoService: ConfiguracaoService,
     private distanceMatrixService: DistanceMatrixService,
     private routerExtService: RouterExtService,
     private fb: FormBuilder,
@@ -98,7 +98,6 @@ export class PedidoComponent implements OnInit {
 
     if (!this.idMesa) {
       this.getUsuarios();
-      this.getConfiguracao();
       this.subscribesUsuarioForm();
       this.initializeAutoCompleteUsuario();
     }
@@ -107,6 +106,12 @@ export class PedidoComponent implements OnInit {
     this.initializeForm();
     this.subscribesProdutoPedidoForm();
     this.initializeAutoCompleteProduto();
+  }
+
+  ngDoCheck(): void {
+    this.tratarExpansaoTabela();
+    this.tratarRadioButton();
+    this.tratarEntrega();
   }
 
   identificarTipoPedido() {
@@ -123,15 +128,12 @@ export class PedidoComponent implements OnInit {
     }
   }
 
-  ngDoCheck(): void {
-    this.tratarExpansaoTabela();
-    this.tratarRadioButton();
-    this.tratarEntrega();
-  }
-
   subscribesUsuarioForm() {
     this.usuarioForm.valueChanges.subscribe((data: any) => {
       this.expandido = false;
+      if (data) {
+        if (data.id) this.pedido.usuario = data;
+      }
     });
   }
 
@@ -190,16 +192,10 @@ export class PedidoComponent implements OnInit {
   calcularEntrega() {
     console.log('Cálculo entrega')
     this.pedido.precoEntrega = 23.954;
-    //this.distanceMatrixService.get(this.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
+    //this.distanceMatrixService.get(this.pedido.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
     //  console.log(res.distance);
-    //  this.precoEntrega = res.distance.value * (this.configuracao.precoPorKm / 1000);
+    //  this.pedido.precoEntrega = res.distance.value * (this.configuracaoService.configuracao.precoPorKm / 1000);
     //}, err => console.log(err));
-  }
-
-  getConfiguracao() {
-    this.configService.get().subscribe(res => {
-      this.configuracao = <Configuracao>res;
-    });
   }
 
   tratarEndereco() {
@@ -258,6 +254,7 @@ export class PedidoComponent implements OnInit {
       if (this.hasPedido) {
         this.entregaCalculada = true;
         this.pedido = res;
+        console.log(this.pedido);
         this.dataSource.data = this.tratarPreco(this.pedido.produtos);
         //this.enderecoSelecionado = this.pedido.enderecoSelecionado;
         this.usuarioForm.patchValue(this.pedido.usuario);
@@ -378,7 +375,8 @@ export class PedidoComponent implements OnInit {
   }
 
   put() {
-    //this.pedido = this.montarPedido(false);
+    this.montarPedido(false);
+    console.log(this.pedido);
     this.pedidoService.put(this.pedido).subscribe((res: any) => {
       Swal.fire({
         position: 'center',
@@ -407,7 +405,8 @@ export class PedidoComponent implements OnInit {
   }
 
   post() {
-    //this.pedido = this.montarPedido(false);
+    this.montarPedido(false);
+    console.log(this.pedido);
     if (this.pedido.tipoPedido == TipoPedido.delivery && !this.pedido.enderecoSelecionado) {
       Swal.fire({
         position: 'center',
@@ -426,6 +425,7 @@ export class PedidoComponent implements OnInit {
           timer: 1500
         });
         this.produtoPedidoForm.reset();
+        this.pedido.id = res.id;
         this.getPedido();
       }, err => {
         console.log(err);
@@ -433,23 +433,10 @@ export class PedidoComponent implements OnInit {
     } 
   }
 
-  //montarPedido(encerrarPedido: boolean): Pedido {
-    
-  //  let pedido: Pedido = {
-  //    id: this.pedido?.id,
-  //    enderecoSelecionado: this.pedido.enderecoSelecionado,
-  //    pedidoLocal: !this.pedido.pedidoDelivery,
-  //    produtos: this.dataSource.data,
-  //    usuario: this.pedido.usuario,
-  //    pedidoDelivery: this.pedido.pedidoDelivery,
-  //    pedidoRetirada: this.pedido.pedidoRetirada,
-  //    observacao: this.pedido.observacao,
-  //    pedidoEncerrado: this.pedido.pedidoEncerrado,
-  //    precoEntrega: this.pedido.precoEntrega,
-  //    preco: this.pedido.preco
-  //  }
-  //  return pedido;
-  //}
+  montarPedido(encerrarPedido: boolean) {
+    this.pedido.produtos = this.dataSource.data;
+    this.pedido.pedidoEncerrado = encerrarPedido;
+  }
 
   add() {
     if (!this.editando) {

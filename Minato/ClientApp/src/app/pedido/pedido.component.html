@@ -174,7 +174,7 @@
   <div class="final-button">
     <button mat-raised-button style="background-color:green; color:white" (click)="imprimirConta()">Imprimir Conta</button>
   </div>
-  <div class="final-button">
+  <div class="final-button" *ngIf="hasPedido">
     <button mat-raised-button style="background-color:red; color:white" (click)="encerrarPedido()">Encerrar Pedido</button>
   </div>
 </div>

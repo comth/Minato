@@ -11,6 +11,7 @@ import { Produto } from '../interfaces/produto';
 import { PedidoService } from '../services/pedido.service';
 import { Pedido } from '../interfaces/pedido';
 import { Router } from '@angular/router';
+import { TipoPedido } from '../enums/tipo-pedido';
 
 @Component({
   selector: 'app-take-away',
@@ -32,6 +33,7 @@ export class TakeAwayComponent implements OnInit {
   expandedElement: any | null;
   editando: boolean;
   oldExpandedElement: any;
+  mostrarFechados: boolean = false; //only
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -42,15 +44,14 @@ export class TakeAwayComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pedidoService.getAll().subscribe((res: any) => {
-      this.dataSource = new MatTableDataSource(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    this.getPedidos();
+    this.dataSource = new MatTableDataSource([]);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   getPedidos() {
-    this.pedidoService.getAll().subscribe((res: any) => {
+    this.pedidoService.getEspecifico(TipoPedido.takeAway, this.mostrarFechados).subscribe((res: any) => {
       this.dataSource.data = res;
     });
   }
@@ -61,6 +62,10 @@ export class TakeAwayComponent implements OnInit {
 
   add() {
     this.router.navigate(['/pedido']) 
+  }
+
+  onChangeToggle() {
+    this.getPedidos();
   }
 
   put(pedido: Pedido) {

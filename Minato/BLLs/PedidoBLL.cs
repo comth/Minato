@@ -25,18 +25,21 @@ namespace Minato.BLLs
             }).ToList(); 
         }
 
-        public List<Pedido> GetEspecifico(Context context, TipoPedido tipoPedido)
+        public List<Pedido> GetEspecifico(Context context, TipoPedido tipoPedido, bool mostrarFechados)
         {
-            return context.Pedido.Select(x => new Pedido()
-            {
-                Id = x.Id,
-                DataPedido = x.DataPedido,
-                PedidoEncerrado = x.PedidoEncerrado,
-                EnderecoSelecionado = x.EnderecoSelecionado,
-                Observacao = x.Observacao,
-                Usuario = new Usuario { Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
-                Preco = x.Preco
-            }).Where(x => x.TipoPedido == tipoPedido).ToList();
+            DateTime dataLimite = DateTime.Now.AddHours(-12);
+            return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.DataPedido >= dataLimite && x.PedidoEncerrado == mostrarFechados)
+                .Select(x => new Pedido()
+                {
+                    Id = x.Id,
+                    DataPedido = x.DataPedido,
+                    PedidoEncerrado = x.PedidoEncerrado,
+                    EnderecoSelecionado = x.EnderecoSelecionado,
+                    Observacao = x.Observacao,
+                    TipoPedido = x.TipoPedido,
+                    Usuario = new Usuario { Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
+                    Preco = x.Preco
+                }).ToList();
         }
 
         public Pedido Get(Context context, int id)
@@ -50,12 +53,14 @@ namespace Minato.BLLs
                 PrecoEntrega = x.PrecoEntrega,
                 EnderecoSelecionado = x.EnderecoSelecionado,
                 Observacao = x.Observacao,
+                TipoPedido = x.TipoPedido,
                 Usuario = x.Usuario != null ? new Usuario { Id = x.Usuario.Id, Nome = x.Usuario.Nome } : null,
                 Preco = x.Preco
             }).AsSplitQuery().First(x => x.Id == id);
 
             pedido.Produtos.ForEach(produtoPedido => {
                 produtoPedido = context.ProdutoPedido.Include(x => x.Produto).AsSplitQuery().First(x => x.Id == produtoPedido.Id);
+                produtoPedido.Produto = context.Produto.Include(x => x.Embalagem).AsSplitQuery().First(x => x.Id == produtoPedido.Produto.Id);
             });
 
             return pedido;
