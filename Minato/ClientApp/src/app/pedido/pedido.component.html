@@ -11,7 +11,8 @@
                placeholder="Usuário"
                matInput
                [matAutocomplete]="auto"
-               [formControl]="usuarioForm">
+               [formControl]="usuarioForm"
+               required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
           <mat-option *ngFor="let option of usuariosFiltrados | async" [value]="option">
             {{option.nome}}

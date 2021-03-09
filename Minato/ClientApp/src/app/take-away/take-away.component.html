@@ -1,3 +1,7 @@
+<header style="font-size: 22px; display: flex; justify-content: center;">
+  Pedidos Take Away
+</header>
+
 <div style="width: 100%; display: flex; flex-direction: row;">
   <div style="width: 70%;">
     <mat-form-field style="width: 90%; font-size: 14px;">
@@ -7,10 +11,10 @@
   </div>
   <div style="width: 30%; font-size: 14px; display: flex; justify-content: center; align-items: center;">
     <mat-slide-toggle class="example-margin"
-                      color="primary"
+                      color="accent"
                       [(ngModel)]="mostrarFechados"
                       (change)="onChangeToggle()">
-      Pedidos Fechados
+      Pedidos Encerrados
     </mat-slide-toggle>
   </div>
 </div>
@@ -57,7 +61,7 @@
             </div>
             <div class="painel-button">
               <button mat-raised-button color="primary" (click)="put(row)">Modificar Pedido</button>
-              <button mat-raised-button style="background-color:red; color:white" (click)="encerrarPedido(row.id)">Encerrar Pedido</button>
+              <button mat-raised-button *ngIf="!row.pedidoEncerrado" style="background-color:red; color:white" (click)="encerrarPedido(row.id)">Encerrar Pedido</button>
               <button mat-raised-button style="background-color:black; color:white" (click)="delete(row.id)">Excluir Pedido</button>
             </div>
           </div>

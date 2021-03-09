@@ -1,13 +1,9 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
+import { Component, OnInit, DoCheck, ChangeDetectorRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { FormGroup, FormBuilder, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { EmbalagemService } from '../services/embalagem.service';
-import Swal from 'sweetalert2';
-import { Produto } from '../interfaces/produto';
 import { PedidoService } from '../services/pedido.service';
 import { Pedido } from '../interfaces/pedido';
 import { Router } from '@angular/router';
@@ -28,8 +24,8 @@ import { TipoPedido } from '../enums/tipo-pedido';
 
 export class TakeAwayComponent implements OnInit {
 
-  displayedColumns: string[] = ['usuario', 'dataPedido', 'preco','observacao', 'actions'];
-  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['usuario', 'dataPedido', 'preco', 'observacao', 'actions'];
+  dataSource: MatTableDataSource<Pedido>;
   expandedElement: any | null;
   editando: boolean;
   oldExpandedElement: any;
@@ -45,14 +41,24 @@ export class TakeAwayComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPedidos();
-    this.dataSource = new MatTableDataSource([]);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    
+  }
+
+  customFilter(data: Pedido, filter: string): boolean {
+    if (data.usuario.nome.toLowerCase().includes(filter)) return true;
+
+    let filtrados: any[] = data.usuario.telefones.filter(x => x.value.includes(filter));
+    if (filtrados.length != 0) return true;
+    return false;
   }
 
   getPedidos() {
-    this.pedidoService.getEspecifico(TipoPedido.takeAway, this.mostrarFechados).subscribe((res: any) => {
-      this.dataSource.data = res;
+    this.pedidoService.getEspecifico(TipoPedido.takeAway, this.mostrarFechados).subscribe((res: Pedido[]) => {
+      this.dataSource = new MatTableDataSource(res);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.filterPredicate =
+        (data: Pedido, filter: string) => this.customFilter(data, filter);
     });
   }
 
@@ -61,7 +67,7 @@ export class TakeAwayComponent implements OnInit {
   }
 
   add() {
-    this.router.navigate(['/pedido']) 
+    this.router.navigate(['/pedido/' + TipoPedido.takeAway]) 
   }
 
   onChangeToggle() {
@@ -69,12 +75,12 @@ export class TakeAwayComponent implements OnInit {
   }
 
   put(pedido: Pedido) {
-    this.router.navigate(['/pedido/' + pedido.id]) 
+    this.router.navigate(['/pedido/' + TipoPedido.takeAway + '/' + pedido.id]) 
   }
 
   encerrarPedido(id: number) {
     this.pedidoService.encerrarPedido(id).subscribe((res: any) => {
-      console.log(res)
+      this.getPedidos();
     }, err => console.log(err));
   }
 

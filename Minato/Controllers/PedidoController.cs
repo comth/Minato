@@ -66,9 +66,9 @@ namespace Minato.Controllers
         }
 
         [HttpPut("encerrar/{id}")]
-        public IActionResult EncerrarPedido(decimal id)
+        public IActionResult EncerrarPedido(int id)
         {
-            bool salvo = PedidoBLL.EncerrarPedido(Context, id);
+            bool salvo = PedidoBLL.EncerrarPedido(Context, id, true);
 
             if (salvo)
             {

@@ -25,10 +25,10 @@ namespace Minato.BLLs
             }).ToList(); 
         }
 
-        public List<Pedido> GetEspecifico(Context context, TipoPedido tipoPedido, bool mostrarFechados)
+        public List<Pedido> GetEspecifico(Context context, TipoPedido tipoPedido, bool mostrarEncerrados)
         {
             DateTime dataLimite = DateTime.Now.AddHours(-12);
-            return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.DataPedido >= dataLimite && x.PedidoEncerrado == mostrarFechados)
+            return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.DataPedido >= dataLimite && x.PedidoEncerrado == mostrarEncerrados)
                 .Select(x => new Pedido()
                 {
                     Id = x.Id,
@@ -136,7 +136,7 @@ namespace Minato.BLLs
 
                 Math.Round(pedidoBanco.PrecoEntrega, 2);
 
-                if (pedido.PedidoEncerrado) EncerrarPedido(context, pedido.Id);
+                if (pedido.PedidoEncerrado) EncerrarPedido(context, pedido.Id, false);
 
                 context.SaveChanges();
                 return true;
@@ -165,12 +165,23 @@ namespace Minato.BLLs
             return precoProdutos + pedido.PrecoEntrega;
         }
 
-        public bool EncerrarPedido(Context context, decimal id)
+        public bool EncerrarPedido(Context context, int id, bool fromController)
         {
-            var mesa = context.Mesa.First(x => x.Pedido.Id == id);
-            mesa.Pedido = null;
-            var config = new ConfiguracaoBLL().Get(context);
-            mesa.Status = config.StatusFinalPedido;
+            var mesa = context.Mesa.FirstOrDefault(x => x.Pedido.Id == id);
+            if(mesa != null)
+            {
+                mesa.Pedido = null;
+                var config = new ConfiguracaoBLL().Get(context);
+                mesa.Status = config.StatusFinalPedido;
+            }
+
+            if (fromController)
+            {
+                var pedidoBanco = context.Pedido.Find(id);
+                pedidoBanco.PedidoEncerrado = true;
+                context.SaveChanges();
+            }
+            
             return true;
         }
 

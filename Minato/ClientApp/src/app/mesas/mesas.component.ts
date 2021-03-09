@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Directive, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TipoPedido } from '../enums/tipo-pedido';
 import { MesaService } from '../services/mesa.service';
 import { StatusService } from '../services/status.service';
 
@@ -126,9 +127,9 @@ export class MesasComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         if (mesa.pedido) {
-          this.router.navigate(['/pedido/' + mesa.id + '/' + mesa.numero + '/' + mesa.pedido.id])
+          this.router.navigate(['/pedido/' + TipoPedido.local + '/' + mesa.id + '/' + mesa.numero + '/' + mesa.pedido.id])
         } else {
-          this.router.navigate(['/pedido/' + mesa.id + '/' + mesa.numero])
+          this.router.navigate(['/pedido/' + TipoPedido.local + '/' + mesa.id + '/' + mesa.numero])
         }
         
       } else if (result.isDenied) {

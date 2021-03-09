@@ -80,6 +80,7 @@ export class PedidoComponent implements OnInit {
     private cdRef: ChangeDetectorRef
   ) {
     this.route.params.subscribe(params => {
+      this.pedido.tipoPedido = <TipoPedido>params['tipoPedido'];
       this.idMesa = params['idMesa'];
       this.pedido.id = params['idPedido'];
       this.numMesa = params['numMesa'];
@@ -93,7 +94,7 @@ export class PedidoComponent implements OnInit {
       this.getPedido();
     } else {
       this.hasPedido = false;
-      this.identificarTipoPedido();
+      //this.identificarTipoPedido();
     } 
 
     if (!this.idMesa) {
@@ -114,19 +115,19 @@ export class PedidoComponent implements OnInit {
     this.tratarEntrega();
   }
 
-  identificarTipoPedido() {
-    if (this.idMesa) {
-      this.pedido.tipoPedido = TipoPedido.local;
-    } else {
-      let previousUrl = this.routerExtService.getPreviousUrl();
-      if (previousUrl.includes('delivery')) {
-        this.pedidoDelivery = true;
-        this.pedido.tipoPedido = TipoPedido.delivery;
-      } else if (previousUrl.includes('takeaway')) {
-        this.pedido.tipoPedido = TipoPedido.takeAway;
-      }
-    }
-  }
+  //identificarTipoPedido() {
+  //  if (this.idMesa) {
+  //    this.pedido.tipoPedido = TipoPedido.local;
+  //  } else {
+  //    let previousUrl = this.routerExtService.getPreviousUrl();
+  //    if (previousUrl.includes('delivery')) {
+  //      this.pedidoDelivery = true;
+  //      this.pedido.tipoPedido = TipoPedido.delivery;
+  //    } else if (previousUrl.includes('takeaway')) {
+  //      this.pedido.tipoPedido = TipoPedido.takeAway;
+  //    }
+  //  }
+  //}
 
   subscribesUsuarioForm() {
     this.usuarioForm.valueChanges.subscribe((data: any) => {
@@ -406,12 +407,22 @@ export class PedidoComponent implements OnInit {
 
   post() {
     this.montarPedido(false);
-    console.log(this.pedido);
-    if (this.pedido.tipoPedido == TipoPedido.delivery && !this.pedido.enderecoSelecionado) {
+    let tipoPedido: TipoPedido = this.pedido.tipoPedido;
+    let usuario: Usuario = this.pedido.usuario;
+    if (tipoPedido == TipoPedido.delivery && !this.pedido.enderecoSelecionado) {
       Swal.fire({
         position: 'center',
         icon: 'error',
         title: 'É necessário selecionar um endereço para a entrega!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+    if (tipoPedido == TipoPedido.delivery || tipoPedido == TipoPedido.takeAway && !usuario) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'É necessário selecionar um usuário!',
         showConfirmButton: false,
         timer: 1500
       });
@@ -436,6 +447,7 @@ export class PedidoComponent implements OnInit {
   montarPedido(encerrarPedido: boolean) {
     this.pedido.produtos = this.dataSource.data;
     this.pedido.pedidoEncerrado = encerrarPedido;
+    this.pedido.tipoPedido = +this.pedido.tipoPedido;
   }
 
   add() {
