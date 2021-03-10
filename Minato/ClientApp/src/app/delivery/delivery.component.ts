@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TipoPedido } from '../enums/tipo-pedido';
 
 @Component({
   selector: 'app-delivery',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DeliveryComponent implements OnInit {
 
-  constructor() { }
+  tipoPedido: TipoPedido;
+  titulo: string;
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.tipoPedido = TipoPedido.delivery;
+    this.titulo = 'Delivery';
   }
-
 }

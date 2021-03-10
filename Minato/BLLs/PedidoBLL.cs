@@ -54,7 +54,7 @@ namespace Minato.BLLs
                 EnderecoSelecionado = x.EnderecoSelecionado,
                 Observacao = x.Observacao,
                 TipoPedido = x.TipoPedido,
-                Usuario = x.Usuario != null ? new Usuario { Id = x.Usuario.Id, Nome = x.Usuario.Nome } : null,
+                Usuario = x.Usuario != null ? new Usuario { Id = x.Usuario.Id, Nome = x.Usuario.Nome, Enderecos = x.Usuario.Enderecos } : null,
                 Preco = x.Preco
             }).AsSplitQuery().First(x => x.Id == id);
 

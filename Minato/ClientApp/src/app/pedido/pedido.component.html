@@ -35,14 +35,13 @@
       <mat-radio-group class="radio-group"
                        [(ngModel)]="pedido.enderecoSelecionado"
                        (change)="tratarEndereco()">
-        <mat-radio-button *ngFor="let endereco of enderecos"
+        <mat-radio-button *ngFor="let endereco of pedido.usuario.enderecos"
                           [value]="endereco"
-                          [checked]="this.pedido.enderecoSelecionado?.id === endereco?.id"
+                          [checked]="this.pedido.enderecoSelecionado.id == endereco.id"
                           style="font-size: 14px;">
           <a style="white-space: pre-wrap;">
             {{endereco.logradouro}}, {{endereco.numero}} - {{endereco.bairro}}
           </a>
-          
         </mat-radio-button>
       </mat-radio-group>
     </div>

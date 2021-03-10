@@ -1,26 +1,2 @@
-.painel-pedido {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
 
-.painel-column {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin-top: 1%;
-  margin-bottom: 1%;
-}
-
-.painel-button {
-  width: 50%;
-  display: flex;
-  justify-content: center;
-  align-content:center;
-  flex-wrap: wrap;
-}
-
-button {
-  margin: 2%;
-}
 

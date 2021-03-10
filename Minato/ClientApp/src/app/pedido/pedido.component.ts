@@ -58,11 +58,9 @@ export class PedidoComponent implements OnInit {
   produtoPedidoForm: FormGroup;
   expandido: boolean;
   pedidoDelivery: boolean = false;
-  //enderecoSelecionado: Endereco;
   oldEnderecoSelecionado: Endereco;
-  enderecos: Endereco[] = [];
   precoProdutos: number = 0;
-  pedido: Pedido = { precoEntrega: 0, preco: 0 };
+  pedido: Pedido = { precoEntrega: 0, preco: 0, usuario: { enderecos: [] } };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -115,32 +113,32 @@ export class PedidoComponent implements OnInit {
     this.tratarEntrega();
   }
 
-  //identificarTipoPedido() {
-  //  if (this.idMesa) {
-  //    this.pedido.tipoPedido = TipoPedido.local;
-  //  } else {
-  //    let previousUrl = this.routerExtService.getPreviousUrl();
-  //    if (previousUrl.includes('delivery')) {
-  //      this.pedidoDelivery = true;
-  //      this.pedido.tipoPedido = TipoPedido.delivery;
-  //    } else if (previousUrl.includes('takeaway')) {
-  //      this.pedido.tipoPedido = TipoPedido.takeAway;
-  //    }
-  //  }
-  //}
-
   subscribesUsuarioForm() {
     this.usuarioForm.valueChanges.subscribe((data: any) => {
       this.expandido = false;
       if (data) {
         if (data.id) this.pedido.usuario = data;
       }
+      this.cdRef.detectChanges();
     });
   }
 
   changeToggle() {
     if (this.pedidoDelivery) this.pedido.tipoPedido = TipoPedido.delivery;
-    else this.pedido.tipoPedido = TipoPedido.takeAway;
+    else {
+      Swal.fire({
+        title: 'Deseja mudar o tipo de pedido para Take Away?',
+        showCancelButton: true,
+        confirmButtonText: `Mudar`,
+        cancelButtonText: `Cancelar`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.pedido.tipoPedido = TipoPedido.takeAway;
+        } else {
+          this.pedidoDelivery = true;
+        }
+      })
+    } 
   }
 
   get TipoPedido(): typeof TipoPedido {
@@ -200,6 +198,7 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarEndereco() {
+    console.log('ta entrando aqui')
     if (this.pedido.enderecoSelecionado && this.oldEnderecoSelecionado) {
       if (this.pedido.enderecoSelecionado.id != this.oldEnderecoSelecionado.id) {
         this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
@@ -255,10 +254,11 @@ export class PedidoComponent implements OnInit {
       if (this.hasPedido) {
         this.entregaCalculada = true;
         this.pedido = res;
-        console.log(this.pedido);
+        if (this.pedido.tipoPedido = TipoPedido.delivery) this.pedidoDelivery = true;
+        this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
         this.dataSource.data = this.tratarPreco(this.pedido.produtos);
-        //this.enderecoSelecionado = this.pedido.enderecoSelecionado;
         this.usuarioForm.patchValue(this.pedido.usuario);
+        console.log(this.usuarioForm.value)
         this.cdRef.detectChanges();
       }
     }, err => console.log(err));
@@ -289,7 +289,7 @@ export class PedidoComponent implements OnInit {
     this.usuarios.forEach(usuario => {
       if (usuario.id == this.usuarioForm.value.id) {
         this.pedido.usuario = usuario;
-        this.enderecos = usuario.enderecos;
+        this.cdRef.detectChanges();
       }
     });
   }
@@ -418,7 +418,7 @@ export class PedidoComponent implements OnInit {
         timer: 1500
       });
     }
-    if (tipoPedido == TipoPedido.delivery || tipoPedido == TipoPedido.takeAway && !usuario) {
+    if ((tipoPedido == TipoPedido.delivery || tipoPedido == TipoPedido.takeAway) && !usuario) {
       Swal.fire({
         position: 'center',
         icon: 'error',
@@ -518,4 +518,18 @@ export class PedidoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  //identificarTipoPedido() {
+  //  if (this.idMesa) {
+  //    this.pedido.tipoPedido = TipoPedido.local;
+  //  } else {
+  //    let previousUrl = this.routerExtService.getPreviousUrl();
+  //    if (previousUrl.includes('delivery')) {
+  //      this.pedidoDelivery = true;
+  //      this.pedido.tipoPedido = TipoPedido.delivery;
+  //    } else if (previousUrl.includes('takeaway')) {
+  //      this.pedido.tipoPedido = TipoPedido.takeAway;
+  //    }
+  //  }
+  //}
 }
