@@ -81,7 +81,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
       { path: 'pedido/:tipoPedido/:idMesa/:numMesa', component: PedidoComponent }, //novo pedido mesa
       { path: 'pedido/:tipoPedido/:idPedido', component: PedidoComponent }, //update pedido existente
       { path: 'pedido/:tipoPedido', component: PedidoComponent }, //novo pedido 
-    ], { useHash: true }),
+    ], { useHash: true, relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule
   ],
   providers: [{

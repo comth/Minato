@@ -7,7 +7,7 @@
   "compilerOptions": {
     "paths": { "@angular/*": [ "./node_modules/@angular/*" ] },
     "baseUrl": "./",
-    "module": "esnext",
+    "module": "es2020",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
