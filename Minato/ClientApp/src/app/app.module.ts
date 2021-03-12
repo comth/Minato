@@ -19,7 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -80,7 +80,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
       { path: 'pedido/:tipoPedido/:idMesa/:numMesa/:idPedido', component: PedidoComponent }, //update pedido local
       { path: 'pedido/:tipoPedido/:idMesa/:numMesa', component: PedidoComponent }, //novo pedido mesa
       { path: 'pedido/:tipoPedido/:idPedido', component: PedidoComponent }, //update pedido existente
-      { path: 'pedido/:tipoPedido', component: PedidoComponent }, //novo pedido 
+      { path: 'pedido/:tipoPedido', component: PedidoComponent }, //novo pedido
     ], { useHash: true, relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule
   ],

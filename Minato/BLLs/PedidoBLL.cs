@@ -27,8 +27,9 @@ namespace Minato.BLLs
 
         public List<Pedido> GetEspecifico(Context context, TipoPedido tipoPedido, bool mostrarEncerrados)
         {
-            DateTime dataLimite = DateTime.Now.AddHours(-12);
-            return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.DataPedido >= dataLimite && x.PedidoEncerrado == mostrarEncerrados)
+            //DateTime dataLimite = DateTime.Now.AddHours(-12);
+            //&& x.DataPedido >= dataLimite
+            return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.PedidoEncerrado == mostrarEncerrados)
                 .Select(x => new Pedido()
                 {
                     Id = x.Id,
