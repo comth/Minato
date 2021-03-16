@@ -29,6 +29,24 @@ namespace Minato.BLLs
         {
             //DateTime dataLimite = DateTime.Now.AddHours(-12);
             //&& x.DataPedido >= dataLimite
+
+            if (tipoPedido == TipoPedido.Local)
+            {
+                return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.PedidoEncerrado == mostrarEncerrados)
+                    .Select(x => new Pedido()
+                    {
+                        Id = x.Id,
+                        DataPedido = x.DataPedido,
+                        PedidoEncerrado = x.PedidoEncerrado,
+                        EnderecoSelecionado = x.EnderecoSelecionado,
+                        Observacao = x.Observacao,
+                        TipoPedido = x.TipoPedido,
+                        Usuario = new Usuario { Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
+                        Preco = x.Preco,
+                        Mesa = x.Mesa,
+                    }).ToList();
+            }
+
             return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.PedidoEncerrado == mostrarEncerrados)
                 .Select(x => new Pedido()
                 {
@@ -55,7 +73,11 @@ namespace Minato.BLLs
                 EnderecoSelecionado = x.EnderecoSelecionado,
                 Observacao = x.Observacao,
                 TipoPedido = x.TipoPedido,
-                Usuario = x.Usuario != null ? new Usuario { Id = x.Usuario.Id, Nome = x.Usuario.Nome, Enderecos = x.Usuario.Enderecos } : null,
+                Usuario = x.Usuario != null ? new Usuario { Id = x.Usuario.Id, 
+                    Nome = x.Usuario.Nome, 
+                    Enderecos = x.Usuario.Enderecos,
+                    Telefones = x.Usuario.Telefones,
+                } : null,
                 Preco = x.Preco
             }).AsSplitQuery().First(x => x.Id == id);
 
@@ -97,6 +119,7 @@ namespace Minato.BLLs
             pedido.Preco = TratarPreco(pedido);
 
             if (mesa != null) {
+                pedido.Mesa = mesa;
                 mesa.Pedido = pedido;
                 var config = new ConfiguracaoBLL().Get(context);
                 mesa.Status = config.StatusInicioPedido;
@@ -195,10 +218,10 @@ namespace Minato.BLLs
         {
             if (Exists(context, id))
             {
-                if(context.Mesa.Any(x => x.Pedido.Id == id))
-                {
-                    return false; //caso a mesa esteja ligado a esse pedido
-                }
+                //if(context.Mesa.Any(x => x.Pedido.Id == id))
+                //{
+                //    return false; //caso a mesa esteja ligado a esse pedido
+                //}
 
                 Pedido pedido = context.Pedido.Include(x => x.Produtos).First(x => x.Id == id);
 

@@ -45,6 +45,10 @@ export class PainelPedidosComponent implements OnInit {
     this.getPedidos();
   }
 
+  get TipoPedido(): typeof TipoPedido {
+    return TipoPedido;
+  }
+
   customFilter(data: Pedido, filter: string): boolean {
     if (data.usuario.nome.toLowerCase().includes(filter)) return true;
 

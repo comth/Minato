@@ -46,7 +46,7 @@ namespace Minato.Controllers
 
             if (salvo)
             {
-                return Ok(pedido);
+                return Ok(new { id = pedido.Id });
             }
 
             return BadRequest();

@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Minato.Migrations
 {
-    public partial class DataPedido : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace Minato.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Preco = table.Column<decimal>(type: "decimal(5,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,7 @@ namespace Minato.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Id = table.Column<int>(type: "int", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Preco = table.Column<decimal>(type: "decimal(7,2)", nullable: false),
                     EmbalagemId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -66,6 +66,61 @@ namespace Minato.Migrations
                         name: "FK_Produto_Embalagem_EmbalagemId",
                         column: x => x.EmbalagemId,
                         principalTable: "Embalagem",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Configuracao",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NomeExibicao = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true),
+                    KeyDistanceMatrix = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CepRestaurante = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: true),
+                    CobrarEntrega = table.Column<bool>(type: "bit", nullable: false),
+                    EntregaFixa = table.Column<bool>(type: "bit", nullable: false),
+                    ValorEntregaFixa = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    PrecoPorKm = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    CobrarPorcentGar = table.Column<bool>(type: "bit", nullable: false),
+                    PorcentGar = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    StatusInicioPedidoId = table.Column<int>(type: "int", nullable: true),
+                    StatusFinalPedidoId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Configuracao", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Configuracao_Status_StatusFinalPedidoId",
+                        column: x => x.StatusFinalPedidoId,
+                        principalTable: "Status",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Configuracao_Status_StatusInicioPedidoId",
+                        column: x => x.StatusInicioPedidoId,
+                        principalTable: "Status",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mesa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Numero = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mesa", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mesa_Status_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -121,14 +176,15 @@ namespace Minato.Migrations
                 name: "Pedido",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DataPedido = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: true),
                     EnderecoSelecionadoId = table.Column<int>(type: "int", nullable: true),
-                    PedidoDelivery = table.Column<bool>(type: "bit", nullable: false),
-                    PedidoRetirada = table.Column<bool>(type: "bit", nullable: false),
-                    PedidoLocal = table.Column<bool>(type: "bit", nullable: false)
+                    Observacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PedidoEncerrado = table.Column<bool>(type: "bit", nullable: false),
+                    TipoPedido = table.Column<int>(type: "int", nullable: false),
+                    PrecoEntrega = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    Preco = table.Column<decimal>(type: "decimal(7,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,36 +196,15 @@ namespace Minato.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Pedido_Mesa_Id",
+                        column: x => x.Id,
+                        principalTable: "Mesa",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Pedido_Usuario_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuario",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Mesa",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Numero = table.Column<int>(type: "int", nullable: false),
-                    PedidoId = table.Column<int>(type: "int", nullable: true),
-                    StatusId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Mesa", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Mesa_Pedido_PedidoId",
-                        column: x => x.PedidoId,
-                        principalTable: "Pedido",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Mesa_Status_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -203,14 +238,19 @@ namespace Minato.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Configuracao_StatusFinalPedidoId",
+                table: "Configuracao",
+                column: "StatusFinalPedidoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Configuracao_StatusInicioPedidoId",
+                table: "Configuracao",
+                column: "StatusInicioPedidoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Endereco_UsuarioId",
                 table: "Endereco",
                 column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Mesa_PedidoId",
-                table: "Mesa",
-                column: "PedidoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mesa_StatusId",
@@ -251,16 +291,13 @@ namespace Minato.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Mesa");
+                name: "Configuracao");
 
             migrationBuilder.DropTable(
                 name: "ProdutoPedido");
 
             migrationBuilder.DropTable(
                 name: "Telefone");
-
-            migrationBuilder.DropTable(
-                name: "Status");
 
             migrationBuilder.DropTable(
                 name: "Pedido");
@@ -272,10 +309,16 @@ namespace Minato.Migrations
                 name: "Endereco");
 
             migrationBuilder.DropTable(
+                name: "Mesa");
+
+            migrationBuilder.DropTable(
                 name: "Embalagem");
 
             migrationBuilder.DropTable(
                 name: "Usuario");
+
+            migrationBuilder.DropTable(
+                name: "Status");
         }
     }
 }

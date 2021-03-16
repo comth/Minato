@@ -60,7 +60,7 @@ export class PedidoComponent implements OnInit {
   pedidoDelivery: boolean = false;
   oldEnderecoSelecionado: Endereco;
   precoProdutos: number = 0;
-  pedido: Pedido = { precoEntrega: 0, preco: 0, usuario: { enderecos: [] } };
+  pedido: Pedido = { precoEntrega: 0, preco: 0 };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -100,8 +100,7 @@ export class PedidoComponent implements OnInit {
       this.subscribesUsuarioForm();
       this.initializeAutoCompleteUsuario();
     }
-    
-    this.initializeMatTable();
+    this.initializeMatTable([]);
     this.initializeForm();
     this.subscribesProdutoPedidoForm();
     this.initializeAutoCompleteProduto();
@@ -151,8 +150,8 @@ export class PedidoComponent implements OnInit {
     });
   }
 
-  initializeMatTable() {
-    this.dataSource = new MatTableDataSource([]);
+  initializeMatTable(data) {
+    this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate =
@@ -254,11 +253,11 @@ export class PedidoComponent implements OnInit {
       if (this.hasPedido) {
         this.entregaCalculada = true;
         this.pedido = res;
-        if (this.pedido.tipoPedido = TipoPedido.delivery) this.pedidoDelivery = true;
+        if (this.pedido.tipoPedido == TipoPedido.delivery) this.pedidoDelivery = true;
+        this.initializeMatTable(this.pedido.produtos);
         this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
         this.dataSource.data = this.tratarPreco(this.pedido.produtos);
         this.usuarioForm.patchValue(this.pedido.usuario);
-        console.log(this.usuarioForm.value)
         this.cdRef.detectChanges();
       }
     }, err => console.log(err));
@@ -402,6 +401,7 @@ export class PedidoComponent implements OnInit {
       observacao: this.produtoPedidoForm.value.observacao
     };
     this.dataSource.data = this.dataSource.data;
+    this.initializeMatTable(this.dataSource.data);
     this.produtoPedidoForm.reset();
   }
 
@@ -409,6 +409,7 @@ export class PedidoComponent implements OnInit {
     this.montarPedido(false);
     let tipoPedido: TipoPedido = this.pedido.tipoPedido;
     let usuario: Usuario = this.pedido.usuario;
+    console.log(this.pedido);
     if (tipoPedido == TipoPedido.delivery && !this.pedido.enderecoSelecionado) {
       Swal.fire({
         position: 'center',

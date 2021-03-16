@@ -32,6 +32,8 @@ import { PainelPedidosComponent } from './painel-pedidos/painel-pedidos.componen
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { RouterExtService } from './services/router-ext-service.service';
 import { ConfiguracaoService } from './services/configuracao.service';
+import { PainelPedidosLocalComponent } from './painel-pedidos-local/painel-pedidos-local.component';
+import { PainelCozinhaComponent } from './painel-cozinha/painel-cozinha.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -48,6 +50,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     PedidoComponent,
     PainelPedidosComponent,
     ConfiguracoesComponent,
+    PainelPedidosLocalComponent,
+    PainelCozinhaComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -77,6 +81,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
       { path: 'takeaway', component: TakeAwayComponent },
       { path: 'delivery', component: DeliveryComponent },
       { path: 'configuracoes', component: ConfiguracoesComponent },
+      { path: 'cozinha', component: PainelCozinhaComponent },
+      { path: 'local', component: PainelPedidosLocalComponent },
       { path: 'pedido/:tipoPedido/:idMesa/:numMesa/:idPedido', component: PedidoComponent }, //update pedido local
       { path: 'pedido/:tipoPedido/:idMesa/:numMesa', component: PedidoComponent }, //novo pedido mesa
       { path: 'pedido/:tipoPedido/:idPedido', component: PedidoComponent }, //update pedido existente

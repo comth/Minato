@@ -153,15 +153,10 @@ namespace Minato.Migrations
                     b.Property<int>("Numero")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PedidoId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("StatusId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PedidoId");
 
                     b.HasIndex("StatusId");
 
@@ -172,8 +167,7 @@ namespace Minato.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DataPedido")
                         .HasColumnType("datetime2");
@@ -350,15 +344,9 @@ namespace Minato.Migrations
 
             modelBuilder.Entity("Minato.Models.Mesa", b =>
                 {
-                    b.HasOne("Minato.Models.Pedido", "Pedido")
-                        .WithMany()
-                        .HasForeignKey("PedidoId");
-
                     b.HasOne("Minato.Models.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
-
-                    b.Navigation("Pedido");
 
                     b.Navigation("Status");
                 });
@@ -369,11 +357,19 @@ namespace Minato.Migrations
                         .WithMany()
                         .HasForeignKey("EnderecoSelecionadoId");
 
+                    b.HasOne("Minato.Models.Mesa", "Mesa")
+                        .WithOne("Pedido")
+                        .HasForeignKey("Minato.Models.Pedido", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Minato.Models.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId");
 
                     b.Navigation("EnderecoSelecionado");
+
+                    b.Navigation("Mesa");
 
                     b.Navigation("Usuario");
                 });
@@ -405,6 +401,11 @@ namespace Minato.Migrations
                     b.HasOne("Minato.Models.Usuario", null)
                         .WithMany("Telefones")
                         .HasForeignKey("UsuarioId");
+                });
+
+            modelBuilder.Entity("Minato.Models.Mesa", b =>
+                {
+                    b.Navigation("Pedido");
                 });
 
             modelBuilder.Entity("Minato.Models.Pedido", b =>

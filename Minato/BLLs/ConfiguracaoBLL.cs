@@ -14,10 +14,7 @@ namespace Minato.BLLs
             var configuracao = context.Configuracao
                 .Include(x => x.StatusInicioPedido)
                 .Include(x => x.StatusFinalPedido)
-                .First(x => x.Id == 1);
-
-            //nunca comentar a próxima linha
-            configuracao.KeyDistanceMatrix = null;
+                .FirstOrDefault(x => x.Id == 1);
 
             //caso de não haver configuracao
             if (configuracao == null)
@@ -26,6 +23,9 @@ namespace Minato.BLLs
                 context.Add(configuracao);
                 context.SaveChanges();
             }
+
+            //nunca comentar a próxima linha
+            configuracao.KeyDistanceMatrix = null;
 
             return configuracao;
         }
