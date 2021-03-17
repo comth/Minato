@@ -43,7 +43,6 @@ namespace Minato.BLLs
                         TipoPedido = x.TipoPedido,
                         Usuario = new Usuario { Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
                         Preco = x.Preco,
-                        Mesa = x.Mesa,
                     }).ToList();
             }
 
@@ -119,7 +118,6 @@ namespace Minato.BLLs
             pedido.Preco = TratarPreco(pedido);
 
             if (mesa != null) {
-                pedido.Mesa = mesa;
                 mesa.Pedido = pedido;
                 var config = new ConfiguracaoBLL().Get(context);
                 mesa.Status = config.StatusInicioPedido;

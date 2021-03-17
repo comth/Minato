@@ -106,26 +106,6 @@ namespace Minato.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mesa",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Numero = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Mesa", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Mesa_Status_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Status",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Endereco",
                 columns: table => new
                 {
@@ -176,7 +156,8 @@ namespace Minato.Migrations
                 name: "Pedido",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DataPedido = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: true),
                     EnderecoSelecionadoId = table.Column<int>(type: "int", nullable: true),
@@ -196,15 +177,36 @@ namespace Minato.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Pedido_Mesa_Id",
-                        column: x => x.Id,
-                        principalTable: "Mesa",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Pedido_Usuario_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuario",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mesa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Numero = table.Column<int>(type: "int", nullable: false),
+                    PedidoId = table.Column<int>(type: "int", nullable: true),
+                    StatusId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mesa", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mesa_Pedido_PedidoId",
+                        column: x => x.PedidoId,
+                        principalTable: "Pedido",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Mesa_Status_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -253,6 +255,11 @@ namespace Minato.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Mesa_PedidoId",
+                table: "Mesa",
+                column: "PedidoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Mesa_StatusId",
                 table: "Mesa",
                 column: "StatusId");
@@ -294,10 +301,16 @@ namespace Minato.Migrations
                 name: "Configuracao");
 
             migrationBuilder.DropTable(
+                name: "Mesa");
+
+            migrationBuilder.DropTable(
                 name: "ProdutoPedido");
 
             migrationBuilder.DropTable(
                 name: "Telefone");
+
+            migrationBuilder.DropTable(
+                name: "Status");
 
             migrationBuilder.DropTable(
                 name: "Pedido");
@@ -309,16 +322,10 @@ namespace Minato.Migrations
                 name: "Endereco");
 
             migrationBuilder.DropTable(
-                name: "Mesa");
-
-            migrationBuilder.DropTable(
                 name: "Embalagem");
 
             migrationBuilder.DropTable(
                 name: "Usuario");
-
-            migrationBuilder.DropTable(
-                name: "Status");
         }
     }
 }

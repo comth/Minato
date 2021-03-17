@@ -19,8 +19,6 @@ namespace Minato.Models
         public DateTime DataPedido { get; set; } = DateTime.Now;
         public Usuario Usuario { get; set; }
         public Endereco EnderecoSelecionado { get; set; }
-        public Mesa Mesa { get; set; }
-
         public string Observacao { get; set; }
         public bool PedidoEncerrado { get; set; }
         public TipoPedido TipoPedido { get; set; }

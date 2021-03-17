@@ -27,10 +27,6 @@ namespace Minato.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Mesa>()
-                        .HasOne(a => a.Pedido)
-                        .WithOne(b => b.Mesa)
-                        .HasForeignKey<Pedido>(b => b.Id);
         }
     }
 }

@@ -14,7 +14,6 @@ namespace Minato.Models
 
         public Pedido Pedido { get; set; }
 
-        [Required]
         public Status Status { get; set; }
     }
 }
