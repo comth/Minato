@@ -87,6 +87,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
       { path: 'configuracoes', component: ConfiguracoesComponent },
       { path: 'cozinha', component: PainelCozinhaComponent },
       { path: 'local', component: PainelPedidosLocalComponent },
+      { path: 'cadastros', component: CadastrosComponent },
       { path: 'pedido/:tipoPedido/:idMesa/:numMesa/:idPedido', component: PedidoComponent }, //update pedido local
       { path: 'pedido/:tipoPedido/:idMesa/:numMesa', component: PedidoComponent }, //novo pedido mesa
       { path: 'pedido/:tipoPedido/:idPedido', component: PedidoComponent }, //update pedido existente
