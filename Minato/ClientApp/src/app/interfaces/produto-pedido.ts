@@ -5,4 +5,5 @@ export interface ProdutoPedido {
   produto: Produto;
   quantidade: number;
   observacao: string;
+  preco: number; //onlyFront
 }

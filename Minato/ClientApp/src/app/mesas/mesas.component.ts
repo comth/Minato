@@ -241,7 +241,8 @@ export class MesasComponent implements OnInit {
       }
     ]).then((result: any) => {
       if (result && !result.dismiss) {
-        this.mesaService.post({ numero: result.value[0], status: this.status[+result.value[1] + 1] }).subscribe((res) => {
+        console.log(this.status)
+        this.mesaService.post({ numero: result.value[0], status: this.status[+result.value[1]] }).subscribe((res) => {
           this.getStatus();
           this.getMesas();
         });

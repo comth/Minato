@@ -43,7 +43,6 @@ export class PedidoComponent implements OnInit {
   usuarioForm = new FormControl();
   produtos: Produto[] = [];
   usuarios: Usuario[] = [];
-  configuracao: Configuracao = {};
   produtosFiltrados: Observable<string[]>;
   usuariosFiltrados: Observable<string[]>;
   idMesa: number;
@@ -60,6 +59,7 @@ export class PedidoComponent implements OnInit {
   pedidoDelivery: boolean = false;
   oldEnderecoSelecionado: Endereco;
   precoProdutos: number = 0;
+  precoPorcentGar: number = 0;
   pedido: Pedido = { precoEntrega: 0, preco: 0 };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -269,17 +269,23 @@ export class PedidoComponent implements OnInit {
       if (x.produto) {
         let preco = 0;
         if (this.pedido.tipoPedido == TipoPedido.takeAway || this.pedido.tipoPedido == TipoPedido.delivery) {
-          preco = <number>(x.produto.preco + x.produto.embalagem.preco) * x.quantidade;
+          preco = <number>(x.produto.preco + x.produto.embalagem?.preco) * x.quantidade;
         } else {
           preco = <number> x.produto.preco * x.quantidade;
         }
+        x.preco = preco;
         precoProdutos = precoProdutos + preco;
       }
     });
 
     this.precoProdutos = precoProdutos;
-
     this.pedido.preco = precoProdutos + this.pedido.precoEntrega;
+
+    if (this.configuracaoService.configuracao.cobrarPorcentGar && this.pedido.tipoPedido == TipoPedido.local) {
+      this.precoPorcentGar = this.pedido.preco * (this.configuracaoService.configuracao.porcentGar / 100);
+      this.pedido.preco = this.pedido.preco + this.precoPorcentGar;
+    } 
+    
     this.cdRef.detectChanges();
     return produtos;
   }

@@ -21,7 +21,7 @@
     <!-- Preço Column -->
     <ng-container matColumnDef="preco">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Preço </th>
-      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.preco}} </td>
+      <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.preco | currency: 'R$ ' }} </td>
     </ng-container>
 
     <!-- Embalagem Column -->

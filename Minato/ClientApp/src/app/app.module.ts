@@ -34,6 +34,8 @@ import { RouterExtService } from './services/router-ext-service.service';
 import { ConfiguracaoService } from './services/configuracao.service';
 import { PainelPedidosLocalComponent } from './painel-pedidos-local/painel-pedidos-local.component';
 import { PainelCozinhaComponent } from './painel-cozinha/painel-cozinha.component';
+import { CadastrosComponent } from './cadastros/cadastros.component';
+import { EmbalagemComponent } from './embalagem/embalagem.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -52,6 +54,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ConfiguracoesComponent,
     PainelPedidosLocalComponent,
     PainelCozinhaComponent,
+    CadastrosComponent,
+    EmbalagemComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
