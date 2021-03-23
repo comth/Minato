@@ -10,6 +10,7 @@ import { ProdutoComponent } from './produto/produto.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +37,8 @@ import { PainelPedidosLocalComponent } from './painel-pedidos-local/painel-pedid
 import { PainelCozinhaComponent } from './painel-cozinha/painel-cozinha.component';
 import { CadastrosComponent } from './cadastros/cadastros.component';
 import { EmbalagemComponent } from './embalagem/embalagem.component';
+import { StatusComponent } from './status/status.component';
+import { ColorPickerComponent } from './color-picker/color-picker.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -56,6 +59,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     PainelCozinhaComponent,
     CadastrosComponent,
     EmbalagemComponent,
+    StatusComponent,
+    ColorPickerComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -72,6 +77,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     MatSortModule,
     MatIconModule,
     MatSelectModule,
+    MatTabsModule,
     MatCardModule,
     MatAutocompleteModule,
     MatSlideToggleModule,

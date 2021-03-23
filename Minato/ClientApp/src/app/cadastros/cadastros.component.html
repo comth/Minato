@@ -1,1 +1,14 @@
-<app-embalagem></app-embalagem>
+<mat-tab-group >
+  <!--dynamicHeight-->
+  <mat-tab label="Embalagens">
+    <ng-template matTabContent>
+      <app-embalagem></app-embalagem>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Status">
+    <ng-template matTabContent>
+      <app-status></app-status>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+
