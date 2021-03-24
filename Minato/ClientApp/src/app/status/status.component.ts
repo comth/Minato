@@ -32,9 +32,6 @@ export class StatusComponent implements OnInit {
   oldExpandedElement: any;
   statusForm: FormGroup;
   status: Status;
-  public backgroundColor: string;
-  public fontColor: string;
-  public linkColor: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -45,9 +42,6 @@ export class StatusComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.backgroundColor = '#fff';
-    this.fontColor = '#222';
-    this.linkColor = '#4b4fce';
 
     this.initializeForm();
     this.statusService.getAll().subscribe((res: any) => {
@@ -61,7 +55,9 @@ export class StatusComponent implements OnInit {
   }
 
   public setColor(color: string) {
-    console.log(color)
+    let status: Status = this.statusForm.value;
+    status.cor = color;
+    this.statusForm.patchValue(status);
   }
 
   ngDoCheck(): void {
@@ -72,7 +68,6 @@ export class StatusComponent implements OnInit {
           this.statusForm.reset();
         } else {
           this.statusForm.patchValue(this.expandedElement);
-          console.log(this.statusForm.value);
         }
       }
     }
@@ -87,6 +82,7 @@ export class StatusComponent implements OnInit {
 
   initializeForm() {
     this.statusForm = this.fb.group({
+      id: new FormControl(null),
       nome: new FormControl(null, [Validators.required]),
       cor: new FormControl(null, [Validators.required]),
     }, { updateOn: 'change' });
@@ -165,7 +161,7 @@ export class StatusComponent implements OnInit {
 
   public add() {
     if (!this.editando) {
-      this.status = { id: 0, nome: "", cor: "" };
+      this.status = { id: 0, nome: "", cor: '#A9A9A9' };
       this.dataSource.data = [this.status].concat(this.dataSource.data);
       this.expandedElement = this.status;
       this.editando = true;

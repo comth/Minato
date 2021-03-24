@@ -37,12 +37,11 @@
               <mat-label>Nome</mat-label>
               <input matInput formControlName="nome" required>
             </mat-form-field>
-              <app-color-picker 
-                                [color]="row.color"
-                                [heading]="'Background'"
+            <div>
+              <app-color-picker [color]="row.cor"
                                 (event)="setColor($event)">
               </app-color-picker>
-              <!--<input matInput formControlName="cor" required>-->
+            </div>
             <div>
               <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
               <mat-icon *ngIf="!statusForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
