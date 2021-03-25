@@ -10,11 +10,10 @@ p {
 }
 
 .summary-info {
-  box-shadow: 0 0 13px 0 rgba(86, 95, 102, 0.4);
-  background: #fff;
-  max-width: 270px;
-  min-width: 270px;
-  padding: 15px;
+  /*box-shadow: 0 0 13px 0 rgba(86, 95, 102, 0.4);
+  background: #fff;*/
+  width: 236px;
+  padding: 10px;
   border-radius: 5px 5px 0 0;
   display: flex;
   align-items: flex-end;
@@ -49,8 +48,8 @@ p.style-value {
 .opened {
   box-shadow: 0 11px 13px 0 rgba(86, 95, 102, 0.4);
   background: #fff;
-  max-width: 270px;
-  padding: 15px;
+  max-width: 260px;
+  padding: 10px;
   border-radius: 0 0 5px 5px;
   position: absolute;
   z-index: 2;

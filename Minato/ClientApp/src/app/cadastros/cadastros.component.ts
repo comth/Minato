@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-cadastros',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CadastrosComponent implements OnInit {
 
-  constructor() { }
+  index: number = 0;
 
-  ngOnInit(): void {
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      let index = params['index'];
+      if (index) this.index = index;
+    });
   }
 
 }

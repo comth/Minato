@@ -1,0 +1,13 @@
+:host ::ng-deep .mat-tab-body-wrapper {
+  height: 800px;
+  width: 95%;
+}
+
+:host ::ng-deep .mat-tab-body.mat-tab-body-active {
+  height: 800px;
+  width: 95%;
+}
+
+::ng-deep .mat-tab-body-content {
+  padding: 3% !important;
+}

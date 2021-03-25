@@ -74,7 +74,7 @@ export class PainelPedidosComponent implements OnInit {
   }
 
   add() {
-    if (this.tipoPedido = TipoPedido.local) this.router.navigate(['/mesas']);
+    if (this.tipoPedido == TipoPedido.local) this.router.navigate(['/mesas']);
     else this.router.navigate(['/pedido/' + this.tipoPedido]);
   }
 
