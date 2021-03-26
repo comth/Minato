@@ -57,10 +57,11 @@ export class PedidoComponent implements OnInit {
   produtoPedidoForm: FormGroup;
   expandido: boolean;
   pedidoDelivery: boolean = false;
-  oldEnderecoSelecionado: Endereco;
+  oldIdEnderecoSelecionado: number;
   precoProdutos: number = 0;
   precoPorcentGar: number = 0;
-  pedido: Pedido = { precoEntrega: 0, preco: 0 };
+  pedido: Pedido = { precoEntrega: 0, preco: 0, enderecoSelecionado: { id: null } };
+  idEnderecoSelecionado: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -92,6 +93,9 @@ export class PedidoComponent implements OnInit {
       this.getPedido();
     } else {
       this.hasPedido = false;
+      if (this.pedido.tipoPedido == TipoPedido.delivery) {
+        this.pedidoDelivery = true;
+      }
       //this.identificarTipoPedido();
     } 
 
@@ -116,7 +120,9 @@ export class PedidoComponent implements OnInit {
     this.usuarioForm.valueChanges.subscribe((data: any) => {
       this.expandido = false;
       if (data) {
-        if (data.id) this.pedido.usuario = data;
+        if (data.id) {
+          this.pedido.usuario = data;
+        }
       }
       this.cdRef.detectChanges();
     });
@@ -181,14 +187,14 @@ export class PedidoComponent implements OnInit {
 
   tratarEntrega() {
     if (this.pedido.enderecoSelecionado && !this.entregaCalculada && this.pedido.tipoPedido == TipoPedido.delivery) {
-      this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
-      this.entregaCalculada = true;
+      this.oldIdEnderecoSelecionado = this.idEnderecoSelecionado;
       if (this.pedido.enderecoSelecionado.cep) this.calcularEntrega();
     }
   }
 
   calcularEntrega() {
     console.log('Cálculo entrega')
+    this.entregaCalculada = true;
     this.pedido.precoEntrega = 23.954;
     //this.distanceMatrixService.get(this.pedido.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
     //  console.log(res.distance);
@@ -197,10 +203,12 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarEndereco() {
-    console.log('ta entrando aqui')
-    if (this.pedido.enderecoSelecionado && this.oldEnderecoSelecionado) {
-      if (this.pedido.enderecoSelecionado.id != this.oldEnderecoSelecionado.id) {
-        this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
+
+    if (this.idEnderecoSelecionado && this.oldIdEnderecoSelecionado) {
+      console.log(this.oldIdEnderecoSelecionado)
+      console.log(this.idEnderecoSelecionado)
+      if (this.idEnderecoSelecionado != this.oldIdEnderecoSelecionado) {
+        this.oldIdEnderecoSelecionado = this.idEnderecoSelecionado;
         this.entregaCalculada = false;
       }
     }
@@ -253,9 +261,12 @@ export class PedidoComponent implements OnInit {
       if (this.hasPedido) {
         this.entregaCalculada = true;
         this.pedido = res;
-        if (this.pedido.tipoPedido == TipoPedido.delivery) this.pedidoDelivery = true;
+        if (this.pedido.tipoPedido == TipoPedido.delivery) {
+          this.pedidoDelivery = true;
+          this.idEnderecoSelecionado = this.pedido.enderecoSelecionado.id;
+        } 
         this.initializeMatTable(this.pedido.produtos);
-        this.oldEnderecoSelecionado = this.pedido.enderecoSelecionado;
+        this.oldIdEnderecoSelecionado = this.pedido.enderecoSelecionado.id;
         this.dataSource.data = this.tratarPreco(this.pedido.produtos);
         this.usuarioForm.patchValue(this.pedido.usuario);
         this.cdRef.detectChanges();
@@ -294,7 +305,7 @@ export class PedidoComponent implements OnInit {
     this.usuarios.forEach(usuario => {
       if (usuario.id == this.usuarioForm.value.id) {
         this.pedido.usuario = usuario;
-        this.cdRef.detectChanges();
+        this.pedido.enderecoSelecionado.id = null;
       }
     });
   }
@@ -383,17 +394,19 @@ export class PedidoComponent implements OnInit {
   put() {
     this.montarPedido(false);
     console.log(this.pedido);
-    this.pedidoService.put(this.pedido).subscribe((res: any) => {
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'Salvo!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-      this.produtoPedidoForm.reset();
-      this.getProdutos();
-    }, err => console.log(err));
+    if (this.isValid()) {
+      this.pedidoService.put(this.pedido).subscribe((res: any) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Salvo!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.produtoPedidoForm.reset();
+        this.getProdutos();
+      }, err => console.log(err));
+    }
   }
 
   addProdutoPedido() {
@@ -413,27 +426,8 @@ export class PedidoComponent implements OnInit {
 
   post() {
     this.montarPedido(false);
-    let tipoPedido: TipoPedido = this.pedido.tipoPedido;
-    let usuario: Usuario = this.pedido.usuario;
     console.log(this.pedido);
-    if (tipoPedido == TipoPedido.delivery && !this.pedido.enderecoSelecionado) {
-      Swal.fire({
-        position: 'center',
-        icon: 'error',
-        title: 'É necessário selecionar um endereço para a entrega!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }
-    if ((tipoPedido == TipoPedido.delivery || tipoPedido == TipoPedido.takeAway) && !usuario) {
-      Swal.fire({
-        position: 'center',
-        icon: 'error',
-        title: 'É necessário selecionar um usuário!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-    } else {
+    if (this.isValid()) {
       this.pedidoService.post(this.pedido, this.idMesa).subscribe((res: any) => {
         Swal.fire({
           position: 'center',
@@ -451,7 +445,35 @@ export class PedidoComponent implements OnInit {
     } 
   }
 
+  isValid(): boolean {
+    let tipoPedido: TipoPedido = this.pedido.tipoPedido;
+    let usuario: Usuario = this.pedido.usuario;
+
+    if (tipoPedido == TipoPedido.delivery && !this.pedido.enderecoSelecionado) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'É necessário selecionar um endereço para a entrega!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      return false;
+    }
+    if ((tipoPedido == TipoPedido.delivery || tipoPedido == TipoPedido.takeAway) && !usuario) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'É necessário selecionar um usuário!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      return false;
+    } else return true;
+  }
+
   montarPedido(encerrarPedido: boolean) {
+    if (this.idEnderecoSelecionado) this.pedido.enderecoSelecionado.id = this.idEnderecoSelecionado;
+    if (!this.pedido.enderecoSelecionado.id) this.pedido.enderecoSelecionado = null;
     this.pedido.produtos = this.dataSource.data;
     this.pedido.pedidoEncerrado = encerrarPedido;
     this.pedido.tipoPedido = +this.pedido.tipoPedido;
@@ -467,7 +489,6 @@ export class PedidoComponent implements OnInit {
   }
 
   delete(row: any) {
-
     this.expandedElement = null;
     Swal.fire({
       title: 'Tem certeza?',

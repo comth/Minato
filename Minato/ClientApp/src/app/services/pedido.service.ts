@@ -41,6 +41,12 @@ export class PedidoService {
   }
 
   public put(pedido: Pedido) {
+    let i = 0;
+    for (i; i < pedido.produtos.length; i++) {
+      if ((pedido.produtos[i].id + '') == "onlyFront") {
+        delete pedido.produtos[i].id;
+      }
+    }
     return this.http.put(this.baseURL + "pedido", pedido);
   }
 
