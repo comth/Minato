@@ -196,19 +196,31 @@ export class PedidoComponent implements OnInit {
     console.log('Cálculo entrega')
     this.entregaCalculada = true;
     this.pedido.precoEntrega = 23.954;
+    this.pedido.tempoEntrega = 15;
+
     //this.distanceMatrixService.get(this.pedido.enderecoSelecionado.cep).subscribe((res: DistanceMatrix) => {
     //  console.log(res.distance);
     //  this.pedido.precoEntrega = res.distance.value * (this.configuracaoService.configuracao.precoPorKm / 1000);
+    //  this.pedido.tempoEntrega = this.calcularTempoEntrega(res.duration.value);
+    //  console.log(this.pedido.tempoEntrega)
     //}, err => console.log(err));
   }
 
-  tratarEndereco() {
+  calcularTempoEntrega(segundos: number): number {
+    let minutos: number = segundos / 60;
+    return +minutos.toFixed(0);
+  }
 
+  tratarEndereco() {
     if (this.idEnderecoSelecionado && this.oldIdEnderecoSelecionado) {
-      console.log(this.oldIdEnderecoSelecionado)
-      console.log(this.idEnderecoSelecionado)
       if (this.idEnderecoSelecionado != this.oldIdEnderecoSelecionado) {
         this.oldIdEnderecoSelecionado = this.idEnderecoSelecionado;
+        let enderecos = <Endereco[]>this.usuarioForm.value.enderecos;
+        enderecos.forEach(x => {
+          if (x.id == this.idEnderecoSelecionado) {
+            this.pedido.enderecoSelecionado = x;
+          }
+        });
         this.entregaCalculada = false;
       }
     }

@@ -159,11 +159,18 @@
 
 <div class="final-panel">
   <div>
-    Preço Produtos : {{this.precoProdutos | currency:'R$ ' }}
+    <ng-container *ngIf="pedido.tipoPedido == TipoPedido.delivery">
+      Tempo Entrega : {{this.pedido?.tempoEntrega}} min
+    </ng-container>
     <br />
     <ng-container *ngIf="pedido.tipoPedido == TipoPedido.delivery">
       Entrega : {{this.pedido?.precoEntrega | currency:'R$ ' }}
     </ng-container>
+    <br />
+
+    Preço Produtos : {{this.precoProdutos | currency:'R$ ' }}
+    <br />
+
     <ng-container *ngIf="pedido.tipoPedido == TipoPedido.local">
       Taxa Garçom : {{this.precoPorcentGar | currency:'R$ ' }}
     </ng-container>

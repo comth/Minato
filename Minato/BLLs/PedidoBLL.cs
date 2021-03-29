@@ -72,6 +72,7 @@ namespace Minato.BLLs
                 EnderecoSelecionado = x.EnderecoSelecionado,
                 Observacao = x.Observacao,
                 TipoPedido = x.TipoPedido,
+                TempoEntrega = x.TempoEntrega,
                 Usuario = x.Usuario != null ? new Usuario { Id = x.Usuario.Id, 
                     Nome = x.Usuario.Nome, 
                     Enderecos = x.Usuario.Enderecos,
@@ -154,6 +155,7 @@ namespace Minato.BLLs
                 pedidoBanco.Observacao = pedido.Observacao;
                 pedidoBanco.PedidoEncerrado = pedido.PedidoEncerrado;
                 pedidoBanco.PrecoEntrega = pedido.PrecoEntrega;
+                pedidoBanco.TempoEntrega = pedido.TempoEntrega;
                 pedidoBanco.Preco = TratarPreco(pedido);
 
                 Math.Round(pedidoBanco.PrecoEntrega, 2);

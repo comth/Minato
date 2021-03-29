@@ -25,6 +25,7 @@ namespace Minato.Models
 
         [Column(TypeName = "decimal(5, 2)")]
         public decimal PrecoEntrega { get; set; } 
+        public int TempoEntrega { get; set; } 
 
         [Column(TypeName = "decimal(7, 2)")]
         public decimal Preco { get; set; } //inclui o preço da entrega

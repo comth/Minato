@@ -13,5 +13,6 @@ export interface Pedido {
   observacao?: string;
   pedidoEncerrado?: boolean;
   preco?: number;
-  tipoPedido?: TipoPedido
+  tipoPedido?: TipoPedido;
+  tempoEntrega?: number;
 }
