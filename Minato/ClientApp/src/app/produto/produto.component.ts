@@ -82,6 +82,7 @@ export class ProdutoComponent implements OnInit, DoCheck {
       nome: new FormControl(null, [Validators.required]),
       preco: new FormControl(null, [Validators.required]),
       embalagem: new FormControl(null),
+      tempoPreparo: new FormControl(null),
     }, { updateOn: 'change' });
   }
 

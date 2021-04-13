@@ -12,6 +12,8 @@ namespace Minato.Models
         [Required]
         public int Id { get; set; }
 
+        public int TempoPreparo { get; set; } //em min
+
         [Required(ErrorMessage = "O Nome é obrigatório.")]
         [StringLength(100, ErrorMessage = "O Nome deve ter no máximo 100 caracteres.")]
         public string Nome { get; set; }

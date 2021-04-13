@@ -158,7 +158,7 @@
 </div>
 
 <div class="final-panel">
-  <div>
+  <div style="margin-bottom: 5px;">
     <ng-container *ngIf="pedido.tipoPedido == TipoPedido.delivery">
       Tempo Entrega : {{this.pedido?.tempoEntrega}} min
     </ng-container>
@@ -167,24 +167,38 @@
       Entrega : {{this.pedido?.precoEntrega | currency:'R$ ' }}
     </ng-container>
     <br />
-
     Preço Produtos : {{this.precoProdutos | currency:'R$ ' }}
     <br />
-
     <ng-container *ngIf="pedido.tipoPedido == TipoPedido.local">
       Taxa Garçom : {{this.precoPorcentGar | currency:'R$ ' }}
     </ng-container>
     <hr />
-    Total : {{this.pedido.preco | currency:'R$ ' }}
+    <div>
+      Total : {{this.pedido.preco | currency:'R$ ' }}
+      <button mat-mini-fab (click)="showCalc = true" style="color:dimgray; background-color:azure">
+        <mat-icon>calculate</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="showCalc">
+      <mat-form-field>
+        <mat-label>Dividir em</mat-label>
+        <input matInput type="number" [(ngModel)]="dividirEm">
+        <span matSuffix>
+          {{(this.pedido.preco / this.dividirEm) | currency:'R$ ' }}
+        </span>
+      </mat-form-field>
+    </div>
   </div>
-  <div class="final-button">
-    <button mat-raised-button color="primary" (click)="onSubmit()">Finalizar Modificações</button>
-  </div>
-  <div class="final-button">
-    <button mat-raised-button style="background-color:green; color:white" (click)="imprimirConta()">Imprimir Conta</button>
-  </div>
-  <div class="final-button" *ngIf="hasPedido">
-    <button mat-raised-button style="background-color:red; color:white" (click)="encerrarPedido()">Encerrar Pedido</button>
+  <div>
+    <div class="final-button">
+      <button mat-flat-button color="primary" (click)="onSubmit()">Salvar Modificações</button>
+    </div>
+    <div class="final-button">
+      <button mat-flat-button style="background-color:green; color:white" (click)="imprimirConta()">Imprimir Conta</button>
+    </div>
+    <div class="final-button" *ngIf="hasPedido">
+      <button mat-flat-button style="background-color:red; color:white" (click)="encerrarPedido()">Encerrar Pedido</button>
+    </div>
   </div>
 </div>
 

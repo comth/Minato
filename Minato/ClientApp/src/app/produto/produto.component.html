@@ -52,6 +52,10 @@
               <input matInput type="number" formControlName="preco" required>
             </mat-form-field>
             <mat-form-field>
+              <mat-label>Tempo Preparo</mat-label>
+              <input matInput type="number" formControlName="tempoPreparo" required>
+            </mat-form-field>
+            <mat-form-field>
               <mat-label>Embalagem</mat-label>
               <mat-select formControlName="embalagem" [compareWith]="compareCategoryObjects">
                 <mat-option>Nenhuma</mat-option>
@@ -61,7 +65,7 @@
             <div>
               <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
               <mat-icon *ngIf="!produtoForm.valid" (click)="error()" class="icon-pad" style="color:#DDA0DD">check</mat-icon>
-              <mat-icon *ngIf="produtoForm.valid" (click)="onSubmit()" class="icon-pad" >check</mat-icon>
+              <mat-icon *ngIf="produtoForm.valid" (click)="onSubmit()" class="icon-pad">check</mat-icon>
             </div>
           </form>
         </div>

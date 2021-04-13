@@ -47,8 +47,10 @@ export class PedidoComponent implements OnInit {
   usuariosFiltrados: Observable<string[]>;
   idMesa: number;
   numMesa: number;
+  dividirEm: number = 2;
   entregaCalculada: boolean = false;
   hasPedido: boolean;
+  showCalc: boolean;
   displayedColumns: string[] = ['produto', 'quantidade', 'observacao', 'preco','actions'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;

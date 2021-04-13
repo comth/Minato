@@ -17,7 +17,20 @@
 
 .final-panel {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   text-align: right;
   font-size: 14px;
+}
+
+.final-button {
+  margin-bottom: 6px;
+}
+
+@media only screen and (max-width: 470px) {
+  .final-panel {
+    display: flex;
+    flex-direction:column;
+    text-align: right;
+    font-size: 14px;
+  }
 }
