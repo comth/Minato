@@ -10,6 +10,9 @@ namespace Minato.BLLs
     {
         public List<Produto> GetAll(Context context)
         {
+            //string teste = "";
+            //teste = null;
+            //if (teste.Length > 0) { }
             return context.Produto.Include(x => x.Embalagem).ToList();
         }
 
