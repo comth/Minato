@@ -44,6 +44,7 @@ export class ColorPickerComponent {
    * Change status of visibility to color picker
    */
   public toggleColors(): void {
+    console.log(this.show)
     this.show = !this.show;
   }
 

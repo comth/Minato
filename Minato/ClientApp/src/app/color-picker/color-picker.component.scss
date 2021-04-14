@@ -52,7 +52,7 @@ p.style-value {
   padding: 10px;
   border-radius: 0 0 5px 5px;
   position: absolute;
-  z-index: 2;
+  z-index: 10;
   box-sizing: border-box;
   /*margin-top: 15px;*/
 }
@@ -63,6 +63,7 @@ p.style-value {
   content: '';
   right: 10px;
   position: absolute;
+  z-index: 10;
   top: -20px;
 }
 

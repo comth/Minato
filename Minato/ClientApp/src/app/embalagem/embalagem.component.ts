@@ -60,7 +60,9 @@ export class EmbalagemComponent implements OnInit {
         if (this.expandedElement.id == 0) {
           this.embalagemForm.reset();
         } else {
+          console.log(this.expandedElement)
           this.embalagemForm.patchValue(this.expandedElement);
+          console.log(this.embalagemForm.value)
         }
       }
     }
@@ -75,6 +77,7 @@ export class EmbalagemComponent implements OnInit {
 
   initializeForm() {
     this.embalagemForm = this.fb.group({
+      id: new FormControl(null),
       nome: new FormControl(null, [Validators.required]),
       preco: new FormControl(null, [Validators.required]),
     }, { updateOn: 'change' });
@@ -112,6 +115,7 @@ export class EmbalagemComponent implements OnInit {
 
   put() {
     this.expandedElement = null;
+    console.log(this.embalagemForm.value)
     this.embalagemService.put(this.embalagemForm.value).subscribe((res: any) => {
       Swal.fire({
         position: 'center',

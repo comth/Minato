@@ -54,6 +54,10 @@ export class StatusComponent implements OnInit {
     });
   }
 
+  teste() {
+    console.log('a')
+  }
+
   public setColor(color: string) {
     let status: Status = this.statusForm.value;
     status.cor = color;
@@ -66,6 +70,7 @@ export class StatusComponent implements OnInit {
         this.oldExpandedElement = this.expandedElement;
         if (this.expandedElement.id == 0) {
           this.statusForm.reset();
+          //this.statusForm.patchValue(this.expandedElement);
         } else {
           this.statusForm.patchValue(this.expandedElement);
         }
