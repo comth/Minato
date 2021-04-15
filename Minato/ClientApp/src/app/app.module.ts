@@ -32,7 +32,7 @@ import { DeliveryComponent } from './delivery/delivery.component';
 import { PedidoComponent } from './pedido/pedido.component';
 import { PainelPedidosComponent } from './painel-pedidos/painel-pedidos.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
-import { RouterExtService } from './services/router-ext-service.service';
+import { RouterExtService } from './services/router-ext.service';
 import { ConfiguracaoService } from './services/configuracao.service';
 import { PainelPedidosLocalComponent } from './painel-pedidos-local/painel-pedidos-local.component';
 import { PainelCozinhaComponent } from './painel-cozinha/painel-cozinha.component';
@@ -40,6 +40,7 @@ import { CadastrosComponent } from './cadastros/cadastros.component';
 import { EmbalagemComponent } from './embalagem/embalagem.component';
 import { StatusComponent } from './status/status.component';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { InterceptorService } from './services/interceptor.service';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -107,7 +108,13 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
   providers: [{
     provide: DEFAULT_CURRENCY_CODE,
     useValue: 'BRL'
-  }, RouterExtService,
+  }, 
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: InterceptorService,
+    multi: true
+  },
+  RouterExtService,
   ],
   bootstrap: [AppComponent]
 })

@@ -22,7 +22,7 @@ import { DistanceMatrixService } from '../services/distance-matrix.service';
 import { DistanceMatrix } from '../interfaces/distance-matrix';
 import { Configuracao } from '../interfaces/configuracao';
 import { ConfiguracaoService } from '../services/configuracao.service';
-import { RouterExtService } from '../services/router-ext-service.service';
+import { RouterExtService } from '../services/router-ext.service';
 
 
 @Component({

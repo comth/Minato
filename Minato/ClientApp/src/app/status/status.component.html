@@ -32,7 +32,7 @@
           [attr.colspan]="displayedColumns.length">
         <div class="expanded-element-detail" 
              [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
-          <form [formGroup]="statusForm" [ngClass]="row.id == 0 ? 'form-add': 'form'" >
+          <form [formGroup]="statusForm" [ngClass]="row.id == 0 ? 'form-add': 'form'" style="position:inherit">
             <mat-form-field>
               <mat-label>Nome</mat-label>
               <input matInput formControlName="nome" required>

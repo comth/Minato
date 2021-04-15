@@ -77,7 +77,7 @@ export class EmbalagemComponent implements OnInit {
 
   initializeForm() {
     this.embalagemForm = this.fb.group({
-      id: new FormControl(null),
+      //id: new FormControl(null),
       nome: new FormControl(null, [Validators.required]),
       preco: new FormControl(null, [Validators.required]),
     }, { updateOn: 'change' });
