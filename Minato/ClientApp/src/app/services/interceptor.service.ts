@@ -22,17 +22,32 @@ export class InterceptorService implements HttpInterceptor {
       catchError(err => {
         if (err instanceof HttpErrorResponse) {
           switch (err.status) {
-            //tratar erros dos requireds back
             case 409:
+              Swal.fire(
+                'Erro',
+                'Item já registrado',
+                'error'
+              )
+              break;
+            case 404:
               Swal.fire(
                 'Erro',
                 'Item não encontrado',
                 'error'
               )
-            case 404:
+              break;
+            case 400:
+              let identifiers = Object.getOwnPropertyNames(err.error.errors);
+              let text;
+
+              identifiers.forEach(x => {
+                text = err.error.errors[x];
+              })
+
+              console.log(text);
               Swal.fire(
                 'Erro',
-                'Item não encontrado',
+                'aaa',
                 'error'
               )
               break;

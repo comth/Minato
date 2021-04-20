@@ -55,14 +55,8 @@ namespace Minato.Controllers
         {
             if (!ProdutoBLL.ExistsIdBanco(Context, produto.IdBanco)) return NotFound();
 
-            bool salvo = ProdutoBLL.Put(Context, produto);
-
-            if (salvo)
-            {
+            ProdutoBLL.Put(Context, produto);
                 return Ok();
-            }
-
-            return Conflict();
         }
 
         [HttpDelete("{id}")]
