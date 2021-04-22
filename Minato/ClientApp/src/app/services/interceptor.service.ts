@@ -4,6 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { title } from 'process';
+import { TipoExcecao } from '../enums/tipo-excecao';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +25,21 @@ export class InterceptorService implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
           switch (err.status) {
             case 409:
-              Swal.fire(
-                'Erro',
-                'Item já registrado',
-                'error'
-              )
+              if (err.error.code) {
+                if (err.error.code == TipoExcecao.ligadoOutraEntidade) {
+                  Swal.fire(
+                    'Erro',
+                    'Item ligado a outra entidade',
+                    'error'
+                  )
+                }
+              } else {
+                Swal.fire(
+                  'Erro',
+                  'Item já registrado',
+                  'error'
+                )
+              }
               break;
             case 404:
               Swal.fire(
@@ -38,21 +50,24 @@ export class InterceptorService implements HttpInterceptor {
               break;
             case 400:
               let identifiers = Object.getOwnPropertyNames(err.error.errors);
-              let text;
+              let text = '';
 
               identifiers.forEach(x => {
-                text = err.error.errors[x];
-              })
+                var partText = '' + err.error.errors[x];
+                partText = partText.replace(',', '\n');
+                if (text = '') text = partText;
+                else text = text + '\n' + partText;
+              });
 
-              console.log(text);
-              Swal.fire(
-                'Erro',
-                'aaa',
-                'error'
-              )
+              Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Erro',
+                html: '<pre class="swal-interceptor">' + text + '</pre>',
+              });
               break;
 
-            default:
+            default: console.log(err)
           }
         }
         return throwError(new Error(err.statusText));

@@ -84,3 +84,16 @@ tr.expanded-element-row:not(.expanded-row):active {
   overflow: hidden;
 }
 
+.swal-interceptor {
+  z-index: 1;
+  justify-content: center;
+  margin: 0;
+  color: #545454;
+  font-size: 1.125em;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+  word-wrap: break-word;
+  font-family: inherit;
+}
+

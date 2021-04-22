@@ -40,14 +40,8 @@ namespace Minato.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Usuario usuario)
         {
-            bool salvo = UsuarioBLL.Post(Context, usuario);
-
-            if (salvo)
-            {
-                return Ok();
-            }
-
-            return Conflict();
+            UsuarioBLL.Post(Context, usuario);
+            return Ok();
         }
 
         [HttpPut]

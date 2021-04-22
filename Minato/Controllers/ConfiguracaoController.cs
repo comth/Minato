@@ -30,14 +30,8 @@ namespace Minato.Controllers
         [HttpPut]
         public IActionResult Put([FromBody]Configuracao configuracao)
         {
-            bool salvo = ConfiguracaoBLL.Put(Context, configuracao, _dataProtectionProvider);
-
-            if (salvo)
-            {
-                return Ok();
-            }
-
-            return BadRequest();
+            ConfiguracaoBLL.Put(Context, configuracao, _dataProtectionProvider);
+            return Ok();
         }
     }
 }

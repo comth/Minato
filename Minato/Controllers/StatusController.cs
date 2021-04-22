@@ -40,14 +40,8 @@ namespace Minato.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Status status)
         {
-            bool salvo = StatusBLL.Post(Context, status);
-
-            if (salvo)
-            {
-                return Ok();
-            }
-
-            return Conflict();
+            StatusBLL.Post(Context, status);
+            return Ok();
         }
 
         [HttpPut]

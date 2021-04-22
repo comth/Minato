@@ -40,14 +40,8 @@ namespace Minato.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Embalagem embalagem)
         {
-            bool salvo = EmbalagemBLL.Post(Context, embalagem);
-
-            if (salvo)
-            {
-                return Ok();
-            }
-
-            return Conflict();
+            EmbalagemBLL.Post(Context, embalagem);
+            return Ok();
         }
 
         [HttpPut]
