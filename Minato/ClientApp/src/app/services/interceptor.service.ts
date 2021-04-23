@@ -4,7 +4,6 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { title } from 'process';
 import { TipoExcecao } from '../enums/tipo-excecao';
 
 @Injectable({

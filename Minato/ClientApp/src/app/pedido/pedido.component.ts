@@ -141,6 +141,8 @@ export class PedidoComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           this.pedido.tipoPedido = TipoPedido.takeAway;
+          this.pedido.preco = this.pedido.preco - this.pedido.precoEntrega;
+          this.pedido.precoEntrega = 0;
         } else {
           this.pedidoDelivery = true;
         }
@@ -278,9 +280,9 @@ export class PedidoComponent implements OnInit {
         if (this.pedido.tipoPedido == TipoPedido.delivery) {
           this.pedidoDelivery = true;
           this.idEnderecoSelecionado = this.pedido.enderecoSelecionado.id;
+          this.oldIdEnderecoSelecionado = this.pedido.enderecoSelecionado.id;
         } 
         this.initializeMatTable(this.pedido.produtos);
-        this.oldIdEnderecoSelecionado = this.pedido.enderecoSelecionado.id;
         this.dataSource.data = this.tratarPreco(this.pedido.produtos);
         this.usuarioForm.patchValue(this.pedido.usuario);
         this.cdRef.detectChanges();
@@ -487,7 +489,7 @@ export class PedidoComponent implements OnInit {
 
   montarPedido(encerrarPedido: boolean) {
     if (this.idEnderecoSelecionado) this.pedido.enderecoSelecionado.id = this.idEnderecoSelecionado;
-    if (!this.pedido.enderecoSelecionado.id) this.pedido.enderecoSelecionado = null;
+    if (this.pedido.tipoPedido != TipoPedido.delivery) this.pedido.enderecoSelecionado = null;
     this.pedido.produtos = this.dataSource.data;
     this.pedido.pedidoEncerrado = encerrarPedido;
     this.pedido.tipoPedido = +this.pedido.tipoPedido;

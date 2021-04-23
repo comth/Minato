@@ -25,7 +25,7 @@ namespace Minato.BLLs
             }).ToList(); 
         }
 
-        public List<Pedido> GetEspecifico(Context context, TipoPedido tipoPedido, bool mostrarEncerrados)
+        public object GetEspecifico(Context context, TipoPedido tipoPedido, bool mostrarEncerrados)
         {
             //DateTime dataLimite = DateTime.Now.AddHours(-12);
             //&& x.DataPedido >= dataLimite
@@ -33,7 +33,7 @@ namespace Minato.BLLs
             if (tipoPedido == TipoPedido.Local)
             {
                 return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.PedidoEncerrado == mostrarEncerrados)
-                    .Select(x => new Pedido()
+                    .Select(x => new 
                     {
                         Id = x.Id,
                         DataPedido = x.DataPedido,
@@ -43,7 +43,8 @@ namespace Minato.BLLs
                         TipoPedido = x.TipoPedido,
                         Usuario = new Usuario { Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
                         Preco = x.Preco,
-                    }).ToList();
+                        Mesa = context.Mesa.FirstOrDefault(mesa => mesa.Pedido.Id == x.Id),
+                    }).AsSplitQuery().ToList();
             }
 
             return context.Pedido.Where(x => x.TipoPedido == tipoPedido && x.PedidoEncerrado == mostrarEncerrados)
@@ -156,6 +157,7 @@ namespace Minato.BLLs
                 pedidoBanco.PedidoEncerrado = pedido.PedidoEncerrado;
                 pedidoBanco.PrecoEntrega = pedido.PrecoEntrega;
                 pedidoBanco.TempoEntrega = pedido.TempoEntrega;
+                pedidoBanco.TipoPedido = pedido.TipoPedido;
                 pedidoBanco.Preco = TratarPreco(pedido);
 
                 Math.Round(pedidoBanco.PrecoEntrega, 2);
