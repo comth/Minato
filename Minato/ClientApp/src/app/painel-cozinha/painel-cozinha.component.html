@@ -1,1 +1,105 @@
-<p>painel-cozinha works!</p>
+<p>Painel Cozinha</p>
+
+<div class="painel-geral">
+  <div class="produtos-fazer">
+    <mat-form-field style="width: 100%; font-size: 14px;">
+      <mat-label>Filtrar por Produto (ID e nome)</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #input>
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+
+        <!-- Produto Column -->
+        <ng-container matColumnDef="produto">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Produto </th>
+          <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.produto?.nome}} </td>
+        </ng-container>
+
+        <!-- Quantidade Column -->
+        <ng-container matColumnDef="quantidade">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+          <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.quantidade}} </td>
+        </ng-container>
+
+        <!-- Observação Column -->
+        <ng-container matColumnDef="observacao">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Observação </th>
+          <td mat-cell *matCellDef="let row" [hidden]="row.id == 0"> {{row.observacao}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell
+              *matCellDef="let row"
+              [attr.colspan]="displayedColumns.length">
+            <div class="expanded-element-detail"
+                 [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+              <form [formGroup]="produtoPedidoForm"
+                    [ngClass]="row.id == 0 ? 'form-add': 'form'">
+                <mat-form-field>
+                  <input type="text"
+                         placeholder="Produto"
+                         matInput
+                         formControlName="produto"
+                         [matAutocomplete]="auto"
+                         required>
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let option of produtosFiltrados | async" [value]="option">
+                      {{option.nome}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Quantidade</mat-label>
+                  <input matInput type="number" formControlName="quantidade" value="1" required>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Observação</mat-label>
+                  <input matInput formControlName="observacao">
+                </mat-form-field>
+                <div>
+                  <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
+                  <mat-icon *ngIf="!produtoPedidoForm.valid"
+                            (click)="error()"
+                            class="icon-pad"
+                            style="color:#DDA0DD">
+                    check
+                  </mat-icon>
+                  <mat-icon *ngIf="produtoPedidoForm.valid"
+                            (click)="onSubmitProdutoPedido(row)"
+                            class="icon-pad">
+                    check
+                  </mat-icon>
+                </div>
+              </form>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" class="icon">
+          <th mat-header-cell *matHeaderCellDef (click)="add()">
+            <mat-icon style="color: purple">add</mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let row" [hidden]="row.id == 0">
+            <mat-icon (click)="delete(row)">check</mat-icon>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+            class="expanded-element-row"
+            [class.expanded-row]="expandedElement === element"
+            (click)="expandedElement = expandedElement === element ? null : element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expanded-detail-row"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+
+  </div>
+  <div class="painel-divido">
+    <div class="pedidos-prontos-montagem"></div>
+    <div class="pedido-selecionado"></div>
+  </div>
+</div>
