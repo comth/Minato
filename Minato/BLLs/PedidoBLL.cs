@@ -12,17 +12,8 @@ namespace Minato.BLLs
     {
         public List<Pedido> GetAll(Context context)
         {
-            return context.Pedido.Select(x => new Pedido()
-            {
-                Id = x.Id,
-                DataPedido = x.DataPedido,
-                PedidoEncerrado = x.PedidoEncerrado,
-                PrecoEntrega = x.PrecoEntrega,
-                EnderecoSelecionado = x.EnderecoSelecionado,
-                Observacao = x.Observacao,
-                Usuario = new Usuario{ Nome = x.Usuario.Nome, Telefones = x.Usuario.Telefones },
-                Preco = x.Preco
-            }).ToList(); 
+            var pedidos = context.Pedido.Include(x => x.Produtos).ThenInclude(x => x.Produto).ToList();
+            return pedidos;
         }
 
         public object GetEspecifico(Context context, TipoPedido tipoPedido, bool mostrarEncerrados)

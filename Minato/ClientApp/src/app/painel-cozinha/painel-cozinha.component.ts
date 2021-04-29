@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { UsuarioService } from '../services/usuario.service';
 import { ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -7,7 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { PedidoService } from '../services/pedido.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -16,12 +15,8 @@ import { Usuario } from '../interfaces/usuario';
 import { Produto } from '../interfaces/produto';
 import { TipoPedido } from '../enums/tipo-pedido';
 import { ProdutoPedido } from '../interfaces/produto-pedido';
-import { Endereco } from '../interfaces/endereco';
 import { Pedido } from '../interfaces/pedido';
-import { DistanceMatrixService } from '../services/distance-matrix.service';
-import { Configuracao } from '../interfaces/configuracao';
 import { ConfiguracaoService } from '../services/configuracao.service';
-import { RouterExtService } from '../services/router-ext.service';
 
 @Component({
   selector: 'app-painel-cozinha',
@@ -39,15 +34,15 @@ import { RouterExtService } from '../services/router-ext.service';
 export class PainelCozinhaComponent implements OnInit {
 
   usuarioForm = new FormControl();
-  produtos: Produto[] = [];
+  produtos: ProdutoPedido[] = [];
   pedidos: Pedido[] = [];
   produtosFiltrados: Observable<string[]>;
   usuariosFiltrados: Observable<string[]>;
   idMesa: number;
   numMesa: number;
   hasPedido: boolean;
-  displayedColumns: string[] = ['produto', 'quantidade', 'observacao', 'actions'];
-  dataSource: MatTableDataSource<any>;
+  displayedColumnsProdutos: string[] = ['produto', 'quantidade', 'observacao', 'actions'];
+  dataSourceProdutos: MatTableDataSource<any>;
   expandedElement: any | null;
   editando: boolean = false;
   oldExpandedElement: any;
@@ -64,8 +59,6 @@ export class PainelCozinhaComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
     private configuracaoService: ConfiguracaoService,
@@ -76,6 +69,7 @@ export class PainelCozinhaComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPedidos();
+    this.getProdutos();
 
     this.initializeMatTable([]);
     this.initializeForm();
@@ -86,23 +80,23 @@ export class PainelCozinhaComponent implements OnInit {
   getPedidos() {
     this.pedidoService.getAll().subscribe((res: any) => {
       this.pedidos = res;
+      this.tratarPedidos();
     }, err => console.log(err));
+  }
+
+  tratarPedidos() {
+    this.pedidos.forEach(pedido => {
+      pedido.produtos.forEach(produtoPedido => {
+        this.produtos.push(produtoPedido);
+        this.dataSourceProdutos.data.push(produtoPedido);
+      });
+    });
+    this.dataSourceProdutos.data = this.dataSourceProdutos.data;
+    console.log(this.dataSourceProdutos.data);
   }
 
   ngDoCheck(): void {
     this.tratarExpansaoTabela();
-  }
-
-  subscribesUsuarioForm() {
-    this.usuarioForm.valueChanges.subscribe((data: any) => {
-      this.expandido = false;
-      if (data) {
-        if (data.id) {
-          this.pedido.usuario = data;
-        }
-      }
-      this.cdRef.detectChanges();
-    });
   }
 
   changeToggle() {
@@ -131,15 +125,15 @@ export class PainelCozinhaComponent implements OnInit {
 
   subscribesProdutoPedidoForm() {
     this.produtoPedidoForm.valueChanges.subscribe((data: any) => {
-      this.dataSource.data = this.tratarPreco(this.dataSource.data);
+      this.dataSourceProdutos.data = this.tratarPreco(this.dataSourceProdutos.data);
     });
   }
 
   initializeMatTable(data) {
-    this.dataSource = new MatTableDataSource(data);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.filterPredicate =
+    this.dataSourceProdutos = new MatTableDataSource(data);
+    this.dataSourceProdutos.paginator = this.paginator;
+    this.dataSourceProdutos.sort = this.sort;
+    this.dataSourceProdutos.filterPredicate =
       (data: ProdutoPedido, filter: string) => this.customFilter(data, filter);
   }
 
@@ -163,31 +157,6 @@ export class PainelCozinhaComponent implements OnInit {
     });
   }
 
-  encerrarPedido() {
-    Swal.fire({
-      title: 'Tem certeza?',
-      text: "Não é possível reverter essa operação",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Encerrar!',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      this.pedido.pedidoEncerrado = true;
-      this.pedidoService.put(this.pedido).subscribe((res: any) => {
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Pedido Encerrado!',
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.router.navigate(['/mesas']);
-      }, err => console.log(err));
-    });
-  }
-
   imprimirConta() {
     console.log(this.pedido);
   }
@@ -203,7 +172,7 @@ export class PainelCozinhaComponent implements OnInit {
           this.oldIdEnderecoSelecionado = this.pedido.enderecoSelecionado.id;
         }
         this.initializeMatTable(this.pedido.produtos);
-        this.dataSource.data = this.tratarPreco(this.pedido.produtos);
+        this.dataSourceProdutos.data = this.tratarPreco(this.pedido.produtos);
         this.usuarioForm.patchValue(this.pedido.usuario);
         this.cdRef.detectChanges();
       }
@@ -264,10 +233,10 @@ export class PainelCozinhaComponent implements OnInit {
     if (this.editando) {
       this.expandedElement = null;
       this.editando = false;
-      this.dataSource.data.forEach((item, index) => {
+      this.dataSourceProdutos.data.forEach((item, index) => {
         if (item.id == 0 || item.id == this.produtoPedidoForm.get('id').value) {
-          this.dataSource.data.splice(index, 1);
-          this.dataSource.data = this.dataSource.data;
+          this.dataSourceProdutos.data.splice(index, 1);
+          this.dataSourceProdutos.data = this.dataSourceProdutos.data;
           this.produtoPedidoForm.reset();
         }
       });
@@ -298,15 +267,15 @@ export class PainelCozinhaComponent implements OnInit {
 
   putProdutoPedido(row) {
     this.expandedElement = null;
-    let indice = this.dataSource.data.indexOf(row);
-    this.dataSource.data[indice] =
+    let indice = this.dataSourceProdutos.data.indexOf(row);
+    this.dataSourceProdutos.data[indice] =
     {
       id: this.produtoPedidoForm.value.id,
       produto: this.produtoPedidoForm.value.produto,
       quantidade: this.produtoPedidoForm.value.quantidade,
       observacao: this.produtoPedidoForm.value.observacao
     };
-    this.dataSource.data = this.dataSource.data;
+    this.dataSourceProdutos.data = this.dataSourceProdutos.data;
     this.produtoPedidoForm.reset();
   }
 
@@ -331,15 +300,15 @@ export class PainelCozinhaComponent implements OnInit {
   addProdutoPedido() {
     this.editando = false;
     this.expandedElement = null;
-    this.dataSource.data[0] =
+    this.dataSourceProdutos.data[0] =
     {
       id: 'onlyFront', //adicionado somente no front
       produto: this.produtoPedidoForm.value.produto,
       quantidade: this.produtoPedidoForm.value.quantidade,
       observacao: this.produtoPedidoForm.value.observacao
     };
-    this.dataSource.data = this.dataSource.data;
-    this.initializeMatTable(this.dataSource.data);
+    this.dataSourceProdutos.data = this.dataSourceProdutos.data;
+    this.initializeMatTable(this.dataSourceProdutos.data);
     this.produtoPedidoForm.reset();
   }
 
@@ -393,7 +362,7 @@ export class PainelCozinhaComponent implements OnInit {
   montarPedido(encerrarPedido: boolean) {
     if (this.idEnderecoSelecionado) this.pedido.enderecoSelecionado.id = this.idEnderecoSelecionado;
     if (this.pedido.tipoPedido != TipoPedido.delivery) this.pedido.enderecoSelecionado = null;
-    this.pedido.produtos = this.dataSource.data;
+    this.pedido.produtos = this.dataSourceProdutos.data;
     this.pedido.pedidoEncerrado = encerrarPedido;
     this.pedido.tipoPedido = +this.pedido.tipoPedido;
   }
@@ -401,7 +370,7 @@ export class PainelCozinhaComponent implements OnInit {
   add() {
     if (!this.editando) {
       let produtoPedido = { id: 0, produto: null, quantidade: 1, observacao: "" };
-      this.dataSource.data = [produtoPedido].concat(this.dataSource.data);
+      this.dataSourceProdutos.data = [produtoPedido].concat(this.dataSourceProdutos.data);
       this.expandedElement = produtoPedido;
       this.editando = true;
     }
@@ -420,9 +389,9 @@ export class PainelCozinhaComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        let indice = this.dataSource.data.indexOf(row);
-        this.dataSource.data.splice(indice, 1);
-        this.dataSource.data = this.tratarPreco(this.dataSource.data);
+        let indice = this.dataSourceProdutos.data.indexOf(row);
+        this.dataSourceProdutos.data.splice(indice, 1);
+        this.dataSourceProdutos.data = this.tratarPreco(this.dataSourceProdutos.data);
       };
       this.expandedElement = null;
     })
@@ -440,16 +409,16 @@ export class PainelCozinhaComponent implements OnInit {
       filterValue = value.produto.toLowerCase();
     }
     return this.produtos.filter(option =>
-      option.nome.toLowerCase().includes(filterValue) || option.id.toString().includes(filterValue)
-    );;
+      option.produto?.nome.toLowerCase().includes(filterValue) || option.produto?.id.toString().includes(filterValue)
+    );
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSourceProdutos.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    if (this.dataSourceProdutos.paginator) {
+      this.dataSourceProdutos.paginator.firstPage();
     }
   }
 }
