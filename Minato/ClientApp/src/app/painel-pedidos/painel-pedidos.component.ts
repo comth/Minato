@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,13 +25,15 @@ import { TipoPedido } from '../enums/tipo-pedido';
 export class PainelPedidosComponent implements OnInit {
 
   @Input() displayedColumns: string[] = ['usuario', 'dataPedido', 'preco', 'observacao', 'actions'];
-  dataSource: MatTableDataSource<Pedido>;
+  @Input() dataSource: MatTableDataSource<Pedido>;
   expandedElement: any | null;
   editando: boolean;
   oldExpandedElement: any;
   mostrarFechados: boolean = false; //only
   @Input() tipoPedido: TipoPedido;
   @Input() titulo: string;
+  @Input() showOnlyTable: boolean = false;
+  @Output() click: EventEmitter<string> = new EventEmitter<string>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -42,11 +44,16 @@ export class PainelPedidosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getPedidos();
+    if (this.tipoPedido) this.getPedidos();
   }
 
   get TipoPedido(): typeof TipoPedido {
     return TipoPedido;
+  }
+
+  onClick(element) {
+    this.expandedElement = this.expandedElement === element ? null : element;
+    this.click.emit(element);
   }
 
   customFilter(data: Pedido, filter: string): boolean {

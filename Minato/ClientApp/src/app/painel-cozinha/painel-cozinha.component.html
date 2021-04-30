@@ -1,5 +1,3 @@
-<p>Painel Cozinha</p>
-
 <div class="painel-geral">
   <div class="produtos-fazer">
     <mat-form-field style="width: 100%; font-size: 14px;">
@@ -34,44 +32,7 @@
               [attr.colspan]="displayedColumnsProdutos.length">
             <div class="expanded-element-detail"
                  [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
-              <form [formGroup]="produtoPedidoForm"
-                    [ngClass]="row.id == 0 ? 'form-add': 'form'">
-                <mat-form-field>
-                  <input type="text"
-                         placeholder="Produto"
-                         matInput
-                         formControlName="produto"
-                         [matAutocomplete]="auto"
-                         required>
-                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let option of produtosFiltrados | async" [value]="option">
-                      {{option.nome}}
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-                <mat-form-field>
-                  <mat-label>Quantidade</mat-label>
-                  <input matInput type="number" formControlName="quantidade" value="1" required>
-                </mat-form-field>
-                <mat-form-field>
-                  <mat-label>Observação</mat-label>
-                  <input matInput formControlName="observacao">
-                </mat-form-field>
-                <div>
-                  <mat-icon class="icon-pad" (click)="cancel()">clear</mat-icon>
-                  <mat-icon *ngIf="!produtoPedidoForm.valid"
-                            (click)="error()"
-                            class="icon-pad"
-                            style="color:#DDA0DD">
-                    check
-                  </mat-icon>
-                  <mat-icon *ngIf="produtoPedidoForm.valid"
-                            (click)="onSubmitProdutoPedido(row)"
-                            class="icon-pad">
-                    check
-                  </mat-icon>
-                </div>
-              </form>
+              Teste
             </div>
           </td>
         </ng-container>
@@ -98,8 +59,15 @@
     </div>
 
   </div>
-  <div class="painel-divido">
-    <div class="pedidos-prontos-montagem"></div>
+  <div style="display: flex; width: 100%; justify-content: space-between; padding-top: 25px;">
+    <div style="min-height:50%; display:flex;">
+      <app-painel-pedidos [titulo]="'prontos para montagem'"
+                          [dataSource]="dataSourcePedidos"
+                          [displayedColumns]="displayedColumnsPedidos"
+                          [showOnlyTable]="true"
+                          (click)="showSelected($event)">
+      </app-painel-pedidos>
+    </div>
     <div class="pedido-selecionado"></div>
   </div>
 </div>
