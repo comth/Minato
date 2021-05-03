@@ -45,7 +45,7 @@ export class PainelCozinhaComponent implements OnInit {
   editando: boolean = false;
   oldExpandedElement: any;
   expandido: boolean;
-  pedido: Pedido = { precoEntrega: 0, preco: 0, enderecoSelecionado: { id: null } };
+  pedidoSelecionado: Pedido;
 
   @ViewChild(MatPaginator) paginatorProdutos: MatPaginator;
   @ViewChild(MatPaginator) paginatorPedidos: MatPaginator;
@@ -86,8 +86,8 @@ export class PainelCozinhaComponent implements OnInit {
   }
 
   showSelected(event) {
-    let teste: Pedido = event
-    console.log(teste)
+    this.pedidoSelecionado = event;
+    console.log(event);
   }
 
   ngDoCheck(): void {

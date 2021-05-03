@@ -33,7 +33,7 @@ export class PainelPedidosComponent implements OnInit {
   @Input() tipoPedido: TipoPedido;
   @Input() titulo: string;
   @Input() showOnlyTable: boolean = false;
-  @Output() click: EventEmitter<string> = new EventEmitter<string>();
+  @Output() selected: EventEmitter<string> = new EventEmitter<string>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -53,7 +53,7 @@ export class PainelPedidosComponent implements OnInit {
 
   onClick(element) {
     this.expandedElement = this.expandedElement === element ? null : element;
-    this.click.emit(element);
+    this.selected.emit(element);
   }
 
   customFilter(data: Pedido, filter: string): boolean {
