@@ -3,16 +3,11 @@ import { ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
 import { PedidoService } from '../services/pedido.service';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { ProdutoService } from '../services/produto.service';
-import { Usuario } from '../interfaces/usuario';
-import { Produto } from '../interfaces/produto';
 import { TipoPedido } from '../enums/tipo-pedido';
 import { ProdutoPedido } from '../interfaces/produto-pedido';
 import { Pedido } from '../interfaces/pedido';
@@ -39,7 +34,9 @@ export class PainelCozinhaComponent implements OnInit {
   usuariosFiltrados: Observable<string[]>;
   displayedColumnsProdutos: string[] = ['produto', 'quantidade', 'observacao', 'actions'];
   displayedColumnsPedidos: string[] = ['id', 'dataPedido', 'observacao', 'actions'];
+  displayedColumnsProdPedSelec: string[] = ['produto', 'quantidade'];
   dataSourceProdutos: MatTableDataSource<ProdutoPedido>;
+  dataSourceProdPedSelec: MatTableDataSource<ProdutoPedido>;
   dataSourcePedidos: MatTableDataSource<Pedido>;
   expandedElement: any | null;
   editando: boolean = false;
@@ -55,8 +52,6 @@ export class PainelCozinhaComponent implements OnInit {
   constructor(
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
-    private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef
   ) {
   }
 
@@ -85,9 +80,10 @@ export class PainelCozinhaComponent implements OnInit {
     console.log(this.dataSourceProdutos.data);
   }
 
-  showSelected(event) {
-    this.pedidoSelecionado = event;
-    console.log(event);
+  showSelected(pedidoSelecionado: Pedido) {
+    this.pedidoSelecionado = pedidoSelecionado;
+    this.dataSourceProdPedSelec = new MatTableDataSource(pedidoSelecionado.produtos);
+    console.log(pedidoSelecionado);
   }
 
   ngDoCheck(): void {

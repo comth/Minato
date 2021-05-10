@@ -170,7 +170,15 @@ namespace Minato.BLLs
                 decimal precoProdutoPedido = 0;
                 if (pedido.TipoPedido == TipoPedido.Delivery || pedido.TipoPedido == TipoPedido.TakeAway)
                 {
-                    precoProdutoPedido = produtoPedido.Produto.Preco + produtoPedido.Produto.Embalagem.Preco;
+                    if (produtoPedido.Produto.Embalagem != null)
+                    {
+                        precoProdutoPedido = produtoPedido.Produto.Preco + produtoPedido.Produto.Embalagem.Preco;
+                    }
+                    else
+                    {
+                        precoProdutoPedido = produtoPedido.Produto.Preco;
+                    }
+                    
                 } 
                 else
                 {

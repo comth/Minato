@@ -291,12 +291,17 @@ export class PedidoComponent implements OnInit {
   }
 
   tratarPreco(produtos: ProdutoPedido[]): ProdutoPedido[] {
+    
     let precoProdutos = 0;
     produtos.forEach(x => {
       if (x.produto) {
         let preco = 0;
         if (this.pedido.tipoPedido == TipoPedido.takeAway || this.pedido.tipoPedido == TipoPedido.delivery) {
-          preco = <number>(x.produto.preco + x.produto.embalagem?.preco) * x.quantidade;
+          if (x.produto.embalagem) {
+            preco = <number>(x.produto.preco + x.produto.embalagem?.preco) * x.quantidade;
+          } else {
+            preco = <number> x.produto.preco * x.quantidade;
+          } 
         } else {
           preco = <number> x.produto.preco * x.quantidade;
         }
@@ -304,7 +309,7 @@ export class PedidoComponent implements OnInit {
         precoProdutos = precoProdutos + preco;
       }
     });
-
+    
     this.precoProdutos = precoProdutos;
     this.pedido.preco = precoProdutos + this.pedido.precoEntrega;
 
