@@ -12,6 +12,7 @@ import { TipoPedido } from '../enums/tipo-pedido';
 import { ProdutoPedido } from '../interfaces/produto-pedido';
 import { Pedido } from '../interfaces/pedido';
 import { ConfiguracaoService } from '../services/configuracao.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-painel-cozinha',
@@ -52,6 +53,7 @@ export class PainelCozinhaComponent implements OnInit {
   constructor(
     private pedidoService: PedidoService,
     private produtoService: ProdutoService,
+    private router: Router
   ) {
   }
 
@@ -119,6 +121,10 @@ export class PainelCozinhaComponent implements OnInit {
         this.oldExpandedElement = this.expandedElement;
       }
     }
+  }
+
+  mostrarPedido() {
+    this.router.navigate(['/pedido/' + this.pedidoSelecionado.tipoPedido + '/' + this.pedidoSelecionado.id]);
   }
 
   getProdutos() {

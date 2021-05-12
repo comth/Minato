@@ -60,7 +60,7 @@
 
   </div>
   <div style="display: flex; width: 100%; justify-content: space-between; padding-top: 25px;">
-    <div style="width:40%;">
+    <div style="width:42.2%;">
       <app-painel-pedidos [titulo]="'prontos para montagem'"
                           [dataSource]="dataSourcePedidos"
                           [displayedColumns]="displayedColumnsPedidos"
@@ -95,10 +95,10 @@
         </mat-card-content>
         <mat-card-actions>
           <button mat-button>FINALIZAR</button>
-          <button mat-button>VER DETALHES</button>
+          <button mat-button (click)="mostrarPedido()">VER DETALHES</button>
         </mat-card-actions>
       </mat-card>
-      <div *ngIf="!this.pedidoSelecionado" style=" height: 100%; display: flex; justify-content: center; align-items: center;">
+      <div *ngIf="!this.pedidoSelecionado" style="height: 100%; display: flex; justify-content: center; align-items: center;">
         Selecione um pedido
       </div>
     </div>
