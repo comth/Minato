@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Minato.BLLs;
 using Minato.Contexts;
 using Minato.Enums;
@@ -12,9 +13,11 @@ namespace Minato.Controllers
     {
         private readonly Context Context;
         private readonly PedidoBLL PedidoBLL;
+        private readonly IHubContext<ChatHub> chatHub;
 
-        public PedidoController(Context context)
+        public PedidoController(Context context, IHubContext<ChatHub> chatHub)
         {
+            this.chatHub = chatHub;
             Context = context;
             PedidoBLL = new PedidoBLL();
         }
