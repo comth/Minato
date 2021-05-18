@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { DEFAULT_CURRENCY_CODE, NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, NgModule, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -41,6 +41,7 @@ import { EmbalagemComponent } from './embalagem/embalagem.component';
 import { StatusComponent } from './status/status.component';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { InterceptorService } from './services/interceptor.service';
+import { HubConnectionBuilder } from '@microsoft/signalr';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -118,11 +119,42 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
+export class AppModule implements OnInit {
+
+  connection: any;
+  messages: any;
+  userName: any;
+  hideJoin: boolean;
 
   constructor(private configuracaoService: ConfiguracaoService) {
     this.configuracaoService.get().subscribe(res => {
       this.configuracaoService.configuracao = res;
+    });
+  }
+
+  ngOnInit(): void {
+    this.initWebSocket();
+    this.connection.start();
+  }
+
+  initWebSocket() {
+    this.connection = new HubConnectionBuilder()
+      .withUrl('/hub/chat')
+      .build();
+
+    this.connection.on('messageReceived', (from: string, body: string) => {
+      this.messages.push({ from, body });
+    });
+
+    this.connection.on('userJoined', user => {
+      if (user === this.userName) {
+        this.hideJoin = true;
+      }
+      this.messages.push({ from: '> ', body: user + ' joined' });
+    });
+
+    this.connection.on('userLeft', user => {
+      this.messages.push({ from: '! ', body: user + ' has left!' });
     });
   }
 

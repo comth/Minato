@@ -18,6 +18,7 @@ namespace Minato.Controllers
         public PedidoController(Context context, IHubContext<ChatHub> chatHub)
         {
             this.chatHub = chatHub;
+            
             Context = context;
             PedidoBLL = new PedidoBLL();
         }
