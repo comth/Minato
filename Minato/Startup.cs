@@ -24,6 +24,15 @@ namespace Minato
 
             services.AddHttpClient();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
+
             services.AddDataProtection();
 
             services.AddControllersWithViews();
@@ -53,6 +62,8 @@ namespace Minato
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseWebSockets(new WebSocketOptions
             {

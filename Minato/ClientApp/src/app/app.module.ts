@@ -119,22 +119,19 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule implements OnInit {
+export class AppModule {
 
   connection: any;
   messages: any;
-  userName: any;
+  userName: any = 'Thalita';
   hideJoin: boolean;
 
   constructor(private configuracaoService: ConfiguracaoService) {
     this.configuracaoService.get().subscribe(res => {
       this.configuracaoService.configuracao = res;
     });
-  }
 
-  ngOnInit(): void {
     this.initWebSocket();
-    this.connection.start();
   }
 
   initWebSocket() {
@@ -156,6 +153,11 @@ export class AppModule implements OnInit {
     this.connection.on('userLeft', user => {
       this.messages.push({ from: '! ', body: user + ' has left!' });
     });
+
+    console.log(this.messages)
+    console.log('aaa')
+
+    this.connection.start();
   }
 
 }
