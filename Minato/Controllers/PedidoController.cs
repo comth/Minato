@@ -50,6 +50,7 @@ namespace Minato.Controllers
 
             if (salvo)
             {
+                chatHub.Clients.All.SendAsync(WebSocketActions.MESSAGE_RECEIVED, "Novo Pedido!");
                 return Ok(new { id = pedido.Id });
             }
 

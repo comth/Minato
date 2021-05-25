@@ -41,7 +41,7 @@ import { EmbalagemComponent } from './embalagem/embalagem.component';
 import { StatusComponent } from './status/status.component';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { InterceptorService } from './services/interceptor.service';
-import { HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -121,7 +121,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 })
 export class AppModule {
 
-  connection: any;
+  connection: HubConnection;
   messages: any;
   userName: any = 'Thalita';
   hideJoin: boolean;
@@ -140,6 +140,7 @@ export class AppModule {
       .build();
 
     this.connection.on('messageReceived', (from: string, body: string) => {
+      console.log(body);
       this.messages.push({ from, body });
     });
 
@@ -153,9 +154,6 @@ export class AppModule {
     this.connection.on('userLeft', user => {
       this.messages.push({ from: '! ', body: user + ' has left!' });
     });
-
-    console.log(this.messages)
-    console.log('aaa')
 
     this.connection.start();
   }
