@@ -1,13 +1,23 @@
 # Minato
 
-Um pequeno projeto que estou fazendo para um restaurante. 
+Um pequeno projeto que estou fazendo para um restaurante, visando o atendimento via delivery, local e take away unificados numa mesma plataforma. 
 
 Tecnologias utilizadas:
- - .NET Core 3.1
- - Angular 8.3.29
+ - .NET 6.0 (Core)
+ - Angular 13
  - Entity Framework Core
  - SQL Server
  
+ O que você vai encontrar por aqui:
+ - tabelas editáveis
+ - colorPicker editável
+ - auto complete de cep
+ - integração com API do Google para prover distância e tempo de entrega
+ - métodos de fácil leitura (ao menos tentei deixar tudo o mais simples possível)
+
+Em Implementação:
+- web socket
+
  Intruções para a execução do projeto:
   - Instale o node (https://nodejs.org/)
   - Usando o cmd navegue até a pasta ClientApp
