@@ -1,4 +1,39 @@
-# Minato
+# Minato (EN)
+
+A small project I'm working on for a restaurant, aiming to provide service via delivery, local and take away unified on the same platform. 
+
+Technologies used:
+ - .NET 6.0 (Core)
+ - Angular 13
+ - Entity Framework Core
+ - SQLServer
+ 
+ What you will find here:
+ - editable tables
+ - editable colorPicker
+ - auto complete zip code
+ - integration with Google API to provide distance and delivery time
+ - easy-to-read methods (at least I tried to make everything as simple as possible)
+
+Under Implementation:
+- web socket
+
+ Instructions for executing the project:
+  - Install node (https://nodejs.org/)
+  - Using cmd navigate to the ClientApp folder
+  - Run the command 'npm i' and then 'npm start'
+  - Install .Net Core (https://dotnet.microsoft.com/download)
+  - Create a new database called Minato in your SQL Server
+  - Open the project in Visual Studio
+  - Using the Visual Studio Package Manager, run the 'Update-Database' command
+  - Run the project through Visual Studio's ISS Express (or whatever tool you think is best)
+  
+  *you may need to change the database connection string, it is in the appSettings.json file, in the project's Minato folder*
+  
+  If you have any questions, contact me on LinkedIn -> https://www.linkedin.com/in/thalita-carvalho-956337193/
+  
+
+# Minato (PT)
 
 Um pequeno projeto que estou fazendo para um restaurante, visando o atendimento via delivery, local e take away unificados numa mesma plataforma. 
 
